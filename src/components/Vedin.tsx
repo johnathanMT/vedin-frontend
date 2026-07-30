@@ -677,8 +677,11 @@ export default function Vedin() {
             style={{ background: 'conic-gradient(from 210deg, #fef3c7, #eab308, #b45309, #f59e0b, #fde68a, #eab308)', boxShadow: '0 0 48px -4px rgba(234,179,8,0.72), 0 0 32px -8px rgba(180,83,9,0.55)' }}>
             <div className="relative h-full w-full overflow-hidden rounded-full bg-card">
               <span className="absolute inset-0 flex items-center justify-center font-groovy text-5xl text-amber-500">ဘ</span>
-              <img src="/sayar.jpg" alt="Bhone Min Thike Din" className="relative h-full w-full object-cover" loading="lazy" decoding="async"
-                onError={(e) => { e.currentTarget.style.visibility = 'hidden' }} />
+              <picture className="block h-full w-full">
+                <source srcSet="/sayar.webp" type="image/webp" />
+                <img src="/sayar.jpg" alt="Bhone Min Thike Din" className="relative h-full w-full object-cover" loading="lazy" decoding="async"
+                  onError={(e) => { e.currentTarget.style.visibility = 'hidden' }} />
+              </picture>
             </div>
           </div>
           <div>
