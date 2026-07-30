@@ -400,7 +400,6 @@ export default function VedinAdmin() {
             <button type="submit" disabled={loading} className="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-400 to-emerald-400 px-5 py-3 font-serif text-sm font-bold text-[#160f22] transition hover:brightness-105 disabled:opacity-60">
               {loading ? 'Signing in…' : 'Sign in'}
             </button>
-            <Link to="/sanctuary-admin" className="mt-4 block text-center font-mono text-[11px] text-fg/50 hover:text-fg">→ Sanctuary Admin (portfolio)</Link>
           </form>
         ) : (
           <>
@@ -412,7 +411,6 @@ export default function VedinAdmin() {
               <TabBtn id="users" icon={UserRound} label="Users" />
               <TabBtn id="messages" icon={Mail} label="Messages" />
               <TabBtn id="remedy" icon={Sparkles} label="Remedy" />
-              <Link to="/sanctuary-admin" className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-300/10 px-4 py-2 font-mono text-xs text-amber-100 transition hover:bg-amber-300/20"><ArrowLeft size={13} /> Sanctuary Admin</Link>
             </div>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">

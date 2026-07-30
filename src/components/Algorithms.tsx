@@ -249,7 +249,7 @@ export default function Algorithms() {
   return (
     <section className="section-container vedin-page">
       <div className="mb-6 flex items-center justify-between">
-        <Link to="/vedin" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 font-mono text-xs text-muted transition hover:text-fg"><ArrowLeft size={15} /> Vedin</Link>
+        <Link to="/" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 font-mono text-xs text-muted transition hover:text-fg"><ArrowLeft size={15} /> Vedin</Link>
         <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1">
           {(['en', 'mm'] as Lang[]).map((l) => (
             <button key={l} type="button" onClick={() => setLang(l)} className={`rounded-full px-3 py-1 font-mono text-xs transition ${lang === l ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>{l === 'en' ? 'EN' : 'မြန်မာ'}</button>
