@@ -1,10 +1,11 @@
 // scripts/prerender-og.mjs
-// Bake Open Graph / title tags for the /vedin route so social crawlers
-// (Facebook, Line, Telegram, Messenger) that DON'T execute JavaScript still read
-// the correct card. Runs AFTER `vite build` + inject-site: copies dist/index.html
-// → dist/vedin.html with the Vedin meta swapped in. vercel.json rewrites
-// `/vedin` → `/vedin.html`, so the same JS bundle still loads — browsers get
-// the full SPA, crawlers get the right tags.
+// Bake Open Graph / title tags for the Vedin app's ROOT "/" route so social
+// crawlers (Facebook, Line, Telegram, Messenger) that DON'T execute JavaScript
+// still read the correct card. Runs AFTER `vite build` + inject-site.
+//
+// Vedin is now the standalone root app, so we rewrite dist/index.html IN PLACE
+// (the document actually served at "/"). We also emit dist/vedin.html so the
+// legacy /vedin path keeps serving the same correct card.
 import { readFileSync, writeFileSync, existsSync } from 'node:fs'
 import { resolve } from 'node:path'
 
@@ -14,10 +15,10 @@ if (!existsSync(src)) { console.error('[prerender-og] dist/index.html not found 
 
 const SITE = (process.env.VITE_SITE_URL || 'https://myothant.dev').replace(/\/+$/, '')
 const OG = {
-  title: 'Sayar Bhone Min Thike Din - Professional Vedic Astrology',
-  desc: 'Get your accurate Vedic astrology reading, Chandra Lagna, and full Shadbala analysis.',
-  url: `${SITE}/vedin`,
-  image: `${SITE}/astrology-og.jpg`,
+  title: 'Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din',
+  desc: 'Get your accurate Vedic astrology reading — Chandra Lagna, D1–D60 divisional charts, Vimśottarī dasha, Shadbala & Ashtakavarga.',
+  url: `${SITE}/`,
+  image: `${SITE}/sayar.jpg`,
 }
 
 let html = readFileSync(src, 'utf8')
@@ -34,5 +35,8 @@ set(/<meta name="twitter:title"[^>]*>/, `<meta name="twitter:title" content="${O
 set(/<meta name="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${OG.desc}" />`)
 set(/<meta name="twitter:image"[^>]*>/, `<meta name="twitter:image" content="${OG.image}" />`)
 
+// Primary: the root document served at "/".
+writeFileSync(src, html)
+// Back-compat: the legacy /vedin path (vercel.json rewrites /vedin → /vedin.html).
 writeFileSync(resolve(dist, 'vedin.html'), html)
-console.log('[prerender-og] wrote dist/vedin.html with Vedin OG tags')
+console.log('[prerender-og] baked Vedin OG tags into dist/index.html (root "/") + dist/vedin.html')

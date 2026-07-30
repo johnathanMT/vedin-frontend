@@ -14,48 +14,56 @@
 
     <!-- CSP is enforced at the HTTP header level via vercel.json (harder to bypass than a meta tag).
          This meta tag is kept as a defence-in-depth fallback for non-Vercel environments only. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://myweb-zqv1.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://vedin-backend.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;">
 
     <!-- ════════════════ SEO / Social ════════════════ -->
-    <title>Myo Thant Naing — Computer Science Student &amp; Aspiring Software Engineer &amp; AI Enthusiast | Portfolio
-    </title>
+    <title>Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din</title>
     <meta name="description"
-        content="Portfolio of Myo Thant Naing — Computer Science student & Software Engineer in Japan, building full-stack apps (C#/.NET, React, Three.js) and Agentic AI systems. From caring to coding." />
-    <meta name="author" content="Myo Thant Naing" />
+        content="Vedin — accurate Vedic astrology readings by Sayar Bhone Min Thike Din. Chandra Lagna (Moon ascendant), D1–D60 divisional charts, Vimśottarī dasha, Shadbala & Ashtakavarga, computed with classical Vedic-astrology methods." />
+    <meta name="author" content="Sayar Bhone Min Thike Din" />
     <meta name="keywords"
-        content="Myo Thant Naing, Software Engineer, AI Engineer, Computer Science, C# .NET, React, Three.js, WebGL, Full-Stack Developer, Portfolio, Japan" />
+        content="Vedin, Vedic astrology, horoscope, Chandra Lagna, Moon ascendant, Vimshottari dasha, Shadbala, Ashtakavarga, natal chart, kundli, divisional charts, Myanmar astrology, Burmese astrology, ဗေဒင်" />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#08090F" />
+    <meta name="application-name" content="Vedin" />
+    <meta name="apple-mobile-web-app-title" content="Vedin" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="canonical" href="https://myothant.dev/" />
+    <link rel="icon" href="/sayar.jpg" />
+    <link rel="apple-touch-icon" href="/sayar.jpg" />
+    <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="Myo Thant Naing" />
-    <meta property="og:title" content="Myo Thant Naing — Software Engineer & AI Developer" />
+    <meta property="og:site_name" content="Vedin" />
+    <meta property="og:title" content="Vedin — Professional Vedic Astrology" />
     <meta property="og:description"
-        content="Computer Science student & Software Engineer in Japan. Full-stack (C#/.NET, React) + Agentic AI. From caring to coding." />
+        content="Accurate Vedic astrology readings by Sayar Bhone Min Thike Din — Chandra Lagna, D1–D60 charts, Vimśottarī dasha, Shadbala & Ashtakavarga." />
     <meta property="og:url" content="https://myothant.dev/" />
-    <meta property="og:image" content="https://myothant.dev/Myweb_photo/My_profile2_for_myweb.jpg" />
+    <meta property="og:image" content="https://myothant.dev/sayar.jpg" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Myo Thant Naing — Software Engineer & AI Developer" />
-    <meta name="twitter:description" content="CS student & Software Engineer in Japan. Full-stack + Agentic AI." />
-    <meta name="twitter:image" content="https://myothant.dev/Myweb_photo/My_profile2_for_myweb.jpg" />
+    <meta name="twitter:title" content="Vedin — Professional Vedic Astrology" />
+    <meta name="twitter:description" content="Accurate Vedic astrology readings by Sayar Bhone Min Thike Din — Chandra Lagna, dashas, Shadbala & Ashtakavarga." />
+    <meta name="twitter:image" content="https://myothant.dev/sayar.jpg" />
 
     <!-- Structured data (Google rich results) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Myo Thant Naing",
-      "alternateName": "MTN",
+      "@type": "WebSite",
+      "name": "Vedin",
+      "alternateName": "Vedin — Vedic Astrology",
       "url": "https://myothant.dev/",
-      "image": "https://myothant.dev/Myweb_photo/My_profile2_for_myweb.jpg",
-      "jobTitle": "Software Engineer & AI Developer",
-      "description": "Computer Science student and Software Engineer in Japan, building full-stack applications (C#/.NET, React) and Agentic AI systems.",
-      "knowsAbout": ["Software Engineering", "Artificial Intelligence", "C#", ".NET", "React", "Three.js", "Computer Science", "Full-Stack Development"],
-      "sameAs": ["https://github.com/johnathanMT"]
+      "image": "https://myothant.dev/sayar.jpg",
+      "inLanguage": ["my", "en"],
+      "description": "Vedin — professional Vedic astrology readings by Sayar Bhone Min Thike Din. Chandra Lagna, D1–D60 divisional charts, Vimśottarī dasha, Shadbala and Ashtakavarga.",
+      "about": ["Vedic astrology", "Chandra Lagna", "Vimshottari dasha", "Shadbala", "Ashtakavarga", "natal chart"],
+      "author": {
+        "@type": "Person",
+        "name": "Sayar Bhone Min Thike Din"
+      }
     }
     </script>
 
@@ -92,10 +100,11 @@
 <body>
     <!-- Crawler / no-JS fallback: gives search engines real content for this SPA -->
     <noscript>
-        <h1>Myo Thant Naing — Software Engineer &amp; AI Developer</h1>
-        <p>Computer Science student and Software Engineer based in Japan, building full-stack
-            applications with C#/.NET and React, plus Agentic AI systems and 3D WebGL experiences.</p>
-        <p>Please enable JavaScript to view the full interactive portfolio.</p>
+        <h1>Vedin — Professional Vedic Astrology</h1>
+        <p>Accurate Vedic astrology readings by Sayar Bhone Min Thike Din — Chandra Lagna (Moon ascendant),
+            the sixteen divisional charts (D1–D60), the Vimśottarī dasha timeline, Shadbala strengths and
+            the Ashtakavarga point system.</p>
+        <p>Please enable JavaScript to use the interactive Vedin app.</p>
     </noscript>
 
     <div id="root"></div>
@@ -110,13 +119,6 @@
     </noscript>
 
     <script type="module" src="/src/main.tsx"></script>
-    <!--
-      api.js: the static blog/admin PortfolioAPI client. Loaded with defer so it
-      never blocks the React bundle. Not type="module" so it exposes window.PortfolioAPI
-      for the legacy static pages (blog.html, admin.html) that rely on a global.
-    -->
-    <script defer src="/api.js"></script>
-
 </body>
 
 </html>

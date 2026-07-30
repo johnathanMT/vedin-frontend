@@ -1,0 +1,19 @@
+{
+  "name": "Vedin — Vedic Astrology",
+  "short_name": "Vedin",
+  "description": "Professional Vedic astrology readings by Sayar Bhone Min Thike Din — Chandra Lagna, divisional charts, dashas, Shadbala & Ashtakavarga.",
+  "lang": "my",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#08090F",
+  "theme_color": "#08090F",
+  "icons": [
+    {
+      "src": "/sayar.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any"
+    }
+  ]
+}

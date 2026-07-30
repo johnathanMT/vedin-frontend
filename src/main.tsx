@@ -48,7 +48,7 @@ ReactDOM.createRoot(rootEl).render(
       <BrowserRouter basename={BASENAME}>
         <Routes>
           {/* Root = the Vedin astrology app (full screen, no portfolio layout). */}
-          <Route path="/" element={<><Seo title="Sayar Bhone Min Thike Din — Professional Vedic Astrology" path="/" description="Get your accurate Vedic astrology reading, Chandra Lagna, and full Shadbala analysis." image="/astrology-og.jpg" /><VedinShell><Suspense fallback={fallback}><Vedin /></Suspense></VedinShell></>} />
+          <Route path="/" element={<><Seo title="Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din" path="/" description="Get your accurate Vedic astrology reading — Chandra Lagna, D1–D60 divisional charts, Vimśottarī dasha, Shadbala & Ashtakavarga." image="/sayar.jpg" /><VedinShell><Suspense fallback={fallback}><Vedin /></Suspense></VedinShell></>} />
 
           <Route path="/research" element={<><Seo title="Vedin Research — Falsifiable Protocol" path="/research" description="A pre-registered, falsifiable protocol that measures whether Vedic astrology beats chance — honest methodology, hash-locked predictions, live statistics." noindex /><VedinShell><Suspense fallback={fallback}><Research /></Suspense></VedinShell></>} />
 
