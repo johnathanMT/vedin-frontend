@@ -10,10 +10,10 @@
   "theme_color": "#08090F",
   "icons": [
     {
-      "src": "/sayar.jpg",
+      "src": "/vedin-logo.png",
       "sizes": "512x512",
-      "type": "image/jpeg",
-      "purpose": "any"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }

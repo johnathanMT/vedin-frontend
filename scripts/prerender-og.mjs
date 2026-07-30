@@ -18,7 +18,7 @@ const OG = {
   title: 'Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din',
   desc: 'Get your accurate Vedic astrology reading — Chandra Lagna, D1–D60 divisional charts, Vimśottarī dasha, Shadbala & Ashtakavarga.',
   url: `${SITE}/`,
-  image: `${SITE}/sayar.jpg`,
+  image: `${SITE}/vedin-logo-og.png`,
 }
 
 let html = readFileSync(src, 'utf8')

@@ -17,6 +17,8 @@ const Vedin = lazy(() => import('./components/Vedin'))
 const Research = lazy(() => import('./components/Research'))
 const Algorithms = lazy(() => import('./components/Algorithms'))
 const VedinAdmin = lazy(() => import('./components/VedinAdmin'))
+const ResetPassword = lazy(() => import('./components/ResetPassword'))
+const ConfirmEmail = lazy(() => import('./components/ConfirmEmail'))
 
 const fallback = <div className="py-24 text-center font-mono text-sm text-muted">Loading…</div>
 
@@ -48,7 +50,7 @@ ReactDOM.createRoot(rootEl).render(
       <BrowserRouter basename={BASENAME}>
         <Routes>
           {/* Root = the Vedin astrology app (full screen, no portfolio layout). */}
-          <Route path="/" element={<><Seo title="Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din" path="/" description="Get your accurate Vedic astrology reading — Chandra Lagna, D1–D60 divisional charts, Vimśottarī dasha, Shadbala & Ashtakavarga." image="/sayar.jpg" /><VedinShell><Suspense fallback={fallback}><Vedin /></Suspense></VedinShell></>} />
+          <Route path="/" element={<><Seo title="Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din" path="/" description="Get your accurate Vedic astrology reading — Chandra Lagna, D1–D60 divisional charts, Vimśottarī dasha, Shadbala & Ashtakavarga." image="/vedin-logo-og.png" /><VedinShell><Suspense fallback={fallback}><Vedin /></Suspense></VedinShell></>} />
 
           <Route path="/research" element={<><Seo title="Vedin Research — Falsifiable Protocol" path="/research" description="A pre-registered, falsifiable protocol that measures whether Vedic astrology beats chance — honest methodology, hash-locked predictions, live statistics." noindex /><VedinShell><Suspense fallback={fallback}><Research /></Suspense></VedinShell></>} />
 
@@ -56,6 +58,10 @@ ReactDOM.createRoot(rootEl).render(
 
           {/* Admin → its own full-screen layout, not indexed. */}
           <Route path="/vedin-admin" element={<><Seo title="Vedin Admin" path="/vedin-admin" noindex /><Suspense fallback={<div style={{ minHeight: '100vh', background: '#0b0e1a' }} />}><VedinAdmin /></Suspense></>} />
+
+          {/* Auth flows (not indexed): email-confirm + auto-login, and password reset. */}
+          <Route path="/confirm" element={<><Seo title="Confirm email — Vedin" path="/confirm" noindex /><Suspense fallback={fallback}><ConfirmEmail /></Suspense></>} />
+          <Route path="/reset-password" element={<><Seo title="Reset password — Vedin" path="/reset-password" noindex /><Suspense fallback={fallback}><ResetPassword /></Suspense></>} />
 
           {/* Legacy paths → the new root. */}
           <Route path="/vedin" element={<Navigate to="/" replace />} />

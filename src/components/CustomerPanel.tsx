@@ -43,7 +43,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
   const [me, setMe] = useState<MeData | null>(null)
   const meRef = useRef<MeData | null>(null)
   useEffect(() => { meRef.current = me }, [me])
-  const [modal, setModal] = useState<null | 'login' | 'signup' | 'profile'>(null)
+  const [modal, setModal] = useState<null | 'login' | 'signup' | 'profile' | 'forgot'>(null)
   const [email, setEmail] = useState(''); const [username, setUsername] = useState('')
   const [pw, setPw] = useState(''); const [pw2, setPw2] = useState('')
   const [busy, setBusy] = useState(false)
@@ -193,15 +193,25 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
       const natal = sPlaceOk && sLat && sLon
         ? { gender: sGender, dob: sDob, birthTime: sTime, locationName: sPlace.trim(), latitude: Number(sLat), longitude: Number(sLon), timezone: sTz }
         : {}
-      const r = await fetch(`${API}/api/customer/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), username: username.trim(), password: pw, confirmPassword: pw2, ...natal }) })
+      // credentials:include → store the HttpOnly device-binding cookie the backend
+      // sets, so confirming on THIS browser can auto-login.
+      const r = await fetch(`${API}/api/customer/signup`, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim(), username: username.trim(), password: pw, confirmPassword: pw2, ...natal }) })
       const j = await r.json()
       if (!r.ok) throw new Error(j?.message || 'Sign up failed')
-      setMsg({ ok: true, text: t('Account created — open the email we sent and confirm. This device will sign you in automatically once verified.', 'အကောင့်ဖန်တီးပြီး — ပို့လိုက်သည့် အီးမေးလ်ကို ဖွင့်၍ အတည်ပြုပါ။ အတည်ပြုပြီးသည်နှင့် ဤစက်တွင် အလိုအလျောက် ဝင်ရောက်ပေးပါမည်။') })
+      setMsg({ ok: true, text: t('Please check your email, including the Spam folder, to confirm your account. Note: in some email clients you may need to click the three dots (⋯) to reveal the confirmation link. Confirm on THIS device and you will be signed in automatically.', 'သင့်အကောင့်ကို အတည်ပြုရန် အီးမေးလ် (Spam folder အပါအဝင်) ကို စစ်ဆေးပါ။ မှတ်ချက် — အချို့ email များတွင် အတည်ပြုလင့်ခ်ကို မြင်ရရန် အစက်သုံးစက် (⋯) ကို နှိပ်ရနိုင်သည်။ ဤစက်တွင်ပင် အတည်ပြုပါက အလိုအလျောက် ဝင်ရောက်ပေးပါမည်။') })
       // Keep the password in memory (clear only the confirm field) and enter the
       // "awaiting verification" state so the auto-advance poll below can silently
       // log this device in the instant the email is confirmed — on ANY device.
       setModal('login'); setPw2(''); setNeedsVerify(true)
     } catch (err) { setMsg({ ok: false, text: err instanceof Error ? err.message : 'Sign up failed' }) } finally { setBusy(false) }
+  }
+  // Forgot password → always show a generic success (anti-enumeration), even on error.
+  const forgotPassword = async (e: FormEvent) => {
+    e.preventDefault(); setBusy(true); setMsg(null)
+    const generic = t('If an account exists for that email, a password-reset link has been sent. Check your inbox (and Spam folder).', 'ထို email ဖြင့် အကောင့်ရှိပါက စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ် ပို့ပြီးပါပြီ။ Inbox (နှင့် Spam) ကို စစ်ပါ။')
+    try {
+      await fetch(`${API}/api/customer/forgot-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim() }) })
+    } catch { /* ignore — still show generic */ } finally { setMsg({ ok: true, text: generic }); setBusy(false) }
   }
   const saveProfile = async (e: FormEvent) => {
     e.preventDefault()
@@ -272,11 +282,12 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={() => setModal(null)}>
           <div className={`glass-card w-full ${modal === 'signup' ? 'max-w-md' : 'max-w-sm'} max-h-[90vh] overflow-y-auto p-6`} onClick={(e) => e.stopPropagation()}>
             <div className="mb-4 flex items-center justify-between">
-              <h3 className="font-groovy text-lg text-fg">{modal === 'login' ? t('Sign in', 'အကောင့်ဝင်') : modal === 'profile' ? t('Edit your natal profile', 'မွေးဇာတာ ပရိုဖိုင် ပြင်ရန်') : t('Create account', 'အကောင့်ဖွင့်')}</h3>
+              <h3 className="font-groovy text-lg text-fg">{modal === 'login' ? t('Sign in', 'အကောင့်ဝင်') : modal === 'profile' ? t('Edit your natal profile', 'မွေးဇာတာ ပရိုဖိုင် ပြင်ရန်') : modal === 'forgot' ? t('Reset your password', 'စကားဝှက် ပြန်လည်သတ်မှတ်ရန်') : t('Create account', 'အကောင့်ဖွင့်')}</h3>
               <button type="button" onClick={() => setModal(null)} className="text-muted hover:text-fg"><X size={18} /></button>
             </div>
+            {modal === 'forgot' && !msg && <p className="mb-3 text-xs leading-relaxed text-muted">{t('Enter your account email and we’ll send a link to reset your password.', 'သင့်အကောင့် email ကို ထည့်ပါ — စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ် ပို့ပေးပါမည်။')}</p>}
             {msg && <p className={`mb-3 rounded-xl border px-3 py-2 text-xs ${msg.ok ? 'border-emerald-400/40 bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200' : 'border-coral/40 bg-coral/10 text-coral'}`}>{msg.text}</p>}
-            <form onSubmit={modal === 'login' ? login : modal === 'signup' ? signup : saveProfile} className="space-y-3">
+            <form onSubmit={modal === 'login' ? login : modal === 'signup' ? signup : modal === 'forgot' ? forgotPassword : saveProfile} className="space-y-3">
               {modal !== 'profile' && (
                 <label className="block"><span className="font-mono text-[11px] uppercase tracking-wider text-muted">{t('Email', 'အီးမေးလ်')}</span>
                   <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className={inputCls} /></label>
@@ -285,7 +296,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
                 <label className="block"><span className="font-mono text-[11px] uppercase tracking-wider text-muted">{modal === 'profile' ? t('Name', 'အမည်') : t('Username', 'အသုံးပြုသူအမည်')}</span>
                   <input required value={username} onChange={(e) => setUsername(e.target.value)} className={inputCls} /></label>
               )}
-              {modal !== 'profile' && (
+              {(modal === 'login' || modal === 'signup') && (
                 <label className="block"><span className="font-mono text-[11px] uppercase tracking-wider text-muted">{t('Password', 'စကားဝှက်')}</span>
                   <input type="password" required minLength={8} value={pw} onChange={(e) => setPw(e.target.value)} className={inputCls} /></label>
               )}
@@ -331,9 +342,19 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
               )}
 
               <button type="submit" disabled={busy} className="w-full rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:opacity-60">
-                {busy ? <Loader2 size={15} className="mx-auto animate-spin" /> : modal === 'login' ? t('Sign in', 'ဝင်မည်') : modal === 'profile' ? t('Save profile', 'ပရိုဖိုင် သိမ်းမည်') : t('Create account', 'အကောင့်ဖွင့်မည်')}
+                {busy ? <Loader2 size={15} className="mx-auto animate-spin" /> : modal === 'login' ? t('Sign in', 'ဝင်မည်') : modal === 'profile' ? t('Save profile', 'ပရိုဖိုင် သိမ်းမည်') : modal === 'forgot' ? t('Send reset link', 'ပြန်သတ်မှတ်လင့်ခ် ပို့မည်') : t('Create account', 'အကောင့်ဖွင့်မည်')}
               </button>
             </form>
+            {modal === 'login' && !needsVerify && (
+              <button type="button" onClick={() => { setModal('forgot'); setMsg(null) }} className="mt-3 w-full text-center font-mono text-[11px] text-accent-light hover:text-accent">
+                {t('Forgot password?', 'စကားဝှက် မေ့နေပါသလား?')}
+              </button>
+            )}
+            {modal === 'forgot' && (
+              <button type="button" onClick={() => { setModal('login'); setMsg(null) }} className="mt-3 w-full text-center font-mono text-[11px] text-muted hover:text-fg">
+                {t('← Back to sign in', '← အကောင့်ဝင်ရန် ပြန်သွားရန်')}
+              </button>
+            )}
             {modal === 'login' && needsVerify && (
               <>
                 <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-2.5 text-center text-xs text-emerald-700 dark:text-emerald-200">
@@ -346,7 +367,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
                 </button>
               </>
             )}
-            {modal !== 'profile' && (
+            {(modal === 'login' || modal === 'signup') && (
               <button type="button" onClick={() => { setModal(modal === 'login' ? 'signup' : 'login'); setMsg(null); setNeedsVerify(false) }} className="mt-3 w-full text-center font-mono text-[11px] text-muted hover:text-fg">
                 {modal === 'login' ? t("No account? Sign up", 'အကောင့်မရှိသေးဘူးလား? ဖွင့်မည်') : t('Have an account? Sign in', 'အကောင့်ရှိပြီးသားလား? ဝင်မည်')}
               </button>

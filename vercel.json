@@ -52,7 +52,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://vedin-backend.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;"
+          "value": "default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://api.myothant.dev https://vedin-backend.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;"
         }
       ]
     },
