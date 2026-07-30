@@ -73,10 +73,41 @@ export default function VedinAdmin() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [q, setQ] = useState('')
+  const [aiChecking, setAiChecking] = useState(false)
+  const [aiStatus, setAiStatus] = useState<{ ok: boolean; text: string } | null>(null)
 
   const persist = (tk: string) => { try { tk ? localStorage.setItem(TOKEN_KEY, tk) : localStorage.removeItem(TOKEN_KEY) } catch { /* ignore */ } }
   const showToast = (text: string) => setToast(text)
   useEffect(() => { if (!toast) return; const t = setTimeout(() => setToast(''), 2600); return () => clearTimeout(t) }, [toast])
+
+  // ── AI provider health check ────────────────────────────────────────────────
+  // Verifies the Gemini/OpenAI key + model WITHOUT generating a reading.
+  const checkAiStatus = async () => {
+    setAiChecking(true); setAiStatus(null)
+    try {
+      const res = await fetch(`${SITE.apiUrl}/api/astrology/ai-health`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.status === 401 || res.status === 403) { logout(); throw new Error('Session expired or not an Admin. Please log in again.') }
+      const j = (await res.json().catch(() => null)) as {
+        message?: string
+        data?: { ok?: boolean; provider?: string; model?: string; modelAvailable?: boolean; status?: number; reason?: string; message?: string }
+      } | null
+      const d = j?.data
+      if (d?.ok) {
+        const modelNote = d.modelAvailable === false
+          ? ` — ⚠ model "${d.model}" is NOT available for this key (set AI__Model)`
+          : ' — model available'
+        setAiStatus({ ok: true, text: `API key is valid. Provider: ${d.provider}, active model: ${d.model}${modelNote}.` })
+      } else {
+        const status = d?.status ?? res.status
+        const reason = d?.reason || j?.message || 'Unknown error.'
+        setAiStatus({ ok: false, text: `AI check failed (HTTP ${status}): ${reason}` })
+      }
+    } catch (err) {
+      setAiStatus({ ok: false, text: err instanceof Error ? err.message : 'Could not reach the server.' })
+    } finally { setAiChecking(false) }
+  }
 
   const login = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault(); setError(''); setLoading(true)
@@ -421,8 +452,22 @@ export default function VedinAdmin() {
               <button onClick={() => load()} disabled={loading} className="inline-flex items-center gap-2 rounded-xl border border-fg/15 bg-fg/5 px-4 py-2.5 font-mono text-xs text-fg/80 transition hover:bg-fg/10 disabled:opacity-60">
                 <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Refresh
               </button>
+              <button onClick={checkAiStatus} disabled={aiChecking} title="Verify the AI provider key + model without generating a reading"
+                className="inline-flex items-center gap-2 rounded-xl border border-violet-400/30 bg-violet-500/10 px-4 py-2.5 font-mono text-xs text-violet-100 transition hover:bg-violet-500/20 disabled:opacity-60">
+                {aiChecking ? <RefreshCw size={14} className="animate-spin" /> : <Sparkles size={14} />} {aiChecking ? 'Checking…' : 'Check AI Status'}
+              </button>
               <span className="font-mono text-xs text-fg/50">{shown} / {total}</span>
             </div>
+
+            {aiStatus && (
+              <div className={`mt-3 flex items-start justify-between gap-3 rounded-xl border px-4 py-3 text-sm ${aiStatus.ok ? 'border-emerald-400/40 bg-emerald-500/10 text-emerald-200' : 'border-rose-400/40 bg-rose-500/10 text-rose-200'}`}>
+                <span className="flex items-start gap-2 break-words">
+                  {aiStatus.ok ? <Check size={16} className="mt-0.5 shrink-0" /> : <X size={16} className="mt-0.5 shrink-0" />}
+                  {aiStatus.text}
+                </span>
+                <button onClick={() => setAiStatus(null)} aria-label="Dismiss" className="shrink-0 text-fg/50 transition hover:text-fg"><X size={15} /></button>
+              </div>
+            )}
 
             {/* ── READINGS ── */}
             {tab === 'readings' && (
