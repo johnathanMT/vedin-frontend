@@ -91,14 +91,16 @@ export default function VedinAdmin() {
       if (res.status === 401 || res.status === 403) { logout(); throw new Error('Session expired or not an Admin. Please log in again.') }
       const j = (await res.json().catch(() => null)) as {
         message?: string
-        data?: { ok?: boolean; provider?: string; model?: string; modelAvailable?: boolean; status?: number; reason?: string; message?: string }
+        data?: { ok?: boolean; provider?: string; model?: string; modelAvailable?: boolean; usableModels?: string[]; status?: number; reason?: string; message?: string }
       } | null
       const d = j?.data
-      if (d?.ok) {
-        const modelNote = d.modelAvailable === false
-          ? ` — ⚠ model "${d.model}" is NOT available for this key (set AI__Model)`
-          : ' — model available'
-        setAiStatus({ ok: true, text: `API key is valid. Provider: ${d.provider}, active model: ${d.model}${modelNote}.` })
+      if (d?.ok && d.modelAvailable !== false) {
+        // Key valid AND the configured model is available → all good.
+        setAiStatus({ ok: true, text: `API key is valid. Provider: ${d.provider}, active model: "${d.model}" — available and ready.` })
+      } else if (d?.ok && d.modelAvailable === false) {
+        // Key valid but the model isn't available → show the models this key CAN use.
+        const models = d.usableModels?.length ? d.usableModels.join(', ') : '(none returned — check your Google AI Studio project)'
+        setAiStatus({ ok: false, text: `Key is VALID, but the model "${d.model}" is NOT available to this key. On Render, set AI__Model to one of these available models → ${models}` })
       } else {
         const status = d?.status ?? res.status
         const reason = d?.reason || j?.message || 'Unknown error.'
