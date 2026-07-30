@@ -27,11 +27,9 @@ export default function VedinShell({ children }: { children: ReactNode }) {
         className="relative z-20 mx-auto flex max-w-6xl items-center justify-end gap-2 px-4 sm:px-6"
         style={{ paddingTop: 'calc(1rem + env(safe-area-inset-top, 0px))' }}
       >
-        {/* External link to the separate portfolio site (NOT a React-Router route). */}
+        {/* Link to the separate portfolio site — same-tab navigation (no new window). */}
         <a
           href="https://myothant.dev"
-          target="_blank"
-          rel="noopener noreferrer"
           className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-2 font-mono text-xs text-muted transition-colors hover:border-accent/40 hover:text-accent-light"
         >
           Portfolio <ExternalLink size={13} aria-hidden />
