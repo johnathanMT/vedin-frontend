@@ -1,0 +1,70 @@
+# .github/workflows/deploy.yml
+# Builds the Vite app on every push to main and deploys it to GitHub Pages.
+# After adding this, set Settings -> Pages -> Source = "GitHub Actions".
+# This replaces the manual gh-pages branch workflow and ends the branch confusion.
+
+name: Deploy Vite site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:          # lets you trigger a deploy manually from the Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one deploy at a time
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # The 3D stack (R3F v9 / drei v10) declares React 19 as a peer, but this
+      # project is on React 18 — so installs need --legacy-peer-deps to bypass
+      # the ERESOLVE conflict (same flag you used locally). The committed .npmrc
+      # also sets legacy-peer-deps=true as a belt-and-suspenders default.
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      # Build-time config. Each value first looks for a GitHub repository VARIABLE
+      # (Settings → Secrets and variables → Actions → Variables tab); if unset it
+      # falls back to the default after `||`, so the build works either way.
+      # NOTE: VITE_BASE is "/" because the site is served at the apex domain
+      # root (myothant.dev). It would be "/Myweb/" only for a github.io project page.
+      - name: Build (vite build + inject-site token replacement)
+        run: npm run build
+        env:
+          VITE_SITE_URL:      ${{ vars.VITE_SITE_URL      || 'https://myothant.dev' }}
+          VITE_BASE:          ${{ vars.VITE_BASE          || '/' }}
+          VITE_API_URL:       ${{ vars.VITE_API_URL       || 'https://myweb-zqv1.onrender.com' }}
+          VITE_CONTACT_EMAIL: ${{ vars.VITE_CONTACT_EMAIL || 'ai@myothant.dev' }}
+          VITE_LINE_URL:      ${{ vars.VITE_LINE_URL      || 'https://lin.ee/s72ayHD' }}
+
+      - name: Upload build output
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist        # Vite's default output folder
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

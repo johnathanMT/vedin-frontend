@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Automation | MTN.Digitosphere</title>
+    <link rel="stylesheet" href="myweb.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="logo">MTN<span class="accent-text">.Digitosphere</span></div>
+        <div class="lang-switch">
+            <button onclick="changeLang('en')" title="English">🇬🇧</button>
+            <button onclick="changeLang('mm')" title="Myanmar">🇲🇲</button>
+            <button onclick="changeLang('jp')" title="Japanese">🇯🇵</button>
+            <button onclick="changeLang('vn')" title="Vietnamese">🇻🇳</button>
+            <button onclick="changeLang('ne')" title="Nepali">🇳🇵</button>
+            <button onclick="changeLang('id')" title="Indonesian">🇮🇩</button>
+        </div>
+    </nav>
+
+    <section class="hero small-hero">
+        <div class="hero-content">
+            <h1 data-i18n="py_hero_title">Python Automation Lab 🐍</h1>
+            <p data-i18n="py_hero_desc">Scripting solutions to automate boring daily tasks.</p>
+            <a href="index.html" class="btn-outline">← Back to Home</a>
+        </div>
+
+        <!-- Product Navi Bar -->
+        <div class="project-nav-bar">
+            <span class="nav-label" data-i18n="nav_switch">Switch Project:</span>
+
+            <a href="myweb_python.html" class="nav-pill active">
+                <i class="fab fa-python"></i> Python
+            </a>
+            <a href="myweb_PStudying.html" class="nav-pill">
+                <i class="fas fa-laptop-code"></i> Studying
+            </a>
+            <a href="myweb_PPortfolio.html" class="nav-pill">
+                <i class="fas fa-user-tie"></i> Portfolio
+            </a>
+        </div>
+
+    </section>
+
+
+
+    <section class="container">
+        <h3 class="section-title-small" data-i18n="py_stack_title">Tech Stack & Libraries</h3>
+        <div class="tech-icons">
+            <div class="tech-item"><i class="fab fa-python"></i> Python 3</div>
+            <div class="tech-item"><i class="fas fa-file-excel"></i> OpenPyXL</div>
+            <div class="tech-item"><i class="fas fa-robot"></i> Selenium</div>
+            <div class="tech-item"><i class="fas fa-chart-bar"></i> Pandas</div>
+        </div>
+    </section>
+
+    <section class="container bg-light">
+        <h2 class="section-title" data-i18n="py_proj_title">Featured Scripts</h2>
+
+        <div class="project-grid">
+            <div class="card code-card">
+                <div class="card-header">
+                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                    <span class="filename">kaigo_report.py</span>
+                </div>
+                <div class="card-body">
+                    <h3 data-i18n="py_p1_title">Excel Report Auto-Filler</h3>
+                    <p data-i18n="py_p1_desc">Automatically fills monthly care reports using data from raw CSV files.
+                    </p>
+                    <div class="tags">
+                        <span>#Pandas</span><span>#Excel</span>
+                    </div>
+                    <a href="#" class="code-link">View Source <i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="card code-card">
+                <div class="card-header">
+                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                    <span class="filename">shift_maker.py</span>
+                </div>
+                <div class="card-body">
+                    <h3 data-i18n="py_p2_title">Shift Schedule Formatter</h3>
+                    <p data-i18n="py_p2_desc">Converts messy shift emails into a clean Google Calendar format.</p>
+                    <div class="tags">
+                        <span>#Automation</span><span>#Email</span>
+                    </div>
+                    <a href="#" class="code-link">View Source <i class="fab fa-github"></i></a>
+                </div>
+            </div>
+
+            <div class="card code-card">
+                <div class="card-header">
+                    <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                    <span class="filename">news_bot.py</span>
+                </div>
+                <div class="card-body">
+                    <h3 data-i18n="py_p3_title">Daily News Scraper</h3>
+                    <p data-i18n="py_p3_desc">Scrapes Japan IT news and sends a summary to Line/Telegram.</p>
+                    <div class="tags">
+                        <span>#Selenium</span><span>#BeautifulSoup</span>
+                    </div>
+                    <a href="#" class="code-link">View Source <i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer Section  -->
+    <footer>
+        <div class="footer-container">
+            <h3 data-i18n="footer_contact">Contact Me</h3>
+            <div class="social-icons">
+                <!-- 1. LINE AI Bot အတွက် -->
+                <a href="https://lin.ee/s72ayHD" target="_blank"><i class="fab fa-line"></i></a>
+
+                <!-- 2. GitHub အတွက် -->
+                <a href="https://github.com/johnathanMT" target="_blank"><i class="fab fa-github"></i></a>
+
+                <!-- 3. LinkedIn အတွက် (မလိုချင်ရင် ဒီတစ်ကြောင်းကို ဖျက်လိုက်လို့ရပါတယ်) -->
+                <a href="https://www.linkedin.com/in/johnathanmt/" target="_blank"><i
+                        class="fab fa-linkedin-in"></i></a>
+            </div>
+
+            <!-- ပုံစံ (၂): စာသားနဲ့ သီးသန့်ပေါ်လွင်အောင် ထည့်ချင်လျှင် ဤအပိုင်းကို ထားပါ -->
+            <div class="my-projects" style="margin: 15px 0;">
+                <p style="font-size: 14px; margin: 0;">
+                    Check out my project:
+                    <a href="%COFFEE_URL%" target="_blank"
+                        style="color: #ffcc00; text-decoration: none; font-weight: bold;">
+                        ☕ Bean Boutique Coffee Shop
+                    </a>
+                </p>
+            </div>
+
+            <p>&copy; 2026 Designed by Myo Thant Naing.</p>
+        </div>
+    </footer>
+
+
+    <script src="myweb.js"></script>
+</body>
+
+</html>

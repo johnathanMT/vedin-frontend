@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Jokes · MTN.Digitosphere</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --c: #eab308
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: #07070f;
+      color: #e2e2f0;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 2rem;
+      background: rgba(7, 7, 15, .85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .85rem;
+      color: #fff
+    }
+
+    .nav-logo span {
+      width: 28px;
+      height: 28px;
+      background: #eab308;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: .75rem;
+      color: #000
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .5);
+      padding: .5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 10px;
+      transition: .2s
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: #eab308;
+      background: rgba(234, 179, 8, .1)
+    }
+
+    .hero {
+      position: relative;
+      min-height: 55vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 6rem 2rem 3rem
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(234, 179, 8, .18), transparent 70%)
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .35rem .9rem;
+      border-radius: 999px;
+      background: rgba(234, 179, 8, .12);
+      border: 1px solid rgba(234, 179, 8, .25);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #fde68a;
+      margin-bottom: 1.5rem
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1rem
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #eab308, #f97316);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, .55);
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 6rem
+    }
+
+    .section {
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: .6s ease
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem
+    }
+
+    .section h2 i {
+      color: #eab308
+    }
+
+    .joke-card {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 18px;
+      padding: 1.75rem;
+      margin-bottom: 1rem;
+      transition: .3s;
+      cursor: default
+    }
+
+    .joke-card:hover {
+      border-color: rgba(234, 179, 8, .3);
+      background: rgba(234, 179, 8, .04);
+      transform: translateY(-2px)
+    }
+
+    .joke-q {
+      font-size: .95rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: .75rem
+    }
+
+    .joke-a {
+      font-size: .88rem;
+      color: #eab308;
+      font-weight: 600;
+      padding: .6rem 1rem;
+      background: rgba(234, 179, 8, .08);
+      border-radius: 10px;
+      display: inline-block
+    }
+
+    .joke-tag {
+      display: inline-block;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .2rem .6rem;
+      border-radius: 6px;
+      margin-bottom: .75rem
+    }
+
+    .tag-dev {
+      background: rgba(59, 130, 246, .1);
+      color: #93c5fd
+    }
+
+    .tag-japan {
+      background: rgba(239, 68, 68, .1);
+      color: #fca5a5
+    }
+
+    .tag-life {
+      background: rgba(16, 185, 129, .1);
+      color: #6ee7b7
+    }
+
+    .tag-dark {
+      background: rgba(139, 92, 246, .1);
+      color: #c4b5fd
+    }
+
+    .code-joke {
+      font-family: 'Fira Code', monospace;
+      background: #0d1117;
+      border: 1px solid rgba(234, 179, 8, .2);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      font-size: .82rem;
+      margin: 1rem 0;
+      overflow-x: auto
+    }
+
+    .code-joke .comment {
+      color: #546e7a
+    }
+
+    .code-joke .keyword {
+      color: #eab308
+    }
+
+    .code-joke .string {
+      color: #a5d6a7
+    }
+
+    .code-joke .out {
+      color: #f97316
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .25);
+      font-size: .78rem
+    }
+
+    footer a {
+      color: #eab308
+    }
+  
+/* — CSP-safe reveal fallback — the scroll animation now lives in /reveal.js
+   (external, allowed by script-src 'self'). reveal.js adds .js-reveal to <html>
+   BEFORE paint; if it is ever blocked, sections stay fully visible instead of
+   being trapped at opacity:0 (the bug that hid this page's body). — */
+.section{opacity:1;transform:none}
+.js-reveal .section{opacity:0;transform:translateY(20px);transition:.6s ease}
+.js-reveal .section.visible{opacity:1;transform:none}
+</style>
+  <script src="/reveal.js"></script>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-logo"><span>😄</span>MTN.Digitosphere</div><a href="index.html" class="back-btn"><i
+        class="fas fa-arrow-left"></i> Back to Portfolio</a>
+  </nav>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-theater-masks"></i> Humor & Wit</div>
+      <h1>Unconditional <span>Jokes</span></h1>
+      <p>Because life is too short to be serious all the time. A good laugh is the shortest distance between two people
+        — or two developers.</p>
+    </div>
+  </section>
+  <div class="container">
+    <div class="section">
+      <h2><i class="fas fa-code"></i> Developer Humour</h2>
+      <div class="joke-card"><span class="joke-tag tag-dev">Dev</span>
+        <div class="joke-q">Q: Why do programmers prefer dark mode?</div>
+        <div class="joke-a">A: Because light attracts bugs! 🐛</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-dev">Dev</span>
+        <div class="joke-q">Q: How many programmers does it take to change a light bulb?</div>
+        <div class="joke-a">A: None — that's a hardware problem.</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-dev">Dev</span>
+        <div class="code-joke"><span class="comment"># A typical developer's day:</span>
+          <span class="keyword">while</span> coffee.empty():
+          coffee.refill()
+          <span class="keyword">while</span> bug <span class="keyword">in</span> code:
+          <span class="keyword">print</span>(<span class="string">"It worked on my machine..."</span>)
+          coffee.refill()
+          blame = <span class="string">"legacy code"</span>
+          <span class="out"># Output: Still debugging. Send help.</span>
+        </div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-dev">Dev</span>
+        <div class="joke-q">Q: What's a developer's favourite hangout place?</div>
+        <div class="joke-a">A: Foo Bar. 🍺</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-dev">Dev</span>
+        <div class="joke-q">Q: A SQL query walks into a bar, walks up to two tables and asks...</div>
+        <div class="joke-a">A: "Can I JOIN you?"</div>
+      </div>
+    </div>
+    <div class="section">
+      <h2><i class="fas fa-torii-gate"></i> Japan Life Humour</h2>
+      <div class="joke-card"><span class="joke-tag tag-japan">Japan</span>
+        <div class="joke-q">Why don't foreigners in Japan ever get lost?</div>
+        <div class="joke-a">Because even when they're lost, the konbini is always 50 meters away.</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-japan">Japan</span>
+        <div class="joke-q">I tried to speak Japanese at the restaurant today.</div>
+        <div class="joke-a">The waiter smiled, nodded enthusiastically, and brought me something completely different.
+          10/10 experience.</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-japan">Japan</span>
+        <div class="joke-q">My Japanese is getting better. I can now apologise for things I didn't do in three different
+          levels of formality.</div>
+        <div class="joke-a">申し訳ございません. (Mōshiwake gozaimasen.) 🙇</div>
+      </div>
+    </div>
+    <div class="section">
+      <h2><i class="fas fa-lightbulb"></i> Tech & Life Wisdom (with a twist)</h2>
+      <div class="joke-card"><span class="joke-tag tag-life">Life</span>
+        <div class="joke-q">Programming is like love:</div>
+        <div class="joke-a">It starts with joy and passion, then becomes complicated, then you're debugging at 3am
+          wondering where it all went wrong.</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-life">Life</span>
+        <div class="joke-q">My code doesn't have bugs.</div>
+        <div class="joke-a">It has undocumented features that surprise users and keep QA employed.</div>
+      </div>
+      <div class="joke-card"><span class="joke-tag tag-dark">Dark</span>
+        <div class="joke-q">There are only 10 types of people in the world:</div>
+        <div class="joke-a">Those who understand binary, and those who don't. 😏</div>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>Part of <a href="index.html">MTN.Digitosphere</a> — Exploring the Infinite 🌌</p>
+    <p style="margin-top:.5rem">Keep laughing · © 2026 Myo Thant Naing</p>
+  </footer>
+
+</body>
+
+</html>

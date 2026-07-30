@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "useDefineForClassFields": true,
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+
+    /* Bundler mode — Vite resolves/transpiles, tsc only type-checks (noEmit). */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    /* Incremental JS → TS migration: existing .jsx keeps resolving and is NOT
+       type-checked (checkJs:false), so the build stays green while you convert
+       files one at a time. Flip checkJs to true once everything is .tsx. */
+    "allowJs": true,
+    "checkJs": false,
+
+    /* Strictness — your requested guarantees. `any` is effectively banned via
+       noImplicitAny (part of strict); prefer `unknown` + narrowing instead. */
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedSideEffectImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "types": ["node", "vite/client"]
+  },
+  "include": ["src"]
+}

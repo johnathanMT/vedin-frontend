@@ -1,0 +1,10 @@
+node_modules/
+dist/
+*.timestamp-*.mjs
+.DS_Store
+.env
+
+# Pre-optimization 3D model intermediates — never deploy these (only the
+# optimized .glb siblings are used). Kept locally for re-optimization.
+*.preopt.glb
+*.code-search

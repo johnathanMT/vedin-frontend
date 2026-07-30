@@ -1,0 +1,9 @@
+{
+  "//": "Root config — delegates to the two project references below. App code is",
+  "//2": "type-checked by tsconfig.app.json; Vite/build tooling by tsconfig.node.json.",
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

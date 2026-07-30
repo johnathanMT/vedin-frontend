@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FE / IT Study · MTN.Digitosphere</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--c:#06b6d4}*{box-sizing:border-box;margin:0;padding:0}body{background:#07070f;color:#e2e2f0;font-family:'Inter',sans-serif;line-height:1.7;overflow-x:hidden}a{color:inherit;text-decoration:none}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:.9rem 2rem;background:rgba(7,7,15,.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.06)}
+.nav-logo{display:flex;align-items:center;gap:.6rem;font-size:.85rem;color:#fff}.nav-logo span{width:28px;height:28px;background:#06b6d4;border-radius:8px;display:grid;place-items:center;font-weight:700;font-size:.75rem}
+.back-btn{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:rgba(255,255,255,.5);padding:.5rem 1rem;border:1px solid rgba(255,255,255,.08);border-radius:10px;transition:.2s}.back-btn:hover{color:#fff;border-color:#06b6d4;background:rgba(6,182,212,.1)}
+.hero{position:relative;min-height:65vh;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;padding:6rem 2rem 4rem}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,rgba(6,182,212,.16),transparent 70%)}
+.hero-content{position:relative;z-index:2;max-width:760px}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .9rem;border-radius:999px;background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.25);font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#06b6d4;margin-bottom:1.5rem}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;color:#fff;line-height:1.1;margin-bottom:1rem}.hero h1 span{background:linear-gradient(135deg,#06b6d4,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:rgba(255,255,255,.55);font-size:1rem;max-width:560px;margin:0 auto}
+.container{max-width:900px;margin:0 auto;padding:0 1.5rem 6rem}
+.section{margin-bottom:3.5rem;opacity:0;transform:translateY(20px);transition:.6s ease}.section.visible{opacity:1;transform:translateY(0)}
+.section h2{font-size:1.5rem;font-weight:700;color:#fff;margin-bottom:1.25rem;display:flex;align-items:center;gap:.6rem}.section h2 i{color:#06b6d4}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:1rem}
+.card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:1.4rem;transition:.3s}.card:hover{border-color:rgba(6,182,212,.35);transform:translateY(-3px);box-shadow:0 12px 30px rgba(6,182,212,.08)}
+.card .icon{width:40px;height:40px;border-radius:10px;background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.2);display:grid;place-items:center;color:#06b6d4;margin-bottom:.9rem}
+.card h3{font-size:.92rem;font-weight:700;color:#fff;margin-bottom:.4rem}.card p{font-size:.8rem;color:rgba(255,255,255,.45);line-height:1.6}
+.code-block{background:#0d1117;border:1px solid rgba(6,182,212,.2);border-radius:14px;padding:1.25rem 1.5rem;font-family:'Fira Code',monospace;font-size:.82rem;color:#a5d6a7;margin:1rem 0;overflow-x:auto}
+.code-block .comment{color:#546e7a}.code-block .keyword{color:#06b6d4}.code-block .string{color:#f97316}
+.fact-box{background:rgba(6,182,212,.05);border:1px solid rgba(6,182,212,.15);border-radius:16px;padding:1.5rem 1.75rem;margin:1rem 0}
+.fact-box p{font-size:.88rem;color:rgba(255,255,255,.65);line-height:1.8}.fact-box strong{color:#06b6d4}
+.hero-img{width:100%;height:260px;object-fit:cover;border-radius:20px;margin:1.5rem 0;border:1px solid rgba(255,255,255,.06)}
+footer{text-align:center;padding:2rem;border-top:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.25);font-size:.78rem}footer a{color:#06b6d4}
+
+/* — CSP-safe reveal fallback — the scroll animation now lives in /reveal.js
+   (external, allowed by script-src 'self'). reveal.js adds .js-reveal to <html>
+   BEFORE paint; if it is ever blocked, sections stay fully visible instead of
+   being trapped at opacity:0 (the bug that hid this page's body). — */
+.section{opacity:1;transform:none}
+.js-reveal .section{opacity:0;transform:translateY(20px);transition:.6s ease}
+.js-reveal .section.visible{opacity:1;transform:none}
+</style>
+  <script src="/reveal.js"></script>
+</head>
+<body>
+<nav><div class="nav-logo"><span>M</span>MTN.Digitosphere</div><a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a></nav>
+<section class="hero"><div class="hero-bg"></div><div class="hero-content">
+  <div class="hero-badge"><i class="fas fa-laptop-code"></i> Engineering & IT</div>
+  <h1>FE / <span>IT Study</span></h1>
+  <p>Fundamental Engineering, algorithms, data structures, system architecture, and the theoretical underpinnings of computer science.</p>
+</div></section>
+<div class="container">
+  <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=900&q=85" alt="Coding" class="hero-img section">
+  <div class="section">
+    <h2><i class="fas fa-book"></i> What is the FE Exam?</h2>
+    <p style="color:rgba(255,255,255,.55);font-size:.9rem;margin-bottom:1rem">The <strong style="color:#06b6d4">Fundamental Information Technology Engineer (FE)</strong> exam is Japan's national IT qualification, testing core knowledge in algorithms, computer architecture, databases, networks, security, management, and system design. It is a benchmark for software engineers in Japan and a goal I am actively working toward.</p>
+    <div class="fact-box"><p>The FE exam covers <strong>10 major domains</strong> — from binary arithmetic and Boolean logic to database normalisation and OSI network layers. Passing it demonstrates a solid foundation equivalent to a CS degree's core subjects.</p></div>
+  </div>
+  <div class="section">
+    <h2><i class="fas fa-sitemap"></i> Topics I'm Mastering</h2>
+    <div class="card-grid">
+      <div class="card"><div class="icon"><i class="fas fa-project-diagram"></i></div><h3>Algorithms & Data Structures</h3><p>Sorting, searching, trees, graphs, dynamic programming, Big-O complexity analysis.</p></div>
+      <div class="card"><div class="icon"><i class="fas fa-server"></i></div><h3>Computer Architecture</h3><p>CPU pipeline, cache hierarchy, memory management, instruction sets, RISC vs CISC.</p></div>
+      <div class="card"><div class="icon"><i class="fas fa-database"></i></div><h3>Databases</h3><p>Relational theory, SQL, normalisation (1NF–BCNF), transactions, ACID properties.</p></div>
+      <div class="card"><div class="icon"><i class="fas fa-network-wired"></i></div><h3>Networking</h3><p>OSI/TCP-IP model, routing protocols, TCP handshake, DNS, HTTP/HTTPS internals.</p></div>
+      <div class="card"><div class="icon"><i class="fas fa-shield-alt"></i></div><h3>Security</h3><p>Cryptography, PKI, common attack vectors, secure development lifecycle.</p></div>
+      <div class="card"><div class="icon"><i class="fas fa-code-branch"></i></div><h3>Software Engineering</h3><p>SDLC models, design patterns, UML, agile methodologies, testing strategies.</p></div>
+    </div>
+  </div>
+  <div class="section">
+    <h2><i class="fas fa-code"></i> A Favourite Algorithm</h2>
+    <div class="code-block">
+<span class="comment"># Binary Search — O(log n)</span>
+<span class="keyword">def</span> binary_search(arr, target):
+    left, right = 0, len(arr) - 1
+    <span class="keyword">while</span> left &lt;= right:
+        mid = (left + right) // 2
+        <span class="keyword">if</span> arr[mid] == target:
+            <span class="keyword">return</span> mid
+        <span class="keyword">elif</span> arr[mid] &lt; target:
+            left = mid + 1
+        <span class="keyword">else</span>:
+            right = mid - 1
+    <span class="keyword">return</span> -1
+    </div>
+  </div>
+</div>
+<footer><p>Part of <a href="index.html">MTN.Digitosphere</a> — Exploring the Infinite 🌌</p><p style="margin-top:.5rem">© 2026 Myo Thant Naing</p></footer>
+
+</body></html>

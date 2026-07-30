@@ -1,0 +1,2341 @@
+/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 1rem 5%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+}
+
+.nav-links li a {
+    color: white;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    transition: 0.3s;
+}
+
+.nav-links li a:hover {
+    color: #3498db;
+}
+
+/* Language Switcher */
+.lang-switch {
+    display: flex;
+    gap: 5px;
+    margin-left: 20px;
+}
+
+.lang-switch button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 5px 8px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+.lang-switch button:hover {
+    background: #3498db;
+    border-color: #3498db;
+}
+
+.hamburger {
+    display: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+
+/* --- Navigation Bar Adjustments (Updated) Start --- */
+
+/* ၁။ ညာဘက်ထောင့်က အုပ်စု (Flags + Hamburger) */
+.nav-right-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* အလံတွေနဲ့ Menu ခလုတ်ကြား ခွာမယ် */
+}
+
+/* ၂။ Language Switcher ဒီဇိုင်း */
+.lang-switch {
+    display: flex;
+    gap: 5px;
+}
+
+.lang-switch button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    padding: 2px;
+}
+
+.lang-switch button:hover {
+    transform: scale(1.2);
+}
+
+/* ၃။ Mobile Phone အတွက် သီးသန့် ပြင်ဆင်ချက် */
+@media (max-width: 768px) {
+
+    /* Menu ပိတ်ထားချိန်မှာလည်း အလံတွေကို ပေါ်နေစေချင်လို့ */
+    .lang-switch {
+        display: flex !important;
+        /* အမြဲတမ်း ပေါ်နေမယ် */
+    }
+
+    /* အလံလေးတွေ အရမ်းများနေရင် ဖုန်းမှာ နေရာကျပ်နိုင်လို့ နည်းနည်းသေးမယ် */
+    .lang-switch button {
+        font-size: 1.1rem;
+        padding: 1px;
+    }
+
+    .nav-right-group {
+        gap: 10px;
+    }
+}
+
+
+/* --- Navigation Bar Adjustments (Updated) END --- */
+
+/* Mobile Menu */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: #2c3e50;
+        text-align: center;
+        padding-bottom: 20px;
+    }
+
+    .nav-links.active {
+        display: none;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .lang-switch {
+        display: flex;
+        /* Mobile မှာ နေရာကျပ်လို့ ခဏဖျောက်ထားနိုင် (သို့) အောက်မှာပြနိုင် */
+    }
+}
+
+/* Hero Section */
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1542051841857-5f90071e7989?q=80&w=1920&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+}
+
+.accent-text {
+    color: #3498db;
+}
+
+.sub-text {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #ddd;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 25px;
+    background: #3498db;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background: #2980b9;
+}
+
+/* Sections General */
+.container {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.bg-light {
+    background-color: #ffffff;
+}
+
+.section-title {
+    margin-bottom: 40px;
+    font-size: 2rem;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* About & Skills */
+
+/* --- New About Me Profile Styles --- */
+
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    /* အရာအားလုံးကို အလယ်ပို့မယ် */
+}
+
+/* Profile ပုံ ဒီဇိုင်း */
+.profile-img-wrapper {
+    margin-bottom: 20px;
+}
+
+.profile-pic {
+    width: 150px;
+    /* ပုံအကြီးအသေး ဒီမှာပြင်ပါ */
+    height: 150px;
+    border-radius: 50%;
+    /* လုံးဝန်းသော အဝိုင်းပုံဖြစ်စေသည် */
+    object-fit: cover;
+    /* ပုံမပိန်မရှည်ဖြစ်အောင် ထိန်းညှိသည် */
+    border: 4px solid #3498db;
+    /* ပုံဘေးက အပြာရောင်ဘောင် */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    /* အရိပ်ထည့်သည် */
+    transition: transform 0.3s;
+}
+
+.profile-pic:hover {
+    transform: scale(2.05);
+    /* Mouse တင်ရင် ပုံနည်းနည်းကြီးလာမယ် */
+}
+
+/* နာမည်စာလုံး */
+.my-name {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Bio စာသား */
+.about-text p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* --- Professional Skills Styling (Core Components)--- */
+
+.skills-container {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    /* အပေါ်ပိုင်းနဲ့ မျဉ်းလေးခြားမယ် */
+}
+
+.skills-title {
+    font-size: 0.9rem;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.skills-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    /* ဖုန်းနဲ့ကြည့်ရင် အောက်တစ်ကြောင်းဆင်းမယ် */
+    gap: 15px;
+    /* တစ်ခုနဲ့တစ်ခုကြား အကွာအဝေး */
+}
+
+.skill-tag {
+    background: white;
+    border: 1px solid #e0e0e0;
+    padding: 10px 20px;
+    border-radius: 50px;
+    /* ထောင့်ကို လုံးဝန်းစေသည် */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    color: #555;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    /* အရိပ်ပါးပါးလေး */
+    transition: all 0.3s ease;
+    cursor: default;
+}
+
+/* Mouse တင်ရင် ဖြစ်မည့် Effect */
+.skill-tag:hover {
+    transform: translateY(-3px);
+    /* အပေါ် နည်းနည်းတက် */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    /* အရိပ်ထူမယ် */
+    border-color: #3498db;
+    /* ဘောင်အရောင်ပြောင်းမယ် */
+}
+
+/* Icons အရောင်များ (ခွဲခြားထားခြင်း) */
+.skill-icon {
+    font-size: 1.2rem;
+}
+
+.py {
+    color: #3776AB;
+}
+
+/* Python Blue */
+.ai {
+    color: #f1c40f;
+}
+
+/* AI Gold */
+.html {
+    color: #E34F26;
+}
+
+/* HTML Orange */
+.js {
+    color: #F7DF1E;
+}
+
+/* JS Yellow */
+.lang {
+    color: #e74c3c;
+}
+
+/* Language Red */
+.kaigo {
+    color: #2ecc71;
+}
+
+
+/* --- New Skills Icon Colors --- */
+/* English - အပြာနုရောင် */
+.skill-icon.eng {
+    color: #4fc3f7;
+}
+
+/* UI/UX - ပန်းရောင်/ခရမ်းရောင် */
+.skill-icon.uiux {
+    color: #e1bee7;
+}
+
+/* IoT (M5Stack) - စိမ်းပြာရောင် */
+.skill-icon.iot {
+    color: #00bcd4;
+}
+
+/* C# - ခရမ်းရင့်ရောင် (Official C# color) */
+.skill-icon.csharp {
+    color: #9b59b6;
+}
+
+/* DDOOCP - လိမ္မော်ရောင် */
+.skill-icon.ddoocp {
+    color: #ff9800;
+}
+
+/* OOSAD - အနီရောင်ဖျော့ဖျော့ (Diagrams တွေနဲ့ လိုက်ဖက်ရန်) */
+.skill-icon.oosad {
+    color: #ff5252;
+}
+
+/* Software Engineering - မီးခိုးပြာရောင် */
+.skill-icon.se {
+    color: #607d8b;
+}
+
+/* AMCC - ရွှေဝါရောင် / အဝါရင့် */
+.skill-icon.amcc {
+    color: #ffc107;
+}
+
+
+/* Care Green */
+
+
+
+/* Slogan ဒီဇိုင်း */
+.mini-slogan {
+    background-color: #f0f8ff;
+    /* အပြာနုရောင် နောက်ခံ */
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 50px;
+    color: maroon;
+    font-style: italic;
+    font-weight: bold;
+    margin-bottom: 30px;
+    border: 1px dashed darkgrey;
+}
+
+.mini-slogan i {
+    font-size: 0.8rem;
+    margin: 0 5px;
+    color: #aaa;
+}
+
+
+/* --- Quote / Poetry Section Styling Start--- */
+
+/* --- AI Programmer Quote Theme --- */
+
+.tech-quote-container {
+    max-width: 900px;
+    margin: 60px auto;
+    background: #1e1e1e;
+    /* VS Code နောက်ခံအရောင် */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5),
+        0 0 20px rgba(0, 255, 242, 0.1);
+    /* Cyan အရောင် Glow */
+    border: 1px solid #333;
+    font-family: 'Fira Code', monospace;
+    /* Coding Font */
+    overflow: hidden;
+    text-align: left;
+    /* Code မို့လို့ ဘယ်ကပ်ပါမယ် */
+}
+
+/* Terminal Header (အစက် ၃ စက်ပါတဲ့ ခေါင်းစီး) */
+.terminal-header {
+    background: #252526;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #333;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.red {
+    background: #ff5f56;
+}
+
+.yellow {
+    background: #ffbd2e;
+}
+
+.green {
+    background: #27c93f;
+}
+
+.terminal-title {
+    color: #888;
+    font-size: 0.8rem;
+    margin-left: 10px;
+    font-family: sans-serif;
+}
+
+/* Body Content */
+.terminal-body {
+    padding: 40px;
+    color: #d4d4d4;
+    position: relative;
+}
+
+/* Code Syntax Styling */
+.code-line {
+    font-size: 0.9rem;
+    color: #6a9955;
+    /* Comment Green */
+    display: block;
+    margin-bottom: 15px;
+    font-family: 'Fira Code', monospace;
+}
+
+.keyword {
+    color: #c586c0;
+}
+
+/* Purple */
+.string {
+    color: #ce9178;
+}
+
+/* Orange */
+.const {
+    color: #569cd6;
+}
+
+/* Blue */
+.var-name {
+    color: #9cdcfe;
+}
+
+/* Light Blue */
+
+/* Main Quote Text */
+.tech-quote-text {
+    font-size: 1.8rem;
+    color: #4ec9b0;
+    /* Cyan Color for AI look */
+    line-height: 1.5;
+    margin-bottom: 25px;
+    font-weight: 400;
+    text-shadow: 0 0 5px rgba(78, 201, 176, 0.3);
+}
+
+.tech-quote-author {
+    font-size: 1rem;
+    color: #d4d4d4;
+    border-left: 3px solid #c586c0;
+    padding-left: 15px;
+}
+
+/* Blinking Cursor Animation */
+.cursor {
+    display: inline-block;
+    width: 10px;
+    background: #4ec9b0;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .tech-quote-text {
+        font-size: 1.3rem;
+    }
+
+    .terminal-body {
+        padding: 25px;
+    }
+}
+
+/* AI quote End */
+
+/* Quote / Poetry Section Styling End */
+
+
+
+
+
+/* Projects Grid */
+
+/* Python Automation Start   */
+/* Projects Grid Layout */
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.project-icon {
+    font-size: 2.5rem;
+    color: #3498db;
+    margin-bottom: 15px;
+}
+
+
+/* Python Automation, Personal Studying, Personal Portfolio , Bean Boutique Start */
+/* Link Styling (အပြာရောင် မျဉ်းကြောင်း ဖျောက်ခြင်း) */
+a.card-link {
+    text-decoration: none !important;
+    /* မျဉ်းကြောင်း လုံးဝ ဖျောက်မယِ */
+    color: inherit;
+    /* စာလုံးအရောင်ကို အမည်းအတိုင်း ထားမယ် */
+    display: block;
+}
+
+/* Card Styling */
+.card {
+    background: #fdfdfd;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* Animation ညက်ညောအောင် */
+    border: 1px solid #eee;
+    height: 100%;
+    /* Card အမြင့်ညီအောင် */
+}
+
+/* Mouse တင်လိုက်ရင် Card ကြွတက်မယ့် Effect */
+a.card-link:hover .card {
+    transform: translateY(-10px);
+    /* အပေါ်ကို ကြွတက်မယ် */
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    /* အရိပ်ထွက်လာမယ် */
+    border-color: #3498db;
+    /* ဘောင်အရောင်လေး ပြောင်းမယ် */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+
+/* --- Coffee Shop Card Special Styling --- */
+/* Mouse တင်လိုက်ရင် ဘောင်နဲ့ အရိပ်ကို ကော်ဖီရောင် ပြောင်းမယ် */
+a.coffee-card-link:hover .card {
+    border-color: #6F4E37;
+    /* ကော်ဖီရောင် ဘောင် */
+    box-shadow: 0 15px 30px rgba(111, 78, 55, 0.2);
+    /* ကော်ဖီရောင် အရိပ်ဖျော့ဖျော့ */
+}
+
+/* Coffee Icon ကို ကော်ဖီရောင် ပြောင်းမယ် */
+a.coffee-card-link .project-icon {
+    color: #6F4E37;
+}
+
+
+/* --- GitHub Card Special Styling --- */
+a.github-card-link:hover .card {
+    border-color: #24292e;
+    /* GitHub Black */
+    box-shadow: 0 15px 30px rgba(36, 41, 46, 0.2);
+}
+
+a.github-card-link .project-icon {
+    color: #24292e;
+}
+
+/* --- GitHub Projects Showcase Styling --- */
+
+.github-showcase-section {
+    padding: 60px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Main Profile Button */
+.github-profile-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.github-profile-header h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.main-github-btn {
+    display: inline-block;
+    background-color: #24292e;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.main-github-btn:hover {
+    background-color: #000;
+}
+
+.main-github-btn i {
+    margin-right: 8px;
+}
+
+/* Projects Grid */
+.gh-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Individual Project Card */
+.gh-project-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.gh-project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Image & Category Container */
+.gh-img-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: #f0f0f0;
+    /* ပုံမထည့်ရသေးခင် အရောင် */
+}
+
+.gh-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Category Badge (ပုံပေါ်မှာ ကပ်နေမည့် စာသား) */
+.gh-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.cat-python {
+    background-color: #3572A5;
+}
+
+/* Python Color */
+.cat-iot {
+    background-color: #178600;
+}
+
+/* C# Color */
+.cat-web {
+    background-color: #e34c26;
+}
+
+/* HTML Color */
+
+/* Text Info */
+.gh-project-info {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.gh-project-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+.gh-project-info p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* --- GitHub Projects Showcase Styling --- */
+
+.github-showcase-section {
+    padding: 60px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+/* Main Profile Button */
+.github-profile-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.github-profile-header h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.main-github-btn {
+    display: inline-block;
+    background-color: #24292e;
+    color: #fff;
+    padding: 12px 25px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+.main-github-btn:hover {
+    background-color: #000;
+}
+
+.main-github-btn i {
+    margin-right: 8px;
+}
+
+/* Projects Grid */
+.gh-projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* Individual Project Card */
+.gh-project-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.gh-project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Image & Category Container */
+.gh-img-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background: #f0f0f0;
+    /* ပုံမထည့်ရသေးခင် အရောင် */
+}
+
+.gh-img-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Category Badge (ပုံပေါ်မှာ ကပ်နေမည့် စာသား) */
+.gh-category {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.cat-python {
+    background-color: #3572A5;
+}
+
+/* Python Color */
+.cat-iot {
+    background-color: #178600;
+}
+
+/* C# Color */
+.cat-web {
+    background-color: #e34c26;
+}
+
+/* HTML Color */
+
+/* Text Info */
+.gh-project-info {
+    padding: 20px;
+    flex-grow: 1;
+}
+
+.gh-project-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+.gh-project-info p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.5;
+}
+
+/* Python Automation, Personal Studying, Personal Portfolio , Bean Boutique End   */
+
+/* Blog Full Post */
+.blog-full-post {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.post-date {
+    color: #888;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.post-text {
+    line-height: 1.8;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    color: #444;
+}
+
+/* Photo Album Grid */
+.photo-album {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.photo-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    cursor: pointer;
+    height: 200px;
+}
+
+.photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.photo-item:hover img {
+    transform: scale(1.1);
+}
+
+.caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.85rem;
+}
+
+
+/* --- Python Page Styles Start --- */
+
+/* Hero အသေး (စာမျက်နှာခွဲများအတွက်) */
+.small-hero {
+    height: 40vh;
+    /* အမြင့်လျှော့လိုက်သည် */
+    min-height: 300px;
+}
+
+.btn-outline {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 8px 20px;
+    border: 1px solid white;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: 0.3s;
+}
+
+.btn-outline:hover {
+    background: white;
+    color: #333;
+}
+
+/* Tech Stack Icons */
+.tech-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.tech-item {
+    font-size: 1.1rem;
+    color: #555;
+    background: #eef;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Code Style Cards (VS Code Look) */
+.code-card {
+    padding: 0 !important;
+    /* မူလ padding ကို ဖျက်မည် */
+    overflow: hidden;
+    /* ထောင့်စွန်းတွေ မထွက်အောင် */
+    border: none;
+    background: white;
+}
+
+.card-header {
+    background: #e0e0e0;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+}
+
+.dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.red {
+    background-color: #ff5f56;
+}
+
+.yellow {
+    background-color: #ffbd2e;
+}
+
+.green {
+    background-color: #27c93f;
+}
+
+.filename {
+    margin-left: 10px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #555;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.tags span {
+    background: #2c3e50;
+    color: #61dafb;
+    /* React Blue color */
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-right: 5px;
+    font-family: monospace;
+}
+
+.code-link {
+    display: block;
+    margin-top: 15px;
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* --- Python Page Styles END--- */
+
+
+
+
+
+/* Personal Studying Page Start */
+/* --- Education Page Styles (EduX Theme) --- */
+
+.edu-hero {
+    background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(44, 62, 80, 0.9)), url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=1920');
+    background-size: cover;
+    background-position: center;
+    height: 45vh;
+    min-height: 350px;
+}
+
+.badge-pill {
+    background: rgba(255, 255, 255, 0.2);
+    color: #f1c40f;
+    padding: 5px 15px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    display: inline-block;
+}
+
+/* Stats Section */
+.stats-container {
+    padding: 30px 20px;
+    margin-top: -50px;
+    /* Hero ထဲကို ဝင်နေအောင် */
+    position: relative;
+    z-index: 10;
+}
+
+.stats-grid {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+}
+
+.counter {
+    font-size: 2.5rem;
+    color: #3498db;
+    margin-bottom: 5px;
+}
+
+/* Course Grid */
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.course-card {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-top: 5px solid #ccc;
+    /* Default border */
+    transition: transform 0.3s;
+}
+
+.course-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Border Colors */
+.border-blue {
+    border-top-color: #3498db;
+}
+
+.border-gold {
+    border-top-color: #f1c40f;
+}
+
+.border-green {
+    border-top-color: #2ecc71;
+}
+
+.course-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.course-tag {
+    background: #f4f4f4;
+    color: #666;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: bold;
+}
+
+.course-icon {
+    font-size: 1.5rem;
+}
+
+.blue {
+    color: #3498db;
+}
+
+.gold {
+    color: #f1c40f;
+}
+
+.green {
+    color: #2ecc71;
+}
+
+.school-name {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* Module List */
+.module-list {
+    list-style: none;
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.module-list li {
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+    color: #444;
+}
+
+.text-green {
+    color: #2ecc71;
+    margin-right: 8px;
+}
+
+.text-yellow {
+    color: #f1c40f;
+    margin-right: 8px;
+}
+
+.text-gray {
+    color: #ccc;
+    margin-right: 8px;
+}
+
+/* Progress Bar */
+.progress-wrapper {
+    margin-top: auto;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.progress-bar-bg {
+    background: #eee;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+}
+
+.blue-fill {
+    background: #3498db;
+}
+
+.gold-fill {
+    background: #f1c40f;
+}
+
+.green-fill {
+    background: #2ecc71;
+}
+
+/* Personal Studying Page END */
+
+
+
+
+/* --- Portfolio Page Styles Start --- */
+/* --- Modern Portfolio Styles --- */
+
+.portfolio-hero {
+    background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1920');
+    background-size: cover;
+    background-position: center;
+    height: 40vh;
+    min-height: 300px;
+    color: white;
+}
+
+/* Modern Timeline Container */
+.modern-timeline {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timeline-card {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Left Side (Image + Line) */
+.card-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 80px;
+}
+
+.company-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    /* အဝိုင်းပုံဖြစ်စေသည် */
+    object-fit: cover;
+    border: 3px solid white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    background: white;
+    z-index: 2;
+}
+
+.timeline-line {
+    width: 3px;
+    background: #e0e0e0;
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+/* Timeline နောက်ဆုံးအကွက်မှာ မျဉ်းကြောင်း မပေါ်စေချင်ရင် */
+.timeline-card:last-child .timeline-line {
+    display: none;
+}
+
+/* Right Side (Content) */
+.card-right {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    flex-grow: 1;
+    position: relative;
+    border-left: 5px solid #3498db;
+    transition: transform 0.3s ease;
+}
+
+.card-right:hover {
+    transform: translateY(-5px);
+}
+
+.date-badge {
+    background: #3498db;
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.card-right h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+}
+
+.company-name {
+    margin: 5px 0 15px 0;
+    color: #7f8c8d;
+    font-weight: normal;
+    font-size: 1rem;
+}
+
+/* Education Modern Cards */
+.edu-grid-modern {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.edu-card-modern {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s;
+}
+
+.edu-card-modern:hover {
+    transform: scale(1.02);
+}
+
+.edu-img-wrapper {
+    height: 140px;
+    overflow: hidden;
+}
+
+.edu-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.edu-content {
+    padding: 25px;
+    text-align: center;
+}
+
+.edu-content h3 {
+    color: #2c3e50;
+    margin-bottom: 5px;
+}
+
+.edu-year {
+    display: block;
+    margin-top: 15px;
+    color: #f1c40f;
+    font-weight: bold;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .timeline-card {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .card-left {
+        flex-direction: row;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .timeline-line {
+        display: none;
+        /* ဖုန်းမှာဆို မျဉ်းကြောင်း ဖျောက်မယ် */
+    }
+}
+
+
+
+
+/* .portfolio-hero {
+
+/* Timeline Container */
+.timeline {
+    border-left: 3px solid #e0e0e0;
+    margin-left: 20px;
+    padding-bottom: 20px;
+}
+
+.timeline-item {
+    padding-left: 40px;
+    position: relative;
+    margin-bottom: 50px;
+}
+
+/* Timeline Dot */
+.timeline-dot {
+    width: 20px;
+    height: 20px;
+    background: #bbb;
+    border-radius: 50%;
+    position: absolute;
+    left: -11px;
+    top: 5px;
+    border: 4px solid white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.timeline-dot.current {
+    background: #3498db;
+    /* Current Job gets Blue Dot */
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+}
+
+.timeline-date {
+    font-size: 0.9rem;
+    color: #888;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.timeline-content {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    border-left: 5px solid #3498db;
+    /* Blue accent line */
+    transition: transform 0.3s;
+}
+
+.timeline-content:hover {
+    transform: translateX(10px);
+}
+
+.job-header h3 {
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+.company {
+    display: block;
+    color: #3498db;
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+}
+
+.job-tags span {
+    display: inline-block;
+    background: #f1f2f6;
+    color: #555;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+
+
+
+/* Education Cards */
+.edu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.edu-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border-bottom: 4px solid #f1c40f;
+    /* Gold accent */
+}
+
+.edu-icon {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.edu-year {
+    color: #888;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Portfolio Page Styles END */
+
+
+
+
+
+/* ---Monthly Digital Gallery Sections Start--- */
+
+/* --- SEASONAL LENS GALLERY STYLES --- */
+
+.lens-section {
+    background-color: #0f0f0f;
+    /* Deep Dark Background */
+    color: #e0e0e0;
+    padding: 60px 0;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.lens-header {
+    margin-bottom: 40px;
+}
+
+.lens-title {
+    font-size: 2rem;
+    color: #f1c40f;
+    /* Gold for Luxury feel */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.lens-subtitle {
+    color: #888;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
+/* 1. Carousel Styling */
+.lens-carousel {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 50% 20px 50%;
+    /* Center the first item */
+    scrollbar-width: none;
+    /* Hide scrollbar Firefox */
+    -ms-overflow-style: none;
+    /* Hide scrollbar IE */
+    align-items: center;
+    cursor: grab;
+    /* လက်ပုံစံ ပေါ်မယ် */
+    user-select: none;
+    /* ဆွဲတဲ့အခါ ပုံတွေ Highlight ဖြစ်မသွားအောင် တားမယ် */
+}
+
+.lens-carousel::-webkit-scrollbar {
+    display: none;
+    /* Hide scrollbar Chrome */
+}
+
+
+/* (၂) ဖိဆွဲနေချိန်မှာ လက်ဆုပ်ထားတဲ့ပုံ ပေါ်မယ် */
+.lens-carousel.active {
+    cursor: grabbing;
+}
+
+
+
+.lens-card {
+    min-width: 280px;
+    height: 380px;
+    background: #291111;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, opacity 0.3s;
+    opacity: 0.5;
+    /* ဘေးကပုံတွေကို မှိန်ထားမယ် */
+    transform: scale(0.9);
+    /* ဘေးကပုံတွေကို သေးထားမယ် */
+    border: 1px solid #333;
+}
+
+/* အလယ်ရောက်နေတဲ့ပုံ (Active) */
+.lens-card.active {
+    opacity: 1;
+    transform: scale(1.1);
+    /* ကြီးလာမယ် */
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
+    /* ရွှေရောင် Glow */
+    border-color: #f1c40f;
+    z-index: 10;
+}
+
+.lens-card img {
+    width: 100%;
+    height: 75%;
+    object-fit: cover;
+}
+
+.lens-info {
+    padding: 15px;
+    text-align: center;
+}
+
+.lens-info h3 {
+    font-size: 1.2rem;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+.lens-info .zodiac {
+    color: #f1c40f;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* 2. Dial Control Styling (ကင်မရာ ဘောင်ကွပ်) */
+.dial-container {
+    margin-top: 40px;
+    height: 60px;
+    position: relative;
+    background: linear-gradient(to right, #0f0f0f, transparent 20%, transparent 80%, #0f0f0f);
+    cursor: grab;
+    overflow: hidden;
+}
+
+.dial-container:active {
+    cursor: grabbing;
+}
+
+/* အလယ်က အနီရောင် ညွှန်တံ */
+.dial-marker {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: #e74c3c;
+    /* Red Marker */
+    transform: translateX(-50%);
+    z-index: 5;
+    box-shadow: 0 0 5px #e74c3c;
+}
+
+/* မျဉ်းကြောင်းများပါသော လမ်းကြောင်း */
+.dial-track {
+    display: flex;
+    align-items: center;
+    padding: 0 50%;
+    /* အလယ်ကစမယ် */
+    height: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.dial-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* မျဉ်းကြောင်းလေးများ (Ticks) */
+.tick {
+    width: 1px;
+    background: #555;
+    margin: 0 10px;
+    /* မျဉ်းကြား အကွာအဝေး */
+    height: 20px;
+    flex-shrink: 0;
+    transition: height 0.2s, background 0.2s;
+}
+
+/* ၅ ခုမြောက်တိုင်း မျဉ်းအရှည် */
+.tick.major {
+    height: 40px;
+    background: #bbb;
+    width: 2px;
+}
+
+.tick:hover {
+    background: #fff;
+}
+
+
+/* Click and Drag Cursor Styles */
+
+/* ပုံမှန်အချိန်မှာ လက်ဝါးပုံ */
+.dial-container {
+    cursor: grab;
+}
+
+/* Mouse နဲ့ ဖိဆွဲနေတဲ့အချိန် (JS က active class ထည့်ပေးလိုက်ရင်) */
+.dial-track.active {
+    cursor: grabbing;
+    cursor: -webkit-grabbing;
+}
+
+/* ---Monthly Digital Gallery Sections END --- */
+
+
+
+
+/* --- Project Switcher Navigation Start --- */
+.project-nav-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: #f8f9fa;
+    /* နောက်ခံ အဖြူရောင်ဖျော့ */
+    border-bottom: 1px solid #e0e0e0;
+    flex-wrap: wrap;
+    /* ဖုန်းနဲ့ကြည့်ရင် အတန်းခွဲဆင်းအောင် */
+}
+
+.nav-label {
+    font-weight: bold;
+    color: #555;
+    margin-right: 10px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.nav-pill {
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 50px;
+    /* ဘဲဥပုံ ဖြစ်စေသည် */
+    background: white;
+    color: #555;
+    border: 1px solid #ccc;
+    font-size: 0.9rem;
+    transition: 0.3s all ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-pill:hover {
+    background: #3498db;
+    color: white;
+    border-color: #3498db;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* လက်ရှိရောက်နေတဲ့ Page ခလုတ်ကို အရောင်ရင့်ထားမည် */
+.nav-pill.active {
+    background: #2c3e50;
+    color: white;
+    border-color: #2c3e50;
+    cursor: default;
+    /* နှိပ်လို့မရအောင် လုပ်ထားမည် */
+    pointer-events: none;
+}
+
+/*  Project Switcher Navigation END */
+
+
+
+/* Travel Diary Section Start */
+/* --- PREMIUM DIARY (DEEP RED THEME) --- */
+
+.diary-section {
+    padding: 80px 20px;
+    background-color: #0a0203;
+    /* Very Dark Background */
+    color: white;
+}
+
+.diary-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.diary-title {
+    font-size: 2.5rem;
+    color: #a81d28;
+    /* Bright Red Accent */
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+/* Bento Grid Layout */
+.bento-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    /* 2 columns: Left wide, Right narrow */
+    grid-template-rows: 250px 250px 250px;
+    /* 2 rows */
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+/* Card General Styles */
+.bento-card {
+    border-radius: 24px;
+    /* Apple-style rounding */
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #2b0505;
+    /* Deep Red Card BG */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.bento-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 15px 40px rgba(168, 29, 40, 0.3);
+    /* Red Glow */
+}
+
+/*  Kyoto Card - Large Cardtakes full height of left column */
+.large-card {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+    /* Spans 2 rows */
+}
+
+/* Osaka & Solitude (ညာဘက်၊ တစ်ကွက်စီယူမယ်) - မူလအတိုင်း */
+.medium-card {
+    min-height: auto;
+    /* ဘာမှပြင်စရာမလို */
+}
+
+/* Kaigo Card (အောက်ဆုံးမှာ အပြည့်ယူမည့် class အသစ်) */
+.wide-card {
+    grid-column: 1 / -1;
+    /* ဘယ်ကနေ ညာအဆုံးထိ ယူမယ် */
+
+    grid-row: 3 / 4;
+    /* ၃ တန်းမြောက်မှာ နေမယ် */
+
+}
+
+
+/* Background Image Handling */
+.card-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.5s ease;
+    opacity: 0.6;
+    /* ဓာတ်ပုံကို မှိုင်းထားမည် */
+    z-index: 1;
+    /* 🔥 ဒီစာကြောင်းလေး အသစ်ထည့်ပါ (ပုံကို စာသားတွေရဲ့အောက် ပို့ရန်) 🔥 */
+}
+
+/* Darken image */
+
+
+.bento-card:hover .card-bg {
+    transform: scale(1.1);
+    /* Zoom effect */
+    opacity: 0.8;
+}
+
+/* Content Overlay */
+.card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    padding: 30px;
+    z-index: 2;
+    width: 100%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+}
+
+.diary-date {
+    font-size: 0.8rem;
+    color: #ff6b6b;
+    /* Light Red */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.bento-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    line-height: 1.2;
+}
+
+.bento-card p {
+    font-size: 0.95rem;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+/* Specific Style for Text-Only Card */
+.text-only {
+    background: linear-gradient(135deg, #520d13, #2b0505);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-only .card-content {
+    position: relative;
+    background: none;
+    text-align: center;
+}
+
+.mini-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+
+
+/* --- MODAL (POPUP) STYLES --- */
+.article-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    /* Apple Glass Effect */
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.article-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.article-container {
+    background: #1a1a1a;
+    width: 90%;
+    max-width: 800px;
+    height: 90vh;
+    border-radius: 20px;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    transform: translateY(50px);
+    transition: transform 0.3s ease;
+}
+
+.article-overlay.active .article-container {
+    transform: translateY(0);
+}
+
+.close-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.article-header-img {
+    width: 100%;
+    height: 350px;
+    background-size: cover;
+    background-position: center;
+}
+
+.article-body {
+    padding: 40px;
+    color: #eee;
+}
+
+.article-title {
+    font-size: 2.5rem;
+    color: #a81d28;
+    margin: 10px 0 30px 0;
+}
+
+.article-content p {
+    margin-bottom: 20px;
+    line-height: 1.8;
+    color: #ccc;
+    font-size: 1.1rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .bento-grid {
+        grid-template-columns: 1fr;
+        /* တစ်တိုင်တည်း */
+        grid-template-rows: auto;
+        /* အမြင့် Auto */
+    }
+
+    .large-card {
+        grid-column: auto;
+        height: 300px;
+    }
+
+    .medium-card {
+        height: 250px;
+    }
+}
+
+
+/* --- Article Modal Gallery Styles Start in Travel Diary Section --- */
+
+.article-gallery {
+    display: grid;
+    /* ဖုန်းမှာ ၂ ပုံ၊ ကွန်ပျူတာမှာ ၃ ပုံစီ ပြမယ် */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    /* ပုံကြား အကွာအဝေး */
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.gallery-img {
+    width: 100%;
+    height: 150px;
+    /* ပုံအမြင့် ညီတူညီမျှ */
+    object-fit: cover;
+    /* ပုံမပိန်မရှည်ဖြစ်အောင် */
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    border: 2px solid #333;
+}
+
+.gallery-img:hover {
+    transform: scale(1.05);
+    /* Mouse တင်ရင် ပုံနည်းနည်းကြီးလာမယ် */
+    border-color: #a81d28;
+    /* ဘောင်အနီရောင် ပြောင်းမယ် */
+}
+
+/* ဓာတ်ပုံခေါင်းစဉ် */
+.gallery-title {
+    font-size: 1.5rem;
+    color: #a81d28;
+    margin-top: 40px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+}
+
+/* --- Article Modal Gallery Styles End --- */
+
+/*  Travel Diary Section END */
+
+
+
+
+
+/* Hobby - Master of Jack of All Trades Section Start */
+
+/* --- POLYMATH / BLOG SECTION STYLES --- */
+
+.polymath-section {
+    /* Dark Green to Black Gradient Background */
+    background: linear-gradient(180deg, #05140a 0%, #000000 100%);
+    padding: 80px 20px;
+    color: #ecf0f1;
+    text-align: center;
+    border-top: 1px solid #1a3c25;
+    /* Subtle Green Border Top */
+}
+
+/* Header Styles */
+.polymath-header {
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+}
+
+.polymath-subtitle {
+    color: #2ecc71;
+    /* Bright Green Accent */
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.polymath-title {
+    font-size: 2.5rem;
+    color: #bdc3c7;
+    /* Silver */
+    margin-bottom: 25px;
+    font-family: 'Playfair Display', serif;
+    /* Or your main font */
+}
+
+.polymath-desc {
+    color: #7f8c8d;
+    font-size: 1rem;
+    line-height: 1.8;
+    font-style: italic;
+}
+
+.highlight-text {
+    color: #27ae60;
+    font-weight: bold;
+}
+
+/* Grid Layout (4 Columns like the image) */
+.polymath-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Card Styles (Xiaomi / Leica Style) */
+.poly-card {
+    background: rgba(20, 25, 22, 0.6);
+    /* Dark Glassy Green-Grey */
+    border: 1px solid #2c3e50;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: left;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 180px;
+}
+
+/* Icon Styles */
+.poly-icon {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.silver {
+    color: #bdc3c7;
+}
+
+/* Silver Icon */
+.green {
+    color: #2ecc71;
+}
+
+/* Green Icon */
+
+/* Text Styles */
+.poly-card h3 {
+    color: #ecf0f1;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.poly-card p {
+    color: #95a5a6;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+/* Hover Effects (Professional Glow) */
+.poly-card:hover {
+    transform: translateY(-5px);
+    background: #0f2b1d;
+    /* Slightly lighter dark green on hover */
+    border-color: #27ae60;
+    box-shadow: 0 10px 30px rgba(46, 204, 113, 0.15);
+    /* Green Glow */
+}
+
+.poly-card:hover h3 {
+    color: #2ecc71;
+}
+
+.poly-card:hover .silver {
+    color: #fff;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .polymath-grid {
+        grid-template-columns: 1fr;
+        /* ဖုန်းမှာ တစ်တိုင်ပဲ ပြမယ် */
+    }
+
+    .polymath-title {
+        font-size: 2rem;
+    }
+}
+
+/* Hobby - Master of Jack of All Trades Section End */
+
+
+/* Snow Effect  */
+#tsparticles {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    /* အရေးကြီးဆုံးပါ (နောက်ခံမှာထားရန်) */
+    pointer-events: none;
+    /* Mouse နှိပ်လို့ရအောင် ကာမထားဘူး */
+}
+
+
+/* Footer */
+footer {
+    background: #222;
+    color: white;
+    text-align: center;
+    padding: 30px 20px;
+    margin-top: 50px;
+}
+
+.social-icons a {
+    color: white;
+    margin: 0 10px;
+    font-size: 1.3rem;
+    transition: 0.3s;
+}
+
+.social-icons a:hover {
+    color: #3498db;
+}

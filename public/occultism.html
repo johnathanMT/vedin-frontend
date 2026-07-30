@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Occultism · MTN.Digitosphere</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --c: #8b5cf6
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: #07070f;
+      color: #e2e2f0;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 2rem;
+      background: rgba(7, 7, 15, .85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-size: .85rem;
+      color: #fff
+    }
+
+    .nav-logo span {
+      width: 28px;
+      height: 28px;
+      background: #8b5cf6;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: .75rem
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .5);
+      padding: .5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 10px;
+      transition: .2s
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: #8b5cf6;
+      background: rgba(139, 92, 246, .1)
+    }
+
+    .hero {
+      position: relative;
+      min-height: 65vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 6rem 2rem 4rem
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(139, 92, 246, .2), rgba(236, 72, 153, .08), transparent 70%)
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .35rem .9rem;
+      border-radius: 999px;
+      background: rgba(139, 92, 246, .12);
+      border: 1px solid rgba(139, 92, 246, .25);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 1.5rem
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 3.8rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1rem
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, .55);
+      font-size: 1rem;
+      max-width: 560px;
+      margin: 0 auto
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 6rem
+    }
+
+    .section {
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: .6s ease
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem
+    }
+
+    .section h2 i {
+      color: #8b5cf6
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 16px;
+      padding: 1.4rem;
+      transition: .3s
+    }
+
+    .card:hover {
+      border-color: rgba(139, 92, 246, .4);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(139, 92, 246, .1)
+    }
+
+    .card .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: rgba(139, 92, 246, .12);
+      border: 1px solid rgba(139, 92, 246, .2);
+      display: grid;
+      place-items: center;
+      color: #a78bfa;
+      margin-bottom: .9rem
+    }
+
+    .card h3 {
+      font-size: .92rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .4rem
+    }
+
+    .card p {
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .45);
+      line-height: 1.6
+    }
+
+    .mystery-box {
+      background: rgba(139, 92, 246, .06);
+      border: 1px solid rgba(139, 92, 246, .2);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      margin: 1rem 0;
+      text-align: center
+    }
+
+    .mystery-box .symbol {
+      font-size: 3rem;
+      margin-bottom: .75rem;
+      display: block
+    }
+
+    .mystery-box h3 {
+      color: #a78bfa;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: .5rem
+    }
+
+    .mystery-box p {
+      font-size: .83rem;
+      color: rgba(255, 255, 255, .5)
+    }
+
+    .symbols-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 1rem
+    }
+
+    .sym {
+      padding: .5rem 1rem;
+      border-radius: 12px;
+      background: rgba(139, 92, 246, .08);
+      border: 1px solid rgba(139, 92, 246, .15);
+      font-size: 1.5rem;
+      cursor: default;
+      transition: .2s
+    }
+
+    .sym:hover {
+      background: rgba(139, 92, 246, .18);
+      transform: scale(1.1)
+    }
+
+    .quote {
+      position: relative;
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      background: rgba(139, 92, 246, .05);
+      border: 1px solid rgba(139, 92, 246, .15);
+      border-radius: 16px;
+      margin: 1.5rem 0
+    }
+
+    .quote::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #8b5cf6, #ec4899);
+      border-radius: 3px
+    }
+
+    .quote p {
+      font-style: italic;
+      color: rgba(255, 255, 255, .65);
+      font-size: .9rem;
+      line-height: 1.8
+    }
+
+    .quote cite {
+      display: block;
+      margin-top: .6rem;
+      font-size: .78rem;
+      color: #a78bfa;
+      font-style: normal;
+      font-weight: 600
+    }
+
+    .hero-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .25);
+      font-size: .78rem
+    }
+
+    footer a {
+      color: #a78bfa
+    }
+  
+/* — CSP-safe reveal fallback — the scroll animation now lives in /reveal.js
+   (external, allowed by script-src 'self'). reveal.js adds .js-reveal to <html>
+   BEFORE paint; if it is ever blocked, sections stay fully visible instead of
+   being trapped at opacity:0 (the bug that hid this page's body). — */
+.section{opacity:1;transform:none}
+.js-reveal .section{opacity:0;transform:translateY(20px);transition:.6s ease}
+.js-reveal .section.visible{opacity:1;transform:none}
+</style>
+  <script src="/reveal.js"></script>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-logo"><span>M</span>MTN.Digitosphere</div><a href="index.html" class="back-btn"><i
+        class="fas fa-arrow-left"></i> Back to Portfolio</a>
+  </nav>
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-eye"></i> Ancient Wisdom</div>
+      <h1>Occult<span>ism</span></h1>
+      <p>Exploring the hidden traditions — alchemy, Hermeticism, Kabbalah, symbolism, and the philosophy of the unseen
+        forces that have shaped human civilisation.</p>
+    </div>
+  </section>
+  <div class="container">
+    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=900&q=85" alt="Mystery"
+      class="hero-img section">
+    <div class="section">
+      <h2><i class="fas fa-scroll"></i> The Hidden Traditions</h2>
+      <p style="color:rgba(255,255,255,.55);font-size:.9rem;margin-bottom:1rem">Occultism encompasses philosophical,
+        religious, and magical traditions that seek knowledge of hidden truths beyond ordinary human understanding. Far
+        from superstition, the great occult traditions were the intellectual heritage of their time — Pythagoras,
+        Giordano Bruno, Isaac Newton, and Carl Jung all engaged deeply with occult philosophy.</p>
+      <div class="symbols-row"><span class="sym" title="Eye of Providence">🔺</span><span class="sym"
+          title="Alchemy">⚗️</span><span class="sym" title="Star of Solomon">✡️</span><span class="sym"
+          title="Ouroboros">🐍</span><span class="sym" title="Crescent">☽</span><span class="sym"
+          title="Sun">☀️</span><span class="sym" title="Saturn">♄</span><span class="sym" title="Mercury">☿</span></div>
+    </div>
+    <div class="section">
+      <h2><i class="fas fa-book-open"></i> Key Traditions</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="icon"><i class="fas fa-flask"></i></div>
+          <h3>Alchemy</h3>
+          <p>The proto-science of transmutation — seeking to transform base metals into gold and the soul into
+            enlightenment.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-star-of-david"></i></div>
+          <h3>Kabbalah</h3>
+          <p>Jewish mystical tradition exploring the Tree of Life, the Sefirot, and the nature of the Divine.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-sun"></i></div>
+          <h3>Hermeticism</h3>
+          <p>Based on the Corpus Hermeticum — "As above, so below." A philosophy of cosmic correspondence.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-eye"></i></div>
+          <h3>Rosicrucianism</h3>
+          <p>17th century secret fraternity claiming ancient wisdom, combining Christianity, Kabbalah, and alchemy.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-magic"></i></div>
+          <h3>Ceremonial Magic</h3>
+          <p>Ritual work involving planetary seals, invocations, and the Goetia — systematised occult practice.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-brain"></i></div>
+          <h3>Theosophy</h3>
+          <p>H.P. Blavatsky's synthesis of Eastern and Western mysticism — karma, reincarnation, cosmic evolution.</p>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="quote">
+        <p>"Magic is the science and art of causing change to occur in conformity with will."</p><cite>— Aleister
+          Crowley, Magick in Theory and Practice</cite>
+      </div>
+      <div class="quote">
+        <p>"The privilege of a lifetime is to become who you truly are."</p><cite>— Carl Jung (who studied occult
+          symbolism extensively)</cite>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <p>Part of <a href="index.html">MTN.Digitosphere</a> — Exploring the Infinite 🌌</p>
+    <p style="margin-top:.5rem">© 2026 Myo Thant Naing</p>
+  </footer>
+
+</body>
+
+</html>

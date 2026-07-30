@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" /> <!-- keep admin page out of search engines -->
+
+  <!-- Strict CSP — NO Google domains, NO external script/style origins.
+       script-src is a clean 'self' (all JS is external: api.js + admin.js, no
+       inline handlers). style-src keeps 'unsafe-inline' because the editor's
+       generated markup uses inline style attributes. blob: allows local image
+       previews (URL.createObjectURL). Locked to 'self' + your own API. -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https: blob:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://myweb-zqv1.onrender.com">
+
+  <title>Admin | MTN.Digitosphere</title>
+  <style>
+    :root {
+      --bg: #0a0e14; --bg-soft: #111722; --card: #131a26; --border: #1f2937;
+      --text: #e6edf3; --muted: #8b97a7; --accent: #4be1a0; --accent-dim: #2f9c70;
+      --danger: #ff6b6b; --radius: 14px;
+      --mono: ui-monospace, "SF Mono", Consolas, monospace; --sans: "Inter", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.6 }
+    a { color: var(--accent); text-decoration: none }
+    nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px; border-bottom: 1px solid var(--border) }
+    .brand { font-family: var(--mono); font-weight: 700 }
+    .brand span { color: var(--accent) }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px }
+    h1 { font-size: 1.8rem; margin: 0 0 4px }
+    .sub { color: var(--muted); font-family: var(--mono); font-size: 14px; margin-bottom: 24px }
+    .panel { background: var(--bg-soft); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 22px }
+    label { font-size: 13px; color: var(--muted); font-family: var(--mono) }
+    input, textarea, select {
+      width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
+      padding: 11px 13px; border-radius: 9px; margin: 6px 0; font-family: var(--sans); font-size: 14px
+    }
+    input:focus, textarea:focus { outline: none; border-color: var(--accent-dim) }
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px }
+    button.btn { background: var(--accent); color: #04130c; border: none; font-weight: 700; padding: 10px 18px; border-radius: 9px; cursor: pointer }
+    button.btn:hover { background: #62f0b1 }
+    button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); padding: 8px 14px; border-radius: 9px; cursor: pointer }
+    button.ghost:hover { color: var(--text); border-color: var(--muted) }
+    button.del { color: var(--danger); border-color: rgba(255, 107, 107, .4) }
+    .admin-row { display: flex; gap: 10px; margin-top: 14px }
+    .manage { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; gap: 12px }
+    .manage small { color: var(--muted); font-family: var(--mono) }
+    .hidden { display: none !important }
+    #toast { position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%); background: var(--card); border: 1px solid var(--border); padding: 12px 18px; border-radius: 10px; font-size: 14px; opacity: 0; transition: .25s; pointer-events: none; z-index: 50 }
+    #toast.show { opacity: 1 }
+    #toast.ok { border-color: var(--accent) }
+    #toast.err { border-color: var(--danger) }
+    @media(max-width:560px) { .row2 { grid-template-columns: 1fr } }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <div class="brand">MTN<span>.Admin</span></div>
+    <div><a href="blog.html">← Back to blog</a></div>
+  </nav>
+
+  <div class="wrap">
+    <h1>Admin Console</h1>
+    <div class="sub">// <span id="who">authenticated access only</span></div>
+
+    <!-- LOGIN -->
+    <section class="panel" id="loginBox">
+      <label>Email</label>
+      <input id="email" type="email" placeholder="you@example.com" autocomplete="username" />
+      <label>Password</label>
+      <input id="password" type="password" placeholder="••••••••" autocomplete="current-password" />
+      <button class="btn" data-action="login">Log in</button>
+    </section>
+
+    <!-- EDITOR (hidden until logged in) -->
+    <section class="panel hidden" id="editorBox">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3 id="editorTitle" style="margin:0;font-family:var(--mono)">New article</h3>
+        <button class="ghost" data-action="logout">Log out</button>
+      </div>
+      <input type="hidden" id="editId" />
+      <label>Title</label>
+      <input id="title" placeholder="Article title" />
+      <div class="row2">
+        <div><label>Author</label><input id="author" placeholder="Myo Thant Naing" /></div>
+        <div><label>Tags (comma separated)</label><input id="tags" placeholder="dev, life, japan" /></div>
+      </div>
+      <label>Content (min 10 characters)</label>
+      <textarea id="content" rows="7" placeholder="Write your article…"></textarea>
+      <div class="row2">
+        <div><label>Images (first = cover · select multiple)</label>
+          <input id="image" type="file" accept="image/*" multiple /></div>
+        <div><label>Status</label>
+          <select id="isPublished">
+            <option value="true">Publish</option>
+            <option value="false">Draft</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div><label>Video (optional · mp4, webm, mov)</label>
+          <input id="video" type="file" accept="video/*" /></div>
+        <div></div>
+      </div>
+      <!-- live previews of the selected media before saving -->
+      <div id="previews" style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0"></div>
+      <div id="videoName" style="font-family:var(--mono);font-size:12px;color:var(--accent)"></div>
+
+      <!-- existing gallery images (shown when editing): delete / reorder -->
+      <div id="existingWrap" class="hidden" style="margin:12px 0">
+        <label>Current gallery images — ↑ ↓ to reorder · × to delete</label>
+        <div id="existingImages" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px"></div>
+      </div>
+
+      <div class="admin-row">
+        <button class="btn" id="saveBtn" data-action="save">Publish</button>
+        <button class="ghost" data-action="clear">Clear</button>
+      </div>
+    </section>
+
+    <!-- MANAGE LIST -->
+    <section class="panel hidden" id="manageBox">
+      <h3 id="manageTitle" style="margin:0 0 12px;font-family:var(--mono)">Articles</h3>
+      <div id="manageList"></div>
+    </section>
+
+    <!-- ACCOUNT: change password (any signed-in user) -->
+    <section class="panel hidden" id="accountBox">
+      <h3 style="margin:0 0 12px;font-family:var(--mono)">Change password</h3>
+      <label>Current password</label>
+      <input id="accCurPw" type="password" placeholder="••••••••" autocomplete="current-password" />
+      <label>New password</label>
+      <input id="accNewPw" type="password" placeholder="••••••••" autocomplete="new-password" />
+      <small style="display:block;margin-top:4px;color:var(--muted);font-family:var(--mono);font-size:12px">8+ chars · upper, lower, digit &amp; symbol · different from current</small>
+      <div class="admin-row">
+        <button class="btn" data-action="change-password">Update password</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast"></div>
+
+  <!-- All logic is external (no inline scripts/handlers) → CSP script-src 'self' -->
+  <script defer src="api.js"></script>
+  <script defer src="admin.js"></script>
+</body>
+
+</html>

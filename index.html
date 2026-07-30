@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <!--
+      viewport-fit=cover → safe-area-inset env() works on iPhone notch + Dynamic Island.
+      interactive-widget=resizes-visual → prevents layout reflow when virtual keyboard opens on mobile.
+    -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- Prevent iOS from auto-linking phone/address/dates in content -->
+    <meta name="format-detection" content="telephone=no, address=no, email=no" />
+
+    <!-- CSP is enforced at the HTTP header level via vercel.json (harder to bypass than a meta tag).
+         This meta tag is kept as a defence-in-depth fallback for non-Vercel environments only. -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://myweb-zqv1.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;">
+
+    <!-- ════════════════ SEO / Social ════════════════ -->
+    <title>Myo Thant Naing — Computer Science Student &amp; Aspiring Software Engineer &amp; AI Enthusiast | Portfolio
+    </title>
+    <meta name="description"
+        content="Portfolio of Myo Thant Naing — Computer Science student & Software Engineer in Japan, building full-stack apps (C#/.NET, React, Three.js) and Agentic AI systems. From caring to coding." />
+    <meta name="author" content="Myo Thant Naing" />
+    <meta name="keywords"
+        content="Myo Thant Naing, Software Engineer, AI Engineer, Computer Science, C# .NET, React, Three.js, WebGL, Full-Stack Developer, Portfolio, Japan" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#08090F" />
+    <link rel="canonical" href="https://myothant.dev/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Myo Thant Naing" />
+    <meta property="og:title" content="Myo Thant Naing — Software Engineer & AI Developer" />
+    <meta property="og:description"
+        content="Computer Science student & Software Engineer in Japan. Full-stack (C#/.NET, React) + Agentic AI. From caring to coding." />
+    <meta property="og:url" content="https://myothant.dev/" />
+    <meta property="og:image" content="https://myothant.dev/Myweb_photo/My_profile2_for_myweb.jpg" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Myo Thant Naing — Software Engineer & AI Developer" />
+    <meta name="twitter:description" content="CS student & Software Engineer in Japan. Full-stack + Agentic AI." />
+    <meta name="twitter:image" content="https://myothant.dev/Myweb_photo/My_profile2_for_myweb.jpg" />
+
+    <!-- Structured data (Google rich results) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Myo Thant Naing",
+      "alternateName": "MTN",
+      "url": "https://myothant.dev/",
+      "image": "https://myothant.dev/Myweb_photo/My_profile2_for_myweb.jpg",
+      "jobTitle": "Software Engineer & AI Developer",
+      "description": "Computer Science student and Software Engineer in Japan, building full-stack applications (C#/.NET, React) and Agentic AI systems.",
+      "knowsAbout": ["Software Engineering", "Artificial Intelligence", "C#", ".NET", "React", "Three.js", "Computer Science", "Full-Stack Development"],
+      "sameAs": ["https://github.com/johnathanMT"]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin />
+
+    <!-- Fonts + Font Awesome load NON-render-blocking (preload → stylesheet via
+         /css-swap.js) so third-party CSS latency never delays first paint on
+         mobile. <noscript> keeps them working when JS is unavailable. -->
+    <link rel="preload" as="style" data-async-style
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Padauk:wght@400;700&family=Noto+Sans+Myanmar:wght@400;500;600&family=Orbitron:wght@400;600;700;800;900&display=swap" />
+    <link rel="preload" as="style" data-async-style
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500;600&family=Padauk:wght@400;700&family=Noto+Sans+Myanmar:wght@400;500;600&family=Orbitron:wght@400;600;700;800;900&display=swap" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    </noscript>
+    <script src="/css-swap.js" defer></script>
+
+    <!-- Instant boot-splash styles (inline <style> is allowed by style-src
+         'unsafe-inline'; contains NO inline JS, so it is CSP-safe). The splash is
+         faded out and removed by main.tsx once React has mounted. -->
+    <style>
+        #boot-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#08090F;transition:opacity .35s ease}
+        #boot-splash .bs-spin{width:38px;height:38px;border-radius:50%;border:3px solid rgba(233,237,245,.14);border-top-color:#22D3EE;box-shadow:0 0 16px rgba(34,211,238,.5);animation:bs-rot .8s linear infinite}
+        #boot-splash.bs-hide{opacity:0;pointer-events:none}
+        @keyframes bs-rot{to{transform:rotate(360deg)}}
+        @media (prefers-reduced-motion: reduce){#boot-splash .bs-spin{animation-duration:2.4s}}
+    </style>
+</head>
+
+<body>
+    <!-- Crawler / no-JS fallback: gives search engines real content for this SPA -->
+    <noscript>
+        <h1>Myo Thant Naing — Software Engineer &amp; AI Developer</h1>
+        <p>Computer Science student and Software Engineer based in Japan, building full-stack
+            applications with C#/.NET and React, plus Agentic AI systems and 3D WebGL experiences.</p>
+        <p>Please enable JavaScript to view the full interactive portfolio.</p>
+    </noscript>
+
+    <div id="root"></div>
+
+    <!-- Instant loading splash: paints immediately (pure CSS, no JS) so mobile
+         never shows a blank screen during the JS bootstrap. main.tsx fades and
+         removes it once React mounts. If JS is disabled, the <noscript> below
+         hides it so the crawler/no-JS fallback content stays visible. -->
+    <div id="boot-splash" aria-hidden="true"><div class="bs-spin"></div></div>
+    <noscript>
+        <style>#boot-splash{display:none !important}</style>
+    </noscript>
+
+    <script type="module" src="/src/main.tsx"></script>
+    <!--
+      api.js: the static blog/admin PortfolioAPI client. Loaded with defer so it
+      never blocks the React bundle. Not type="module" so it exposes window.PortfolioAPI
+      for the legacy static pages (blog.html, admin.html) that rely on a global.
+    -->
+    <script defer src="/api.js"></script>
+
+</body>
+
+</html>

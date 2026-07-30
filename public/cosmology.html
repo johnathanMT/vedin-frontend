@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Cosmology · MTN.Digitosphere</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --c: #0ea5e9;
+      --cg: rgba(14, 165, 233, .15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    body {
+      background: #07070f;
+      color: #e2e2f0;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden
+    }
+
+    ::selection {
+      background: #0ea5e944;
+      color: #fff
+    }
+
+    ::-webkit-scrollbar {
+      width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #07070f
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #0ea5e9;
+      border-radius: 3px
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: .9rem 2rem;
+      background: rgba(7, 7, 15, .85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: 'Fira Code', monospace;
+      font-size: .85rem;
+      color: #fff
+    }
+
+    .nav-logo span {
+      width: 28px;
+      height: 28px;
+      background: #0ea5e9;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: .75rem
+    }
+
+    .back-btn {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .5);
+      padding: .5rem 1rem;
+      border: 1px solid rgba(255, 255, 255, .08);
+      border-radius: 10px;
+      transition: .2s
+    }
+
+    .back-btn:hover {
+      color: #fff;
+      border-color: #0ea5e9;
+      background: rgba(14, 165, 233, .1)
+    }
+
+    /* HERO */
+    .hero {
+      position: relative;
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 6rem 2rem 4rem
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 40%, rgba(14, 165, 233, .18), rgba(99, 102, 241, .1), transparent 70%)
+    }
+
+    .hero canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .35rem .9rem;
+      border-radius: 999px;
+      background: rgba(14, 165, 233, .12);
+      border: 1px solid rgba(14, 165, 233, .25);
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: #0ea5e9;
+      margin-bottom: 1.5rem
+    }
+
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 1rem
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text
+    }
+
+    .hero p {
+      color: rgba(255, 255, 255, .55);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 6rem
+    }
+
+    /* SECTION */
+    .section {
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: .6s ease
+    }
+
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    .section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: .6rem
+    }
+
+    .section h2 i {
+      color: #0ea5e9;
+      font-size: 1.1rem
+    }
+
+    /* CARDS */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .03);
+      border: 1px solid rgba(255, 255, 255, .07);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: .3s
+    }
+
+    .card:hover {
+      border-color: rgba(14, 165, 233, .35);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 40px rgba(14, 165, 233, .08)
+    }
+
+    .card .icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: rgba(14, 165, 233, .12);
+      border: 1px solid rgba(14, 165, 233, .2);
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+      color: #0ea5e9;
+      margin-bottom: 1rem
+    }
+
+    .card h3 {
+      font-size: .95rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .5rem
+    }
+
+    .card p {
+      font-size: .82rem;
+      color: rgba(255, 255, 255, .45);
+      line-height: 1.6
+    }
+
+    /* FACT BOX */
+    .fact-box {
+      background: rgba(14, 165, 233, .05);
+      border: 1px solid rgba(14, 165, 233, .15);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+      margin: 1rem 0
+    }
+
+    .fact-box p {
+      font-size: .88rem;
+      color: rgba(255, 255, 255, .65);
+      line-height: 1.8
+    }
+
+    .fact-box strong {
+      color: #0ea5e9
+    }
+
+    /* QUOTE */
+    .quote {
+      position: relative;
+      padding: 1.5rem 1.5rem 1.5rem 2rem;
+      background: rgba(99, 102, 241, .05);
+      border: 1px solid rgba(99, 102, 241, .15);
+      border-radius: 16px;
+      margin: 1.5rem 0
+    }
+
+    .quote::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #0ea5e9, #6366f1);
+      border-radius: 3px
+    }
+
+    .quote p {
+      font-style: italic;
+      color: rgba(255, 255, 255, .65);
+      font-size: .9rem;
+      line-height: 1.8
+    }
+
+    .quote cite {
+      display: block;
+      margin-top: .6rem;
+      font-size: .78rem;
+      color: #0ea5e9;
+      font-style: normal;
+      font-weight: 600
+    }
+
+    /* TIMELINE */
+    .timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      margin-top: 1rem
+    }
+
+    .tl-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start
+    }
+
+    .tl-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #0ea5e9;
+      flex-shrink: 0;
+      margin-top: 6px;
+      box-shadow: 0 0 8px #0ea5e9
+    }
+
+    .tl-content h4 {
+      font-size: .9rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: .2rem
+    }
+
+    .tl-content p {
+      font-size: .8rem;
+      color: rgba(255, 255, 255, .45)
+    }
+
+    /* IMAGE */
+    .hero-img {
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      border-radius: 20px;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(255, 255, 255, .06)
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+      color: rgba(255, 255, 255, .25);
+      font-size: .78rem
+    }
+
+    footer a {
+      color: #0ea5e9;
+      transition: .2s
+    }
+
+    footer a:hover {
+      opacity: .7
+    }
+
+    @media(max-width:640px) {
+      .hero h1 {
+        font-size: 2rem
+      }
+
+      .card-grid {
+        grid-template-columns: 1fr
+      }
+    }
+  
+/* — CSP-safe reveal fallback — the scroll animation now lives in /reveal.js
+   (external, allowed by script-src 'self'). reveal.js adds .js-reveal to <html>
+   BEFORE paint; if it is ever blocked, sections stay fully visible instead of
+   being trapped at opacity:0 (the bug that hid this page's body). — */
+.section{opacity:1;transform:none}
+.js-reveal .section{opacity:0;transform:translateY(20px);transition:.6s ease}
+.js-reveal .section.visible{opacity:1;transform:none}
+</style>
+  <script src="/reveal.js"></script>
+</head>
+
+<body>
+  <nav>
+    <div class="nav-logo"><span>M</span>MTN.Digitosphere</div>
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Portfolio</a>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><i class="fas fa-globe-asia"></i> Deep Exploration</div>
+      <h1>Cosmo<span>logy</span></h1>
+      <p>Unraveling the mysteries of the universe — from the Big Bang to dark matter, black holes to the cosmic web.</p>
+    </div>
+  </section>
+
+  <div class="container">
+    <img src="https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=900&q=85" alt="Universe"
+      class="hero-img section">
+
+    <div class="section">
+      <h2><i class="fas fa-infinity"></i> The Scale of Everything</h2>
+      <p style="color:rgba(255,255,255,.55);font-size:.9rem;margin-bottom:1rem">The universe spans approximately 93
+        billion light-years in diameter — and that's just the observable portion. What lies beyond our cosmic horizon
+        remains one of the greatest open questions in science.</p>
+      <div class="fact-box">
+        <p>The Milky Way contains roughly <strong>200–400 billion stars</strong>. The observable universe contains
+          roughly <strong>2 trillion galaxies</strong>. If every grain of sand on Earth represented a star in our
+          galaxy, there would still be more galaxies than grains of sand on every beach combined.</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2><i class="fas fa-atom"></i> Key Topics I Explore</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="icon"><i class="fas fa-circle-notch"></i></div>
+          <h3>Big Bang Theory</h3>
+          <p>The universe began ~13.8 billion years ago from an infinitely dense singularity and has been expanding ever
+            since.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-circle"></i></div>
+          <h3>Black Holes</h3>
+          <p>Regions of spacetime where gravity is so strong that nothing — not even light — can escape the event
+            horizon.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-question-circle"></i></div>
+          <h3>Dark Matter</h3>
+          <p>~27% of the universe is made of dark matter — invisible to light but detectable through gravitational
+            effects.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-expand-arrows-alt"></i></div>
+          <h3>Dark Energy</h3>
+          <p>The mysterious force (~68% of the universe) driving the accelerating expansion of spacetime itself.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-star"></i></div>
+          <h3>Stellar Evolution</h3>
+          <p>How stars are born in nebulae, live through nuclear fusion, and die as white dwarfs, neutron stars, or
+            black holes.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-wave-square"></i></div>
+          <h3>Gravitational Waves</h3>
+          <p>Ripples in spacetime first detected in 2015, confirming Einstein's century-old prediction from General
+            Relativity.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2><i class="fas fa-clock"></i> A Timeline of the Universe</h2>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>t = 0 — The Big Bang</h4>
+            <p>All energy, matter, and space compressed into a singularity; expansion begins.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>t = 380,000 yrs — First Light</h4>
+            <p>Protons capture electrons forming hydrogen; the universe becomes transparent (Cosmic Microwave
+              Background).</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>t = 200 million yrs — First Stars</h4>
+            <p>Population III stars ignite, seeding the cosmos with heavier elements through nuclear fusion.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>t = 9.2 billion yrs — Our Sun Born</h4>
+            <p>The Solar System coalesces from a spinning cloud of gas and dust.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-content">
+            <h4>t = 13.8 billion yrs — Now</h4>
+            <p>You are here — a conscious arrangement of stardust, contemplating its own origin.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="quote">
+        <p>"The cosmos is within us. We are made of star-stuff. We are a way for the universe to know itself."</p>
+        <cite>— Carl Sagan, Cosmos</cite>
+      </div>
+      <div class="quote">
+        <p>"Look up at the stars and not down at your feet. Try to make sense of what you see, and wonder about what
+          makes the universe exist."</p><cite>— Stephen Hawking</cite>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2><i class="fas fa-book"></i> Recommended Resources</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="icon"><i class="fas fa-book-open"></i></div>
+          <h3>Cosmos: A Spacetime Odyssey</h3>
+          <p>Neil deGrasse Tyson's masterpiece documentary series — a perfect entry point.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-book-open"></i></div>
+          <h3>A Brief History of Time</h3>
+          <p>Stephen Hawking's accessible yet profound exploration of cosmology and time.</p>
+        </div>
+        <div class="card">
+          <div class="icon"><i class="fas fa-globe"></i></div>
+          <h3>NASA Hubble Gallery</h3>
+          <p>Real photographs from the deepest corners of our observable universe.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>Part of <a href="index.html">MTN.Digitosphere</a> — Exploring the Infinite 🌌</p>
+    <p style="margin-top:.5rem">© 2026 Myo Thant Naing</p>
+  </footer>
+
+
+</body>
+
+</html>
