@@ -75,6 +75,10 @@ export default function VedinAdmin() {
   const [q, setQ] = useState('')
   const [aiChecking, setAiChecking] = useState(false)
   const [aiStatus, setAiStatus] = useState<{ ok: boolean; text: string } | null>(null)
+  // Admin login ⇄ forgot-password toggle.
+  const [authView, setAuthView] = useState<'login' | 'forgot'>('login')
+  const [fpBusy, setFpBusy] = useState(false)
+  const [fpMsg, setFpMsg] = useState('')
 
   const persist = (tk: string) => { try { tk ? localStorage.setItem(TOKEN_KEY, tk) : localStorage.removeItem(TOKEN_KEY) } catch { /* ignore */ } }
   const showToast = (text: string) => setToast(text)
@@ -121,6 +125,16 @@ export default function VedinAdmin() {
       if ((data?.data?.role || '').toLowerCase() !== 'admin') throw new Error('This account is not an Admin.')
       setToken(tk); persist(tk); setPassword('')
     } catch (err) { setError(err instanceof Error ? err.message : 'Login failed.') } finally { setLoading(false) }
+  }
+  // Admin forgot-password — always show a generic success (anti-enumeration).
+  const forgotPassword = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); setFpBusy(true); setError('')
+    try {
+      await fetch(`${SITE.apiUrl}/api/auth/forgot-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim() }) })
+    } catch { /* ignore — still show generic */ } finally {
+      setFpMsg('If the email matches an admin account, a password-reset link has been sent. Please check your inbox (and Spam folder).')
+      setFpBusy(false)
+    }
   }
   const logout = () => { setToken(''); persist(''); setRemedies([]); setCharts([]); setQuerentCharts([]); setUsers([]); setPdfs([]); setReadingReqs([]); setThreads([]); setActiveThread(null); setThreadMsgs([]) }
 
@@ -419,21 +433,58 @@ export default function VedinAdmin() {
         {error && <p className="mt-4 rounded-xl border border-rose-400/40 bg-rose-500/10 px-4 py-2.5 font-mono text-sm text-rose-200">{error}</p>}
 
         {!token ? (
-          <form onSubmit={login} className="mx-auto mt-16 w-full max-w-sm rounded-2xl border border-fg/10 bg-fg/5 p-7">
-            <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-violet-500/15"><Lock size={20} /></div>
-            <h2 className="text-center font-serif text-lg font-bold">Vedin Admin sign in</h2>
-            <label className="mt-5 block">
-              <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Email</span>
-              <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
-            </label>
-            <label className="mt-4 block">
-              <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Password</span>
-              <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
-            </label>
-            <button type="submit" disabled={loading} className="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-400 to-emerald-400 px-5 py-3 font-serif text-sm font-bold text-[#160f22] transition hover:brightness-105 disabled:opacity-60">
-              {loading ? 'Signing in…' : 'Sign in'}
-            </button>
-          </form>
+          authView === 'login' ? (
+            <form onSubmit={login} className="mx-auto mt-16 w-full max-w-sm rounded-2xl border border-fg/10 bg-fg/5 p-7">
+              <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-violet-500/15"><Lock size={20} /></div>
+              <h2 className="text-center font-serif text-lg font-bold">Vedin Admin sign in</h2>
+              <label className="mt-5 block">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Email</span>
+                <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
+              </label>
+              <label className="mt-4 block">
+                <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Password</span>
+                <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
+              </label>
+              <button type="submit" disabled={loading} className="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-400 to-emerald-400 px-5 py-3 font-serif text-sm font-bold text-[#160f22] transition hover:brightness-105 disabled:opacity-60">
+                {loading ? 'Signing in…' : 'Sign in'}
+              </button>
+              <button type="button" onClick={() => { setAuthView('forgot'); setError(''); setFpMsg('') }}
+                className="mt-4 block w-full text-center font-mono text-[11px] text-violet-300 transition hover:text-violet-200">
+                Forgot password?
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={forgotPassword} className="mx-auto mt-16 w-full max-w-sm rounded-2xl border border-fg/10 bg-fg/5 p-7">
+              <div className="mx-auto mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-violet-500/15"><Lock size={20} /></div>
+              <h2 className="text-center font-serif text-lg font-bold">Reset admin password</h2>
+              {fpMsg ? (
+                <>
+                  <div className="mt-5 flex items-start gap-2 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+                    <Check size={16} className="mt-0.5 shrink-0" /> {fpMsg}
+                  </div>
+                  <button type="button" onClick={() => { setAuthView('login'); setFpMsg('') }}
+                    className="mt-5 w-full rounded-xl border border-fg/15 bg-fg/5 px-5 py-3 font-serif text-sm font-bold text-fg/80 transition hover:bg-fg/10">
+                    Back to login
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="mt-3 text-center text-xs leading-relaxed text-fg/50">Enter your admin email and we’ll send a link to reset your password. The link expires in 15 minutes.</p>
+                  <label className="mt-5 block">
+                    <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Admin email</span>
+                    <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
+                  </label>
+                  <button type="submit" disabled={fpBusy} className="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-400 to-emerald-400 px-5 py-3 font-serif text-sm font-bold text-[#160f22] transition hover:brightness-105 disabled:opacity-60">
+                    {fpBusy ? <RefreshCw size={15} className="mx-auto animate-spin" /> : 'Send reset link'}
+                  </button>
+                  <button type="button" onClick={() => { setAuthView('login'); setError('') }}
+                    className="mt-4 block w-full text-center font-mono text-[11px] text-fg/50 transition hover:text-fg">
+                    ← Back to login
+                  </button>
+                </>
+              )}
+            </form>
+          )
         ) : (
           <>
             <div className="mt-6 flex flex-wrap items-center gap-2">
