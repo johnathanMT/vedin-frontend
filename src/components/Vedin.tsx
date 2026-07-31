@@ -58,7 +58,7 @@ const BIO_EN = 'Bhone Min Thike Din delivers each reading with the rigor of an e
 // light bg, light shades on dark bg), each with a distinct colour + soft glow.
 const PROFILE_PILLS: { mm: string; en: string; cls: string }[] = [
   { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology', cls: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-400/40 shadow-emerald-500/20' },
-  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa', cls: 'bg-ruby-100 text-ruby-800 border-ruby-300 dark:bg-ruby-900/40 dark:text-ruby-200 dark:border-ruby-400/40 shadow-ruby-500/20' },
+  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa', cls: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/40 dark:text-red-200 dark:border-red-400/40 shadow-red-500/20' },
   { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha', cls: 'bg-violet-100 text-violet-800 border-violet-300 dark:bg-violet-900/40 dark:text-violet-200 dark:border-violet-400/40 shadow-violet-500/25' },
   { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas', cls: 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-400/50 shadow-amber-500/25' },
   { mm: 'ဆဒ္ဗလ', en: 'Shadbala', cls: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-400/40 shadow-rose-500/20' },
