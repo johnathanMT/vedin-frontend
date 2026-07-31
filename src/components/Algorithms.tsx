@@ -20,7 +20,7 @@ interface Section {
 // ── Copyable code block ──
 function Code({ code }: { code: string }) {
   const [copied, setCopied] = useState(false)
-  const copy = () => { navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500) }).catch(() => {}) }
+  const copy = () => { navigator.clipboard?.writeText(code).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1500) }).catch(() => { }) }
   return (
     <div className="relative mt-3">
       <button type="button" onClick={copy} aria-label="Copy code"
@@ -70,7 +70,7 @@ function MathBlock({ tex }: { tex: string }) {
     ro.observe(wrap)
     let cancelled = false
     const fonts = (document as Document & { fonts?: FontFaceSet }).fonts
-    fonts?.ready?.then(() => { if (!cancelled) fit() }).catch(() => {})
+    fonts?.ready?.then(() => { if (!cancelled) fit() }).catch(() => { })
     return () => { cancelled = true; cancelAnimationFrame(raf); ro.disconnect() }
   }, [html])
 
@@ -268,8 +268,8 @@ export default function Algorithms() {
         <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><FlaskConical size={14} /> {t('Computational reconstruction', 'ကွန်ပျူတာဖြင့် ပြန်တည်ဆောက်ခြင်း')}</p>
         <h1 className="mt-2 font-groovy text-2xl text-fg sm:text-3xl">{t('The algorithms behind the charts', 'ဇာတာများ၏ နောက်ကွယ်မှ algorithm များ')}</h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
-          {t('A catalog of the classical astronomical & astrological algorithms this engine reconstructs — for the CS course "Algorithms and Mathematical Concepts for Computing". Each entry pairs plain-language notes, the mathematics, and the TypeScript that implements it.',
-            'ဤ engine ပြန်တည်ဆောက်ထားသော ဂန္ထဝင် နက္ခတ်ဗေဒ/ဂျောတိသ algorithm များ၏ catalog — "Algorithms and Mathematical Concepts for Computing" CS ဘာသာရပ်အတွက်။ entry တစ်ခုစီတွင် ရိုးရှင်းသော ရှင်းလင်းချက်၊ သင်္ချာ၊ နှင့် ၎င်းကို အကောင်အထည်ဖော်သည့် TypeScript ပါသည်။')}
+          {t('A catalog of the classical astronomical & astrological algorithms this engine reconstructs — for the Computer Science "Algorithms and Mathematical Concepts for Computing". Each entry pairs plain-language notes, the mathematics, and the TypeScript that implements it.',
+            'ကွန်ပျူတာသိပ္ပံဘာသာရပ် "Algorithms and Mathematical Concepts for Computing" အတွက် ရည်ရွယ်၍ ဤစနစ် (Engine) မှ ပြန်လည်ဖော်ထုတ်ရေးသားထားသော ရှေးဟောင်း နက္ခတ္တဗေဒနှင့် ဗေဒင်ပညာ တွက်ရိုး (Algorithms) များ၏ စာရင်းမှတ်တမ်း။ အပိုင်းတစ်ခုချင်းစီတိုင်း၌ သာမန်နားလည်လွယ်သော ရှင်းလင်းချက်များ၊ သင်္ချာသီအိုရီများနှင့် ၎င်းတို့ကို အသက်သွင်းရေးသားထားသော TypeScript ကုဒ်များကိုပါ အချိတ်အဆက်မိမိ တွဲဖက်ပြသထားပါသည်။')}
         </p>
       </div>
 

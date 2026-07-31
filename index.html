@@ -14,7 +14,8 @@
 
     <!-- CSP is enforced at the HTTP header level via vercel.json (harder to bypass than a meta tag).
          This meta tag is kept as a defence-in-depth fallback for non-Vercel environments only. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://api.myothant.dev https://vedin-backend.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self' blob:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: blob: https:; media-src 'self' https://res.cloudinary.com blob:; connect-src 'self' https://api.myothant.dev https://vedin-backend.onrender.com https://www.gstatic.com https://api.unsplash.com https://ipapi.co https://nominatim.openstreetmap.org; frame-ancestors 'none'; upgrade-insecure-requests;">
 
     <!-- ════════════════ SEO / Social ════════════════ -->
     <title>Vedin — Professional Vedic Astrology | Sayar Bhone Min Thike Din</title>
@@ -48,7 +49,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Vedin — Professional Vedic Astrology" />
-    <meta name="twitter:description" content="Accurate Vedic astrology readings by Sayar Bhone Min Thike Din — Chandra Lagna, dashas, Shadbala & Ashtakavarga." />
+    <meta name="twitter:description"
+        content="Accurate Vedic astrology readings by Sayar Bhone Min Thike Din — Chandra Lagna, dashas, Shadbala & Ashtakavarga." />
     <meta name="twitter:image" content="https://myothant.dev/vedin-logo-og.png" />
 
     <!-- Structured data (Google rich results) -->
@@ -92,11 +94,43 @@
          'unsafe-inline'; contains NO inline JS, so it is CSP-safe). The splash is
          faded out and removed by main.tsx once React has mounted. -->
     <style>
-        #boot-splash{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#08090F;transition:opacity .35s ease}
-        #boot-splash .bs-spin{width:38px;height:38px;border-radius:50%;border:3px solid rgba(233,237,245,.14);border-top-color:#22D3EE;box-shadow:0 0 16px rgba(34,211,238,.5);animation:bs-rot .8s linear infinite}
-        #boot-splash.bs-hide{opacity:0;pointer-events:none}
-        @keyframes bs-rot{to{transform:rotate(360deg)}}
-        @media (prefers-reduced-motion: reduce){#boot-splash .bs-spin{animation-duration:2.4s}}
+        #boot-splash {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #08090F;
+            transition: opacity .35s ease
+        }
+
+        #boot-splash .bs-spin {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 3px solid rgba(233, 237, 245, .14);
+            border-top-color: #22D3EE;
+            box-shadow: 0 0 16px rgba(34, 211, 238, .5);
+            animation: bs-rot .8s linear infinite
+        }
+
+        #boot-splash.bs-hide {
+            opacity: 0;
+            pointer-events: none
+        }
+
+        @keyframes bs-rot {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #boot-splash .bs-spin {
+                animation-duration: 2.4s
+            }
+        }
     </style>
 </head>
 
@@ -116,9 +150,15 @@
          never shows a blank screen during the JS bootstrap. main.tsx fades and
          removes it once React mounts. If JS is disabled, the <noscript> below
          hides it so the crawler/no-JS fallback content stays visible. -->
-    <div id="boot-splash" aria-hidden="true"><div class="bs-spin"></div></div>
+    <div id="boot-splash" aria-hidden="true">
+        <div class="bs-spin"></div>
+    </div>
     <noscript>
-        <style>#boot-splash{display:none !important}</style>
+        <style>
+            #boot-splash {
+                display: none !important
+            }
+        </style>
     </noscript>
 
     <script type="module" src="/src/main.tsx"></script>
