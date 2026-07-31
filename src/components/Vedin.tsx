@@ -58,7 +58,7 @@ const BIO_EN = 'Bhone Min Thike Din delivers each reading with the rigor of an e
 // light bg, light shades on dark bg), each with a distinct colour + soft glow.
 const PROFILE_PILLS: { mm: string; en: string; cls: string }[] = [
   { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology', cls: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-400/40 shadow-emerald-500/20' },
-  { mm: 'Lahiri Ayanamsa', en: 'Lahiri Ayanamsa', cls: 'bg-cyan-100 text-cyan-800 border-cyan-300 dark:bg-cyan-900/40 dark:text-cyan-200 dark:border-cyan-400/40 shadow-cyan-500/20' },
+  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa', cls: 'bg-maroon-100 text-maroon-800 border-maroon-300 dark:bg-maroon-900/40 dark:text-maroon-200 dark:border-maroon-400/40 shadow-maroon-500/20' },
   { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha', cls: 'bg-violet-100 text-violet-800 border-violet-300 dark:bg-violet-900/40 dark:text-violet-200 dark:border-violet-400/40 shadow-violet-500/25' },
   { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas', cls: 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-400/50 shadow-amber-500/25' },
   { mm: 'ဆဒ္ဗလ', en: 'Shadbala', cls: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-400/40 shadow-rose-500/20' },
@@ -586,7 +586,7 @@ export default function Vedin() {
     <div class="meta">${today}</div></div>
   <div class="md">${bodyHtml}</div>
   <div class="foot">${lang === 'mm'
-          ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တွက်ချက်ပြီး ဆရာ ကိုယ်တိုင် စိစစ်အတည်ပြုထားပါသည်။ ရလဒ်များမှာ ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်ဖြစ်ပါသည်။'
+          ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များကိုအသုံးပြုပြီး တွက်ချက်ထားပါသည်။ ရလဒ်များမှာ ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များဖြစ်ပါသည်။'
           : 'Computed with classical Vedic astrology formulas and personally verified by the Sayar. Guidance for reflection.'}</div>
 </div></body></html>`
 
@@ -645,8 +645,8 @@ export default function Vedin() {
 
   const curVarga = VARGAS.find((v) => v.n === vargaN) ?? VARGAS[4]
   const TABS: { id: Tab; label: string; variant?: 'main' | 'ashtaka' | 'shadbala' }[] = [
-    { id: 'ai', label: lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading', variant: 'main' },
-    { id: 'reading', label: lang === 'mm' ? 'မွေးဇာတာဟောစာတမ်း' : t.tabReading },
+    { id: 'ai', label: lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်းများ' : 'Detailed Reading', variant: 'main' },
+    { id: 'reading', label: lang === 'mm' ? 'မွေးဇာတာစစ်တမ်းများ' : t.tabReading },
     { id: 'timeline', label: t.tabTimeline },
     { id: 'vargas', label: lang === 'mm' ? 'ဇာတာခွဲများ' : 'Charts' },
     { id: 'ashtaka', label: lang === 'mm' ? 'အဋ္ဌကဝဂ်' : 'Ashtaka', variant: 'ashtaka' },
@@ -718,7 +718,7 @@ export default function Vedin() {
             <div className="min-w-0">
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent-light">{lang === 'mm' ? 'ကွန်ပျူတာသိပ္ပံဆိုင်ရာ အခြေခံ' : 'The Computation'}</p>
               <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'mm' ? 'အယ်လဂိုရီသမ်များ' : 'The Algorithm'}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'ဇာတာများ၏ နောက်ကွယ်မှကိန်းအောင်းနေသော သင်္ချာနှင့် ကုဒ်များ — Julian Day မှ Ashtakavarga အထိ။' : 'The math & code behind the charts — from Julian Day to Ashtakavarga.'}</p>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'ဇာတာတွက်ချက်မှုများ၏ နောက်ကွယ်မှကိန်းအောင်းနေသော သင်္ချာဖော်မြူလာများနှင့် ကုဒ်များ — Julian Day မှ Ashtakavarga အထိ။' : 'The math & code behind the charts — from Julian Day to Ashtakavarga.'}</p>
               <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-accent-light transition group-hover:gap-2.5">{lang === 'mm' ? 'အသေးစိတ်ကြည့်ရှုရန်' : 'Explore'} <ArrowRight size={13} /></span>
             </div>
           </div>
@@ -733,8 +733,8 @@ export default function Vedin() {
               <FlaskConical size={22} />
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-jade">{lang === 'mm' ? 'သိပ္ပံနည်းကျ ရိုးသားမှု' : 'Honest Science'}</p>
-              <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'mm' ? 'တိုင်းတာနိုင်သော သုတေသန' : 'Falsifiable Research'}</h3>
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-jade">{lang === 'mm' ? 'သိပ္ပံနည်းကျကျ ရိုးသားမှု' : 'Honest Science'}</p>
+              <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'mm' ? 'တိုင်းတာနိုင်သော သုတေသနပြုချက်' : 'Falsifiable Research'}</h3>
               <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'ကြိုတင်မှတ်တမ်း၊ base rate၊ permutation test — ဟောကြားချက်ကို တိုင်းတာနိုင်သည်။' : 'Pre-registration, base rates, permutation tests — we measure claims, not boast them.'}</p>
               <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-jade transition group-hover:gap-2.5">{lang === 'mm' ? 'လုပ်ထုံးလုပ်နည်းများ ကြည့်ရန်' : 'View protocol'} <ArrowRight size={13} /></span>
             </div>
@@ -831,8 +831,8 @@ export default function Vedin() {
                   {(lang === 'mm'
                     ? [
                       'မွေးသက္ကရာဇ် အချက်အလက်များ ဖြည့်သွင်းပါ။',
-                      'ဇာတာများ သိမ်းဆည်းရန်နှင့် ဟောစာတမ်းတောင်းရန် အကောင့် ဖွင့်/ဝင်ပါ။',
-                      '"အသေးစိတ် ဟောစာတမ်း" နေရာမှတစ်ဆင့် ဆရာ့ထံသို့ တောင်းဆိုမှု ပြုလုပ်ပါ။',
+                      'ဇာတာများ သိမ်းဆည်းရန်နှင့် ဟောစာတမ်းတောင်းယူရန် အကောင့် ဖွင့်/ဝင်ပါ။',
+                      '"အသေးစိတ် ဟောစာတမ်းများ" နေရာမှတစ်ဆင့် ဆရာ့ထံသို့ တောင်းဆိုမှု ပြုလုပ်ပါ။',
                       'ဆရာမှ အတည်ပြု (Approve) ပြီးပါက ဟောစာတမ်းဖတ်ရှုနိုင်ပြီး PDF ရယူနိုင်ပါသည်။',
                     ]
                     : [
@@ -1049,8 +1049,8 @@ export default function Vedin() {
                         <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={15} /> {lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
                         <h3 className="mt-2 font-groovy text-xl text-fg">{lang === 'mm' ? 'သင့်ဇာတာအတွက် ဆရာ ကိုယ်တိုင် စစ်ဆေးသော ဟောစာတမ်း' : 'A reading personally reviewed by the Sayar'}</h3>
                         <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{lang === 'mm'
-                          ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီး၊ ဆရာ ကိုဘုန်းမင်းသိုက်ဒင် ကိုယ်တိုင် စိစစ်အတည်ပြု၍ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်း ရေးသားပေးပါမည်။'
-                          : 'Your chart is computed precisely with classical Vedic astrology formulas, then personally verified and approved by Sayar Ko Bhone Min Thike Din before your full 7-life-area reading is written.'}</p>
+                          ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီးနောက်၊ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်းအပြည့်အစုံကို ရေးသားပေးပါမည်။'
+                          : 'Your chart is computed precisely with classical Vedic astrology formulas, verified and approved to get full details before your full 7-life-area reading is written.'}</p>
                         <button type="button" onClick={requestReading} disabled={reqLoading}
                           className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
                           {reqLoading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
@@ -1097,7 +1097,7 @@ export default function Vedin() {
                         </p>
                       </div>
                       <p className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-rose-400/50 bg-rose-500/10 px-4 py-2.5 text-center text-sm font-bold text-rose-600 dark:text-rose-300">
-                        <AlertTriangle size={16} className="shrink-0" /> ဟောစာတမ်း အပြည့်အစုံကို ဖတ်ရှုရန် Page ကို Refresh (ပြန်လည်ဆွဲချ) လုပ်ပေးပါ။
+                        <AlertTriangle size={16} className="shrink-0" /> ဟောစာတမ်း အပြည့်အစုံကို ဖတ်ရှုရန် Page ကို Refresh (ပြန်လည်ဆွဲချ) လုပ်ပေးပါရန်။
                       </p>
                     </div>
                   )}
@@ -1114,8 +1114,8 @@ export default function Vedin() {
                         </div>
                         <div ref={readingRef}><MarkdownView markdown={reqMarkdown} /></div>
                         <p className="mt-5 border-t border-white/10 pt-3 text-[11px] leading-relaxed text-muted">{lang === 'mm'
-                          ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီး ဆရာ ကိုယ်တိုင် စိစစ်အတည်ပြုထားပါသည်။ ရလဒ်များမှာ မိမိကိုယ်တိုင် ပြန်လည်ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်ဖြစ်ပါသည်။'
-                          : 'This reading was computed with classical Vedic astrology formulas and personally verified by the Sayar. The interpretations are guidance for reflection.'}</p>
+                          ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ထားပါသည်။သို့သော်လည်း ရလဒ်များမှာ မိမိကိုယ်တိုင် ပြန်လည်ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များသာဖြစ်ပါသည်။'
+                          : 'This reading was computed with classical Vedic astrology formulas and personally according to system.But The interpretations are guidance for self-reflection.'}</p>
 
                         {/* Direct client-side PDF download (logged-in users only) */}
                         <div className="mt-5 no-print">
