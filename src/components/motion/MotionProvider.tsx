@@ -1,4 +1,4 @@
-import { LazyMotion } from 'framer-motion'
+import { LazyMotion, MotionConfig } from 'framer-motion'
 import type { ReactNode } from 'react'
 
 // Mounted ONCE at the app root. Everything below can then use the lightweight `m`
@@ -11,9 +11,15 @@ import type { ReactNode } from 'react'
 const loadFeatures = () => import('./features').then((mod) => mod.default)
 
 export default function MotionProvider({ children }: { children: ReactNode }) {
+  // reducedMotion="user" makes framer honour the OS "reduce motion" setting for
+  // every transform/layout animation below — including the shared-layout tab
+  // pill and the Reveal/Appear entrances — without each component checking the
+  // media query itself.
   return (
     <LazyMotion features={loadFeatures} strict>
-      {children}
+      <MotionConfig reducedMotion="user">
+        {children}
+      </MotionConfig>
     </LazyMotion>
   )
 }
