@@ -12,6 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.101.4",
     "@types/katex": "^0.16.8",
     "dompurify": "^3.4.10",
     "framer-motion": "^12.40.0",
