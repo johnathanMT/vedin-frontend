@@ -2,9 +2,12 @@ import React, { lazy, Suspense } from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { HelmetProvider } from 'react-helmet-async'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { queryClient } from './lib/query'
 import { getInitialTheme, applyTheme } from './hooks/useTheme'
 import Seo from './components/Seo'
 import VedinShell from './components/VedinShell'
+import MotionProvider from './components/motion/MotionProvider'
 import './index.css'
 
 // This repository is now the standalone **Vedin** app. The old portfolio home,
@@ -47,6 +50,8 @@ if (!rootEl) throw new Error('Root element #root not found in index.html')
 ReactDOM.createRoot(rootEl).render(
   <React.StrictMode>
     <HelmetProvider>
+      <QueryClientProvider client={queryClient}>
+      <MotionProvider>
       <BrowserRouter basename={BASENAME}>
         <Routes>
           {/* Root = the Vedin astrology app (full screen, no portfolio layout). */}
@@ -70,6 +75,8 @@ ReactDOM.createRoot(rootEl).render(
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </BrowserRouter>
+      </MotionProvider>
+      </QueryClientProvider>
     </HelmetProvider>
   </React.StrictMode>,
 )

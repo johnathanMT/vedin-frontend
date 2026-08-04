@@ -7,11 +7,12 @@ import {
   type Prediction, type JournalEntry, type Valence, type Outcome,
 } from '../lib/research'
 import { wilsonInterval, binomialNullSamples, permutationPValue, benjaminiHochberg } from '../lib/stats'
+import useLang from '../hooks/useLang'
 
 type Lang = 'en' | 'mm'
 
 export default function Research() {
-  const [lang, setLang] = useState<Lang>('mm')
+  const { lang, setLang } = useLang()
   const t = (en: string, mm: string) => (lang === 'mm' ? mm : en)
 
   const [preds, setPreds] = useState<Prediction[]>([])

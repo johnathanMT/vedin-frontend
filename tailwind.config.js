@@ -7,9 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        // ── THEME-AWARE TOKENS (driven by CSS vars; see .theme-batman /
-        //    .theme-cyber in index.css). Same class names, different palette
-        //    depending on which wrapper the app root uses. ────────────────────
+        // ── THEME-AWARE TOKENS (driven by CSS vars; see .theme-batman in
+        //    index.css). Same class names, different palette depending on
+        //    which wrapper the app root uses. ─────────────────────────────────
+        //
+        // `white` is deliberately remapped to the foreground token. The ~110
+        // `bg-white/5`, `border-white/15`, `text-white` sites across the app all
+        // mean "a veil the same colour as the text", which is white-on-dark but
+        // must invert on the parchment light theme. Remapping here replaces the
+        // former `html[data-theme="light"] [class*="bg-white/"]` override hack.
+        // `black` is NOT remapped: `text-black` is only used on <option>
+        // elements, which the OS renders on its own white chrome.
+        white: 'rgb(var(--fg) / <alpha-value>)',
         space: 'rgb(var(--space) / <alpha-value>)',
         // Primary foreground/text — flips with the theme (near-white ⇆ near-black).
         fg: 'rgb(var(--fg) / <alpha-value>)',

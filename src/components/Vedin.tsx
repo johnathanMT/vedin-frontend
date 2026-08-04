@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
-import { Sparkles, MapPin, Loader2, Search, Download, Star, Info, Sigma, FlaskConical, ArrowRight, ScrollText, Clock, CheckCircle2, ChevronDown, Lock, UserPlus, Pencil, Send, AlertTriangle, Cake, X } from 'lucide-react'
-import tzlookup from 'tz-lookup'
+import { Sparkles, MapPin, Loader2, Search, Download, Star, Info, Sigma, FlaskConical, ArrowRight, ScrollText, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, Pencil, Cake, X } from 'lucide-react'
 import { SITE } from '../config/site'
 import KundliChart from './KundliChart'
 import DiamondChart from './DiamondChart'
@@ -10,134 +9,27 @@ import TimelineChart from './TimelineChart'
 import AshtakavargaView from './AshtakavargaView'
 import ShadbalaView from './ShadbalaView'
 import CustomerPanel, { type SavedChart, type CustomerPanelHandle } from './CustomerPanel'
-import MarkdownView from './MarkdownView'
-import type { BirthChartData, BirthChartRequest, PlanetPosition, TransitPos } from '../types/astrology'
+import useLang from '../hooks/useLang'
+import useGeocode from '../hooks/useGeocode'
+import useConsultationChat from '../hooks/useConsultationChat'
+import useQuerentProfile from '../hooks/useQuerentProfile'
+import useChart from '../hooks/useChart'
+import useReadingRequest from '../hooks/useReadingRequest'
+import ReadingRequestPanel from './reading/ReadingRequestPanel'
+import ChatPanel from './chat/ChatPanel'
+import TabBar, { type TabDef } from './TabBar'
+import ChartSummaryHero from './ChartSummaryHero'
+import ChartSkeleton from './ChartSkeleton'
+import WizardProgress from './wizard/WizardProgress'
+import { loadBirthDraft, draftValue, saveBirthDraft } from '../hooks/useBirthDraft'
+import type { BirthChartData, PlanetPosition, TransitPos } from '../types/astrology'
 import { JT, type Lang, type Naynan, vargaSign, signLabel, planetName, readingFor, naynan, activeBhukti, activePratyantar, toMmDigits, themeWord, transitNoteText, findPlanet, dignityLabel, currentAreaEffect } from '../lib/vedin'
+import {
+  PRESETS, browserTz, TZ_OPTIONS, VARGAS, BIO_EN, BIO_MM, PROFILE_PILLS, VARGA_GUIDE,
+  YOGA_INFO, yogaText, deg, field, labelCls,
+  type Preset, type Profile, type Tab, type ChartStyle,
+} from '../lib/vedin-content'
 
-const CHART_URL = `${SITE.apiUrl}/api/astrology/chart`
-const GEO_URL = 'https://nominatim.openstreetmap.org/search'
-
-interface Preset { label: string; lat: number; lon: number; tz: string }
-const PRESETS: Preset[] = [
-  { label: 'Yangon', lat: 16.8409, lon: 96.1735, tz: 'Asia/Yangon' },
-  { label: 'Mandalay', lat: 21.9588, lon: 96.0891, tz: 'Asia/Yangon' },
-  { label: 'Tokyo', lat: 35.6762, lon: 139.6503, tz: 'Asia/Tokyo' },
-  { label: 'Bangkok', lat: 13.7563, lon: 100.5018, tz: 'Asia/Bangkok' },
-  { label: 'New Delhi', lat: 28.6139, lon: 77.209, tz: 'Asia/Kolkata' },
-  { label: 'Singapore', lat: 1.3521, lon: 103.8198, tz: 'Asia/Singapore' },
-]
-const browserTz = (() => { try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC' } catch { return 'UTC' } })()
-const TZ_OPTIONS = [...new Set([browserTz, ...PRESETS.map((p) => p.tz), 'UTC'])]
-
-interface GeoResult { display_name: string; lat: string; lon: string }
-interface Profile {
-  id: number; email: string; username: string; emailConfirmed: boolean
-  gender?: string; dob?: string; birthTime?: string; locationName?: string
-  latitude?: number; longitude?: number; timezone?: string; hasProfile: boolean
-}
-interface ChatMsg { id: number; senderRole: string; text: string; createdAt: string }
-type Tab = 'ai' | 'reading' | 'timeline' | 'd1' | 'vargas' | 'ashtaka' | 'shadbala'
-
-
-const VARGAS: { n: number; name: string; desc: { en: string; mm: string } }[] = [
-  { n: 2, name: 'D2 · Hora', desc: { en: 'Wealth & resources.', mm: 'ဥစ္စာဓန နှင့် အရင်းအမြစ်။' } },
-  { n: 3, name: 'D3 · Drekkana', desc: { en: 'Siblings, courage, initiative.', mm: 'မောင်နှမ၊ ရဲစွမ်းသတ္တိ။' } },
-  { n: 4, name: 'D4 · Chaturthamsa', desc: { en: 'Property, home, fixed assets & fortune.', mm: 'အိုးအိမ်၊ အခြေပစ္စည်း၊ ကံ။' } },
-  { n: 7, name: 'D7 · Saptamsa', desc: { en: 'Children, progeny & legacy.', mm: 'သားသမီး၊ အမွေဆက်ခံမှု။' } },
-  { n: 9, name: 'D9 · Navamsa', desc: { en: 'Spouse, dharma — the fruit of the chart.', mm: 'အိမ်ထောင်ဖက်၊ ဓမ္မ — ဇာတာ၏ အသီးအပွင့်။' } },
-  { n: 10, name: 'D10 · Dasamsa', desc: { en: 'Career, profession & status.', mm: 'အသက်မွေးဝမ်းကျောင်း၊ ဂုဏ်အဆင့်။' } },
-  { n: 12, name: 'D12 · Dwadasamsa', desc: { en: 'Parents & ancestry.', mm: 'မိဘ နှင့် ဘိုးဘွား။' } },
-  { n: 16, name: 'D16 · Shodasamsa', desc: { en: 'Vehicles, comforts & luxuries.', mm: 'ယာဉ်၊ အိမ်သုံး အဆင်ပြေမှု။' } },
-  { n: 20, name: 'D20 · Vimsamsa', desc: { en: 'Spiritual practice & devotion.', mm: 'ဝိညာဉ်ရေး၊ ဘာသာရေး လေ့ကျင့်မှု။' } },
-  { n: 24, name: 'D24 · Chaturvimsamsa', desc: { en: 'Education & learning.', mm: 'ပညာရေး နှင့် သင်ယူမှု။' } },
-  { n: 60, name: 'D60 · Shashtiamsa', desc: { en: 'Overall karma — the most refined chart.', mm: 'အလုံးစုံ ကံ — အသိမ်မွေ့ဆုံး ဇာတာ။' } },
-]
-
-const BIO_EN = 'Bhone Min Thike Din delivers each reading with the rigor of an exact Vedic science. Every chart is decoded through a demanding, multi-layered methodology — the sidereal zodiac fixed by the Lahiri Ayanamsa, Whole-Sign houses anchored on the Chandra Lagna, the complete set of sixteen divisional charts from D1 to D60, the Vimśottarī Dasha timeline of planetary periods, the six-fold Shadbala strength metrics and the Ashtakavarga point system. This is not vague fortune-telling; it is a precise mathematical blueprint of your life, computed to the exacting standard of the classical Vedic astrology śāstras. From that blueprint he delivers clear, strategic life guidance — decisive, practical, and grounded in absolute confidence and professional mastery.'
-// Astrologer credential pills — readable in BOTH light and dark (dark shades on
-// light bg, light shades on dark bg), each with a distinct colour + soft glow.
-const PROFILE_PILLS: { mm: string; en: string; cls: string }[] = [
-  { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology', cls: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-400/40 shadow-emerald-500/20' },
-  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa', cls: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/40 dark:text-red-200 dark:border-red-400/40 shadow-red-500/20' },
-  { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha', cls: 'bg-violet-100 text-violet-800 border-violet-300 dark:bg-violet-900/40 dark:text-violet-200 dark:border-violet-400/40 shadow-violet-500/25' },
-  { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas', cls: 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-400/50 shadow-amber-500/25' },
-  { mm: 'ဆဒ္ဗလ', en: 'Shadbala', cls: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-400/40 shadow-rose-500/20' },
-  { mm: 'အဋ္ဌကဝဂ်', en: 'Ashtakavarga', cls: 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/40 dark:text-indigo-200 dark:border-indigo-400/40 shadow-indigo-500/20' },
-]
-
-const BIO_MM = 'ရှေးဟောင်း ဂဏန်းသင်္ချာနှင့် နက္ခတ်ဗေဒင်သိပ္ပံ (Vedic Astrology) ၏ အဆင့်မြင့် တွက်ကိန်းများကို အခြေခံ၍ — Sidereal Zodiac ကို Lahiri Ayanamsa ဖြင့် တိကျစွာ ချိန်ညှိတွက်ချက်ခြင်း၊ Chandra Lagna (စန္ဒလဂ်) ကို အခြေခံသော Whole-Sign House စနစ်၊ အခြေခံဇာတာမှသည် အနုစိတ်ဇာတာများအထိ ပါဝင်သော ဇာတာခွင် ၁၆ မျိုး (D1 မှ D60 Vargas)၊ ဝိံရှာတ္တရီ (Vimsottari) ဒဿနှင့် အန္တရဒဿ ကာလများ၊ ဂြိုလ်တို့၏ အမြင် (Drishti)၊ ဂြိုလ်စွမ်းအားပြည့်ဝမှုကို တိုင်းတာသည့် ဆုဒ္ဓလ (Shadbala) နှင့် အဋ္ဌကဝဂ် (Ashtakavarga) စသည့် ရှေးဟောင်း နက္ခတ်သင်္ချာနည်းစနစ်များကို အလွှာလိုက် (Layer-by-layer) စေ့စေ့စပ်စပ် စစ်ဆေးခွဲခြမ်းစိတ်ဖြာကာ တိကျသေချာစွာ တွက်ချက်ဖော်ပြပေးပါသည်။'
-
-// D1–D60 educational meanings (simple, bilingual).
-const VARGA_GUIDE: { code: string; en: string; mm: string }[] = [
-  { code: 'D1 · Rasi', en: 'Physical body, general life path, and baseline karma.', mm: 'ခန္ဓာကိုယ်၊ ဘဝလမ်းကြောင်း အထွေထွေနှင့် အခြေခံကံ။' },
-  { code: 'D2 · Hora', en: 'Wealth, assets, and financial prosperity.', mm: 'ဥစ္စာဓန၊ ပိုင်ဆိုင်မှုနှင့် ငွေကြေး ကြွယ်ဝမှု။' },
-  { code: 'D3 · Drekkana', en: 'Siblings, courage, and inner strength.', mm: 'မောင်နှမ၊ ရဲစွမ်းသတ္တိနှင့် စိတ်ဓာတ်ခွန်အား။' },
-  { code: 'D4 · Chaturthamsha', en: 'Real estate, properties, and overall fortune.', mm: 'အိမ်ခြံမြေ၊ ပိုင်ဆိုင်မှုနှင့် အထွေထွေကံကြမ္မာ။' },
-  { code: 'D7 · Saptamsha', en: 'Children, progeny, and legacy.', mm: 'သားသမီး၊ သားစဉ်မြေးဆက်နှင့် အမွေအနှစ်။' },
-  { code: 'D9 · Navamsa', en: "Marriage, the soul's true purpose, and hidden strengths — the most important sub-chart.", mm: 'အိမ်ထောင်ရေး၊ ဝိညာဉ်၏ စစ်မှန်သော ရည်ရွယ်ချက်နှင့် ကွယ်ဝှက်နေသော အင်အား — အရေးအကြီးဆုံး ဇာတာခွဲ။' },
-  { code: 'D10 · Dasamsha', en: 'Career, professional success, and public status.', mm: 'အသက်မွေးဝမ်းကျောင်း၊ အလုပ်အောင်မြင်မှုနှင့် လူသိဂုဏ်အဆင့်။' },
-  { code: 'D12 · Dwadasamsha', en: 'Parents, ancestral karma, and heritage.', mm: 'မိဘ၊ ဘိုးဘွား ကံနှင့် အမွေအနှစ်။' },
-  { code: 'D16 · Shodashamsha', en: 'Vehicles, inner happiness, and comforts.', mm: 'ယာဉ်၊ စိတ်တွင်း ပျော်ရွှင်မှုနှင့် သက်သာချမ်းသာမှု။' },
-  { code: 'D20 · Vimsamsha', en: 'Spiritual progress and religious dedication.', mm: 'ဝိညာဉ်ရေး တိုးတက်မှုနှင့် ဘာသာရေး ဆက်ကပ်မှု။' },
-  { code: 'D24 · Chaturvimsamsha', en: 'Education, learning, and intellect.', mm: 'ပညာရေး၊ သင်ယူမှုနှင့် ဉာဏ်ရည်။' },
-  { code: 'D60 · Shashtiamsha', en: 'Past-life karma and deep-rooted destiny.', mm: 'အတိတ်ဘဝ ကံနှင့် အမြစ်တွယ်နေသော ကံကြမ္မာ။' },
-]
-
-// Yoga meanings — bilingual. Keyed by the exact backend yoga name; also used as
-// an educational guide (incl. Neecha Bhanga Raja Yoga).
-const YOGA_INFO: Record<string, { en: string; mm: string }> = {
-  'Gaja Kesari Yoga': {
-    en: 'Jupiter in a kendra (1/4/7/10) from the Moon. Grants wisdom, virtue, prosperity and a respected, well-liked nature.',
-    mm: 'ကြာသပတေးသည် စန်း (လ) မှ ကေန္ဒြ (၁/၄/၇/၁၀) တွင် တည်ရှိသောအခါ ဖြစ်သည်။ ပညာဉာဏ်၊ ဂုဏ်သိက္ခာ၊ ကြီးပွားချမ်းသာမှုနှင့် လူချစ်လူခင်ပေါများပြီး လေးစားခံရသော သဘာဝကို ပေးသည်။',
-  },
-  'Budha-Aditya Yoga': {
-    en: 'Sun and Mercury conjunct in one sign. Sharp intellect, eloquence, skill in learning and business.',
-    mm: 'နေနှင့် ဗုဒ္ဓဟူး တစ်ရာသီတည်း ပူးယှဉ်သောအခါ ဖြစ်သည်။ ဉာဏ်ရည်ထက်မြက်မှု၊ ဟောပြောဆက်သွယ်စွမ်း၊ ပညာနှင့် စီးပွားရေးကျွမ်းကျင်မှုကို ပေးသည်။',
-  },
-  'Chandra-Mangala Yoga': {
-    en: 'Moon and Mars conjunct. Wealth through drive, enterprise and bold initiative.',
-    mm: 'စန်းနှင့် အင်္ဂါ ပူးယှဉ်သောအခါ ဖြစ်သည်။ ဇွဲလုံ့လ၊ လုပ်ငန်းစွန့်ဦးတီထွင်မှုနှင့် ရဲရင့်သောဆုံးဖြတ်ချက်ဖြင့် ဥစ္စာဓန ရရှိမှုကို ပေးသည်။',
-  },
-  'Ruchaka Yoga': {
-    en: 'Mars in its own/exaltation sign in a kendra (a Pancha Mahapurusha yoga). Courage, leadership and physical strength.',
-    mm: 'အင်္ဂါသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ ရဲစွမ်းသတ္တိ၊ ခေါင်းဆောင်နိုင်စွမ်းနှင့် ကာယခွန်အားကို ပေးသည်။',
-  },
-  'Bhadra Yoga': {
-    en: 'Mercury in its own/exaltation sign in a kendra. Intelligence, communication and business acumen.',
-    mm: 'ဗုဒ္ဓဟူးသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ ဉာဏ်ရည်၊ ဟောပြောရေးသားစွမ်းနှင့် စီးပွားရေးဉာဏ်ကို ပေးသည်။',
-  },
-  'Hamsa Yoga': {
-    en: 'Jupiter in its own/exaltation sign in a kendra. Virtue, wisdom, spirituality and honour.',
-    mm: 'ကြာသပတေးသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ ကုသိုလ်တရား၊ ပညာ၊ ဝိညာဉ်ရေးနှင့် ဂုဏ်သိက္ခာကို ပေးသည်။',
-  },
-  'Malavya Yoga': {
-    en: 'Venus in its own/exaltation sign in a kendra. Beauty, comfort, art and refined luxury.',
-    mm: 'သောကြာသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ အလှ၊ သက်သာချမ်းသာမှု၊ အနုပညာနှင့် ဇိမ်ခံမှုကို ပေးသည်။',
-  },
-  'Sasa Yoga': {
-    en: 'Saturn in its own/exaltation sign in a kendra. Discipline, authority, endurance and lasting success.',
-    mm: 'စနေသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ စည်းကမ်း၊ အာဏာ၊ ခံနိုင်ရည်နှင့် ရေရှည်တည်တံ့သော အောင်မြင်မှုကို ပေးသည်။',
-  },
-  'Neecha Bhanga Raja Yoga': {
-    en: 'A "debilitation-cancellation" raja yoga: a planet is debilitated (neecha), but its weakness is cancelled — e.g. the lord of its sign, or the planet that would be exalted there, sits in a kendra. Early struggles turn into great, hard-won success.',
-    mm: 'ဂြိုဟ်တစ်လုံးသည် နိစ် (ကျဆင်း) ဖြစ်နေသော်လည်း ထိုနိစ်ဖြစ်မှုကို ပယ်ဖျက်ပေးသည့် အခြေအနေ (ဥပမာ — နိစ်ရာသီ၏ သခင် သို့မဟုတ် ထိုနေရာတွင် ဥစ်ဖြစ်မည့်ဂြိုဟ်သည် ကေန္ဒြတွင် တည်ရှိ) ရှိသောအခါ ဖြစ်သည်။ အစပိုင်း အခက်အခဲများမှတစ်ဆင့် နောက်ပိုင်း ကြီးကျယ်သော အောင်မြင်မှု (ရာဇယောဂ) ကို ပေးသည် — "ကျရှုံးရာမှ ကြီးပွား" ဆိုသည့်သဘော။',
-  },
-  'Raja Yoga': {
-    en: 'A link (conjunction/aspect/exchange) between a kendra lord (1/4/7/10) and a trikona lord (1/5/9). Power, status and success.',
-    mm: 'ကေန္ဒြသခင် (၁/၄/၇/၁၀) နှင့် တြိကုဏသခင် (၁/၅/၉) တို့ ဆက်စပ် (ပူးယှဉ်/အမြင်/ဖလှယ်) သောအခါ ဖြစ်သည်။ အာဏာ၊ ဂုဏ်အဆင့်နှင့် အောင်မြင်မှုကို ပေးသည်။',
-  },
-  'Dhana Yoga': {
-    en: 'A link between the lords of wealth houses (2/11) and other benefic-house lords. Accumulation of wealth.',
-    mm: 'ဓနအိမ် (၂/၁၁) သခင်များနှင့် အခြားအကျိုးပေးအိမ်သခင်များ ဆက်စပ်သောအခါ ဖြစ်သည်။ ဥစ္စာဓန စုဆောင်းနိုင်မှုကို ပေးသည်။',
-  },
-}
-const yogaText = (name: string, lang: Lang) => (YOGA_INFO[name] ? YOGA_INFO[name][lang] : '')
-
-const deg = (d: number) => `${Math.floor(d)}°${String(Math.floor((d % 1) * 60)).padStart(2, '0')}'`
-const field = 'mt-1.5 w-full rounded-xl border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-fg outline-none transition focus:border-accent/50'
-const labelCls = 'block font-mono text-[11px] uppercase tracking-wider text-muted'
-
-type ChartStyle = 'diamond' | 'grid'
 // Switch between North-Indian diamond (encyclopedia) and South-Indian grid.
 function ChartView({ style, ...rest }: {
   style: ChartStyle; data: BirthChartData; lagnaSign?: number
@@ -171,129 +63,136 @@ function VargaPanel({ data, lang, signOf, lagnaSign, title, subtitle, desc, char
 }
 
 export default function Vedin() {
-  const [lang, setLang] = useState<Lang>('mm')   // default to Burmese; toggle switches to English
+  const { lang, setLang } = useLang()   // defaults to Burmese; persisted across routes + refresh
   const t = JT[lang]
 
-  const [name, setName] = useState('')
-  const [gender, setGender] = useState<'male' | 'female'>('male')
-  const [date, setDate] = useState('1998-01-01')
-  const [time, setTime] = useState('12:00')
-  const [lat, setLat] = useState('16.8409')
-  const [lon, setLon] = useState('96.1735')
-  const [tz, setTz] = useState(browserTz)
-  const [place, setPlace] = useState('')
-  const [placeConfirmed, setPlaceConfirmed] = useState(false)   // true only after a city is picked/preset
-  const [results, setResults] = useState<GeoResult[]>([])
-  const [searching, setSearching] = useState(false)
-  const debTimer = useRef<number | undefined>(undefined)
+  // A refresh used to wipe every field, including a geocoded city. Rehydrate.
+  const draft0 = useRef(loadBirthDraft()).current
 
-  const [data, setData] = useState<BirthChartData | null>(null)
+  const [name, setName] = useState(() => draftValue(draft0, 'name', ''))
+  const [gender, setGender] = useState<'male' | 'female'>(() => draftValue(draft0, 'gender', 'male'))
+  const [date, setDate] = useState(() => draftValue(draft0, 'date', '1998-01-01'))
+  const [time, setTime] = useState(() => draftValue(draft0, 'time', '12:00'))
+  const [lat, setLat] = useState(() => draftValue(draft0, 'lat', '16.8409'))
+  const [lon, setLon] = useState(() => draftValue(draft0, 'lon', '96.1735'))
+  const [tz, setTz] = useState(() => draftValue(draft0, 'tz', browserTz))
+
+  // Wizard position, and the explicit "I don't know my birth time" path. The
+  // form used to silently default to 12:00, which quietly corrupts the Lagna
+  // and every house cusp without ever telling the querent.
+  const [step, setStep] = useState(() => draftValue(draft0, 'step', 1))
+  const [timeUnknown, setTimeUnknown] = useState(() => draftValue(draft0, 'timeUnknown', false))
+  const [advancedOpen, setAdvancedOpen] = useState(false)
+
+  // Birth-place search + timezone resolution (shared with the signup modal).
+  const geo = useGeocode(({ lat: la, lon: lo, tz: zone }) => {
+    setLat(String(la)); setLon(String(lo))
+    if (zone) setTz(zone)
+  })
+  const place = geo.place
+  const placeConfirmed = geo.confirmed
+
+  // The geocoded city lives inside useGeocode, so restore it once on mount.
+  useEffect(() => {
+    if (draft0.placeConfirmed && draft0.place) geo.hydrate(draft0.place)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // Chart compute + archive, cached by birth data (see useChart).
+  const chart$ = useChart()
+  const { data, setData, loading, error } = chart$
   const [querent, setQuerent] = useState<{ name: string; gender: 'male' | 'female'; nn: Naynan | null } | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
   const [tab, setTab] = useState<Tab>('reading')
   const [chartStyle, setChartStyle] = useState<ChartStyle>('diamond')
   const [vargaN, setVargaN] = useState(9)
-  const [ayanamsa, setAyanamsa] = useState('lahiri')
-  const [consent, setConsent] = useState(false)
+  const [ayanamsa, setAyanamsa] = useState(() => draftValue(draft0, 'ayanamsa', 'lahiri'))
+  const [consent, setConsent] = useState(() => draftValue(draft0, 'consent', false))
 
   // Remedy / contact-to-Ko Bhone Min Thike Din form.
   const remedyRef = useRef<HTMLDivElement>(null)
-  const [chatMsgs, setChatMsgs] = useState<ChatMsg[]>([])
-  const [chatInput, setChatInput] = useState('')
-  const [chatBusy, setChatBusy] = useState(false)
-  const chatEndRef = useRef<HTMLDivElement>(null)
 
   // Full-reading PDF via the browser's print engine (captures every tab's charts & tables).
   const [printAll, setPrintAll] = useState(false)
+  const [pdfBusy, setPdfBusy] = useState(false)
 
   // Customer account (email-only sign-up); token drives per-account chart saving.
   const [customerToken, setCustomerToken] = useState<string | null>(null)
 
-  // AI reading
-  // Manual-approval reading workflow: request → pending → (Sayar approves) → approved.
-  const [reqStatus, setReqStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none')
-  const [reqMarkdown, setReqMarkdown] = useState('')
-  const [, setReqId] = useState<number | null>(null)   // tracked on status load; value unused since PDF is client-side now
-  const [reqLoading, setReqLoading] = useState(false)
-  const [reqError, setReqError] = useState('')
-  const [reqInfo, setReqInfo] = useState('')
-  const [showApprovedModal, setShowApprovedModal] = useState(false)   // guidance pop-up when a reading is approved
+  // Consultation thread with the Sayar (polling lives in the hook).
+  const chat = useConsultationChat(customerToken)
+
   const readingRef = useRef<HTMLDivElement>(null)   // the rendered reading, for client-side PDF
   const customerPanelRef = useRef<CustomerPanelHandle>(null)
   const [howtoOpen, setHowtoOpen] = useState(false)
   const [verifyToast, setVerifyToast] = useState('')
-  const [profile, setProfile] = useState<Profile | null>(null)
+  const profile$ = useQuerentProfile(customerToken)
+  const profile = profile$.profile
   const [otherMode, setOtherMode] = useState(false)   // "calculate for someone else"
   const loadSavedChart = (c: SavedChart) => {
     setName(c.name || ''); setGender(c.gender === 'female' ? 'female' : 'male')
     setDate(c.birthDate || date); setTime(c.birthTime || time)
     setLat(String(c.latitude)); setLon(String(c.longitude))
     if (c.timeZone) setTz(c.timeZone)
-    setPlace(c.name ? `${c.name} · saved` : 'Saved location'); setPlaceConfirmed(true)
+    geo.hydrate(c.name ? `${c.name} · saved` : 'Saved location')
+    setStep(3)   // a saved chart has already answered steps 1 and 2
   }
 
-  const onPlaceChange = (v: string) => {
-    setPlace(v)
-    setPlaceConfirmed(false)   // typing invalidates until a result is chosen
-    window.clearTimeout(debTimer.current)
-    if (v.trim().length < 3) { setResults([]); return }
-    debTimer.current = window.setTimeout(async () => {
-      setSearching(true)
-      try {
-        const r = await fetch(`${GEO_URL}?format=json&limit=5&q=${encodeURIComponent(v)}`, { headers: { Accept: 'application/json' } })
-        const j = (await r.json()) as GeoResult[]
-        setResults(Array.isArray(j) ? j : [])
-      } catch { setResults([]) } finally { setSearching(false) }
-    }, 450)
+  const applyPreset = (p: Preset) => geo.apply(p)
+
+  useEffect(() => {
+    saveBirthDraft({ name, gender, date, time, timeUnknown, lat, lon, tz, ayanamsa, place, placeConfirmed, consent, step })
+  }, [name, gender, date, time, timeUnknown, lat, lon, tz, ayanamsa, place, placeConfirmed, consent, step])
+
+  // An unknown birth time is answered with a noon solar chart: the Lagna and
+  // house cusps are not trustworthy, so the reading leans on the Moon instead.
+  const setTimeUnknownSafely = (unknown: boolean) => {
+    setTimeUnknown(unknown)
+    if (unknown) setTime('12:00')
   }
-  const selectPlace = (g: GeoResult) => {
-    const la = Number(g.lat), lo = Number(g.lon)
-    setLat(String(la)); setLon(String(lo)); setPlace(g.display_name.split(',').slice(0, 2).join(',').trim()); setResults([]); setPlaceConfirmed(true)
-    try { setTz(tzlookup(la, lo)) } catch { /* keep */ }
-  }
-  const applyPreset = (p: Preset) => { setLat(String(p.lat)); setLon(String(p.lon)); setTz(p.tz); setPlace(p.label); setResults([]); setPlaceConfirmed(true) }
 
   const canSubmit = !!name.trim() && placeConfirmed && consent
+
+  // Per-step validation, so a blocker is reported on the screen that caused it
+  // rather than as an error list at the very bottom of the form.
+  const stepError = (s: number): string => {
+    if (s === 1 && !name.trim()) return lang === 'mm' ? 'အမည် ဖြည့်သွင်းပါ။' : 'Please enter a name.'
+    if (s === 2 && !placeConfirmed) {
+      return lang === 'mm'
+        ? 'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ။'
+        : 'Search and select your birth city from the list.'
+    }
+    if (s === 3 && !date) return lang === 'mm' ? 'မွေးသက္ကရာဇ် ဖြည့်ပါ။' : 'Please enter your date of birth.'
+    if (s === 3 && !consent) {
+      return lang === 'mm'
+        ? 'အချက်အလက်သိမ်းဆည်းခွင့်ကို သဘောတူညီပေးပါ။'
+        : 'Please agree to the data-storage consent.'
+    }
+    return ''
+  }
+  const currentStepError = stepError(step)
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!canSubmit) return   // name + confirmed city + consent are all mandatory
-    setError(''); setLoading(true); setData(null)
-    try {
-      const [y, mo, d] = date.split('-').map(Number)
-      const [h, mi] = time.split(':').map(Number)
-      const body: BirthChartRequest = {
-        year: y, month: mo, day: d, hour: h || 0, minute: mi || 0, second: 0,
-        timeZone: tz, latitude: Number(lat), longitude: Number(lon), ayanamsa,
-      }
-      const res = await fetch(CHART_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      const json = (await res.json().catch(() => null)) as { success?: boolean; data?: BirthChartData; message?: string } | null
-      if (!res.ok || !json?.success || !json.data) throw new Error(json?.message || `Failed (${res.status})`)
-      setData(json.data); setQuerent({ name: name.trim(), gender, nn: naynan(date, time) }); setTab('reading')
-      // Persist the querent's chart ONLY with explicit consent (opt-in).
-      if (consent) {
-        fetch(`${SITE.apiUrl}/api/astrology/save-chart`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name.trim(), gender, birthDate: date, birthTime: time, timeZone: tz,
-            latitude: Number(lat), longitude: Number(lon), nayNan: naynan(date, time)?.num ?? 0, consent: true,
-          }),
-        }).catch(() => { })
-      }
-      // Logged-in customers: also save under their account (history + autofill).
-      if (customerToken) {
-        fetch(`${SITE.apiUrl}/api/customer/save-chart`, {
-          method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${customerToken}` },
-          body: JSON.stringify({
-            name: name.trim(), gender, birthDate: date, birthTime: time, timeZone: tz,
-            latitude: Number(lat), longitude: Number(lon), nayNan: naynan(date, time)?.num ?? 0, consent: true,
-          }),
-        }).catch(() => { })
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not compute the chart.')
-    } finally { setLoading(false) }
+    const [y, mo, d] = date.split('-').map(Number)
+    const [h, mi] = time.split(':').map(Number)
+    const chart = await chart$.compute({
+      year: y, month: mo, day: d, hour: h || 0, minute: mi || 0, second: 0,
+      timeZone: tz, latitude: Number(lat), longitude: Number(lon), ayanamsa,
+    })
+    if (!chart) return
+
+    setQuerent({ name: name.trim(), gender, nn: naynan(date, time) })
+    setTab('reading')
+
+    // Archived ONLY with explicit consent (opt-in), plus under the account when
+    // signed in, for history and autofill.
+    if (consent) {
+      chart$.archive({
+        name: name.trim(), gender, birthDate: date, birthTime: time, timeZone: tz,
+        latitude: Number(lat), longitude: Number(lon), nayNan: naynan(date, time)?.num ?? 0, consent: true,
+      }, customerToken)
+    }
   }
 
   // Current age from a yyyy-mm-dd date of birth.
@@ -323,39 +222,23 @@ export default function Vedin() {
     setDate(p.dob); setTime(bt)
     setLat(String(p.latitude)); setLon(String(p.longitude))
     if (p.timezone) setTz(p.timezone)
-    setPlace(p.locationName || 'My birth place'); setPlaceConfirmed(true)
-    setError(''); setLoading(true); setData(null)
-    try {
-      const [y, mo, d] = p.dob.split('-').map(Number)
-      const [h, mi] = bt.split(':').map(Number)
-      const body: BirthChartRequest = {
-        year: y, month: mo, day: d, hour: h || 0, minute: mi || 0, second: 0,
-        timeZone: p.timezone || tz, latitude: p.latitude, longitude: p.longitude, ayanamsa,
-      }
-      const res = await fetch(CHART_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-      const json = (await res.json().catch(() => null)) as { success?: boolean; data?: BirthChartData; message?: string } | null
-      if (!res.ok || !json?.success || !json.data) throw new Error(json?.message || `Failed (${res.status})`)
-      setData(json.data); setQuerent({ name: (p.username || '').trim(), gender: g, nn: naynan(p.dob, bt) }); setTab('reading')
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Could not compute your chart.')
-    } finally { setLoading(false) }
-  }
+    geo.hydrate(p.locationName || 'My birth place')
+    const [y, mo, d] = p.dob.split('-').map(Number)
+    const [h, mi] = bt.split(':').map(Number)
+    const chart = await chart$.compute({
+      year: y, month: mo, day: d, hour: h || 0, minute: mi || 0, second: 0,
+      timeZone: p.timezone || tz, latitude: p.latitude, longitude: p.longitude, ayanamsa,
+    })
+    if (!chart) return
 
-  // Fetch the profile whenever the auth token changes.
-  useEffect(() => {
-    if (!customerToken) { setProfile(null); setOtherMode(false); return }
-    let cancelled = false
-    fetch(`${SITE.apiUrl}/api/customer/me`, { headers: { Authorization: `Bearer ${customerToken}` } })
-      .then((r) => r.json()).then((j) => { if (!cancelled && j?.success && j.data) setProfile(j.data as Profile) })
-      .catch(() => { /* ignore */ })
-    return () => { cancelled = true }
-  }, [customerToken])
+    setQuerent({ name: (p.username || '').trim(), gender: g, nn: naynan(p.dob, bt) })
+    setTab('reading')
+  }
 
   const refreshProfile = () => {
     if (!customerToken) return
-    fetch(`${SITE.apiUrl}/api/customer/me`, { headers: { Authorization: `Bearer ${customerToken}` } })
-      .then((r) => r.json()).then((j) => { if (j?.success && j.data) { setProfile(j.data as Profile); setOtherMode(false) } })
-      .catch(() => { /* ignore */ })
+    setOtherMode(false)
+    profile$.refresh()
   }
 
   // Registered + has profile + not "someone else" → instantly show their chart.
@@ -367,68 +250,16 @@ export default function Vedin() {
 
   const startCalcForOther = () => {
     setOtherMode(true); setData(null)
-    setName(''); setGender('male'); setPlace(''); setPlaceConfirmed(false); setResults([])
-    setReqStatus('none'); setReqMarkdown(''); setReqId(null); setReqError(''); setReqInfo('')
+    setName(''); setGender('male'); geo.reset()
+    reading$.reset()
   }
-  const backToDashboard = () => { setOtherMode(false); setReqStatus('none'); setReqMarkdown(''); setReqId(null) }
+  const backToDashboard = () => { setOtherMode(false); reading$.reset() }
 
   // Life-area "get remedy" → pre-fill the consultation chat with that area.
   const openRemedy = (areaLabel: string) => {
-    setChatInput(lang === 'mm' ? `${areaLabel} ကဏ္ဍအတွက် သင့်လျော်သော ယတြာ/အကြံဉာဏ် လိုအပ်ပါသည်။` : `I would like a suitable remedy / advice for: ${areaLabel}.`)
+    chat.setInput(lang === 'mm' ? `${areaLabel} ကဏ္ဍအတွက် သင့်လျော်သော ယတြာ/အကြံဉာဏ် လိုအပ်ပါသည်။` : `I would like a suitable remedy / advice for: ${areaLabel}.`)
     setTimeout(() => remedyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 40)
   }
-  const loadMessages = async () => {
-    if (!customerToken) return
-    try {
-      const res = await fetch(`${SITE.apiUrl}/api/customer/messages`, { headers: { Authorization: `Bearer ${customerToken}` } })
-      const j = (await res.json().catch(() => null)) as { success?: boolean; data?: ChatMsg[] } | null
-      if (j?.success && Array.isArray(j.data)) {
-        // Only replace state when the thread actually changed (new/removed message),
-        // so silent 5s polls don't trigger needless re-renders or scroll jumps.
-        const next = j.data
-        setChatMsgs((prev) =>
-          (prev.length === next.length && prev[prev.length - 1]?.id === next[next.length - 1]?.id)
-            ? prev
-            : next)
-      }
-    } catch { /* ignore — silent background poll */ }
-  }
-  const sendMessage = async () => {
-    const text = chatInput.trim()
-    if (!text || !customerToken || chatBusy) return
-    setChatBusy(true)
-    try {
-      const res = await fetch(`${SITE.apiUrl}/api/customer/messages`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${customerToken}` }, body: JSON.stringify({ text }),
-      })
-      const j = (await res.json().catch(() => null)) as { success?: boolean; data?: ChatMsg } | null
-      if (j?.success && j.data) { setChatMsgs((m) => [...m, j.data as ChatMsg]); setChatInput('') }
-    } catch { /* ignore */ } finally { setChatBusy(false) }
-  }
-  // Real-time chat: load immediately on login, then silently poll every 5s.
-  // The interval is cleared on unmount / logout so there's no memory leak or
-  // background work once the user leaves — keeps mobile completely smooth.
-  useEffect(() => {
-    if (!customerToken) return
-    loadMessages()
-    const id = window.setInterval(loadMessages, 5000)
-    return () => window.clearInterval(id)
-  }, [customerToken]) // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }) }, [chatMsgs])
-
-  // Approved-reading guidance pop-up: show once per browser session when the
-  // reading turns 'approved', unless the user has already dismissed it.
-  useEffect(() => {
-    if (reqStatus !== 'approved') return
-    let dismissed = false
-    try { dismissed = sessionStorage.getItem('vedinApprovedSeen') === '1' } catch { /* private mode */ }
-    if (!dismissed) setShowApprovedModal(true)
-  }, [reqStatus])
-  const dismissApprovedModal = () => {
-    setShowApprovedModal(false)
-    try { sessionStorage.setItem('vedinApprovedSeen', '1') } catch { /* ignore */ }
-  }
-
   // Render every tab, switch to the light (print-friendly) theme, then open the
   // browser's Save-as-PDF dialog. The full reading — charts, tables, timeline —
   // is captured because printAll forces all sections into the DOM.
@@ -503,55 +334,56 @@ export default function Vedin() {
     }
   }
 
-  type StatusData = { status: string; requestId: number; markdown?: string; alreadyRequested?: boolean }
-  const applyStatus = (d: StatusData | null | undefined) => {
-    if (d && d.status && d.status.toLowerCase() !== 'none') {
-      setReqStatus(d.status.toLowerCase() as 'pending' | 'approved' | 'rejected')
-      setReqId(d.requestId ?? null)
-      setReqMarkdown(d.markdown || '')
-    } else {
-      setReqStatus('none'); setReqId(null); setReqMarkdown('')
+  // The Sayar-approval workflow (status polling + approved modal live in the hook).
+  const reading$ = useReadingRequest({
+    token: customerToken,
+    identity: readingIdentity,
+    buildPayload: buildAiPayload,
+  })
+
+  // On chart compute (and revisits), check whether a request already exists.
+  useEffect(() => {
+    if (!data) return
+    reading$.setError(''); reading$.setInfo(''); reading$.check()
+  }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  /**
+   * The premium report is a real document rendered by QuestPDF on the server —
+   * typeset pages, embedded Burmese fonts, a vector chart plate — and it is built
+   * by the same background job that writes the reading, so this is a download of
+   * stored bytes rather than a render. Browser print stays as the fallback for the
+   * case where the server artifact is not there yet.
+   */
+  const downloadReadingPdf = async () => {
+    if (!customerToken) { openAuth('login'); return }
+    setPdfBusy(true)
+    try {
+      const res = await fetch(`${SITE.apiUrl}/api/customer/download-pdf`, {
+        headers: { Authorization: `Bearer ${customerToken}` },
+      })
+      if (!res.ok) throw new Error(`HTTP ${res.status}`)
+
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `vedin-reading-${new Date().toISOString().slice(0, 10)}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.setTimeout(() => URL.revokeObjectURL(url), 4000)
+    } catch {
+      printReadingFallback()
+    } finally {
+      setPdfBusy(false)
     }
   }
 
-  // On chart compute (and revisits), check whether a request already exists / is approved.
-  const checkReadingStatus = async () => {
-    try {
-      const res = await fetch(`${SITE.apiUrl}/api/astrology/reading-status`, {
-        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(readingIdentity()),
-      })
-      const json = (await res.json().catch(() => null)) as { data?: StatusData } | null
-      applyStatus(json?.data)
-    } catch { /* ignore */ }
-  }
-  useEffect(() => { if (data) { setReqError(''); setReqInfo(''); checkReadingStatus() } }, [data]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Submit a request — NO AI call; the Sayar reviews and approves later.
-  const requestReading = async () => {
-    if (!data || reqLoading) return
-    const payload = buildAiPayload()
-    if (!payload) return
-    setReqLoading(true); setReqError(''); setReqInfo('')
-    try {
-      const headers: Record<string, string> = { 'Content-Type': 'application/json' }
-      if (customerToken) headers.Authorization = `Bearer ${customerToken}`
-      const res = await fetch(`${SITE.apiUrl}/api/astrology/request-reading`, {
-        method: 'POST', headers, body: JSON.stringify(payload),
-      })
-      const json = (await res.json().catch(() => null)) as { success?: boolean; message?: string; data?: StatusData } | null
-      if (!res.ok || !json?.data) throw new Error(json?.message || `Failed (${res.status})`)
-      applyStatus(json.data)
-      if (json.data.alreadyRequested) setReqInfo(json.message || '')
-    } catch (err) {
-      setReqError(err instanceof Error ? err.message : 'Could not send the request.')
-    } finally { setReqLoading(false) }
-  }
-
-  // Direct client-side PDF via a HIDDEN IFRAME (not a pop-up, so no blocker and no
-  // blank-modal crash). We write a clean, self-contained light-theme document into
+  // Fallback: client-side PDF via a HIDDEN IFRAME (not a pop-up, so no blocker and
+  // no blank-modal crash). We write a clean, self-contained light-theme document into
   // the iframe, wait for the Padauk web-fonts to load, then print just that iframe.
   // Everything is wrapped so a failure shows a friendly toast instead of crashing.
-  const downloadReadingPdf = () => {
+  const printReadingFallback = () => {
     if (!customerToken) { openAuth('login'); return }
     const bodyHtml = readingRef.current?.innerHTML
     if (!bodyHtml) { setVerifyToast(lang === 'mm' ? 'ဟောစာတမ်း မတွေ့ပါ။ စာမျက်နှာကို ပြန်စစ်ပါ။' : 'Reading not found — please reload.'); return }
@@ -644,7 +476,7 @@ export default function Vedin() {
   const openAuth = (mode: 'login' | 'signup') => customerPanelRef.current?.openAuth(mode)
 
   const curVarga = VARGAS.find((v) => v.n === vargaN) ?? VARGAS[4]
-  const TABS: { id: Tab; label: string; variant?: 'main' | 'ashtaka' | 'shadbala' }[] = [
+  const TABS: TabDef[] = [
     { id: 'ai', label: lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်းများ' : 'Detailed Reading', variant: 'main' },
     { id: 'reading', label: lang === 'mm' ? 'မွေးဇာတာစစ်တမ်းများ' : t.tabReading },
     { id: 'timeline', label: t.tabTimeline },
@@ -857,6 +689,9 @@ export default function Vedin() {
 
           {/* ── Form (centered on top; results span the full page below) ── */}
           <form onSubmit={submit} className="glass-card mx-auto w-full max-w-3xl p-6 no-print">
+            <WizardProgress lang={lang} step={step} />
+
+            {step === 1 && (<>
             <div className="mb-3 grid grid-cols-2 gap-3">
               <label><span className={labelCls}>{t.fldName} <span className="text-coral">*</span></span>
                 <input value={name} onChange={(e) => setName(e.target.value)} placeholder={lang === 'mm' ? 'အမည်' : 'Full name'}
@@ -867,40 +702,92 @@ export default function Vedin() {
                   <option value="female" className="text-black">{t.female}</option>
                 </select></label>
             </div>
+            </>)}
+
+            {step === 2 && (<>
             <label className="relative block">
               <span className={labelCls}>{lang === 'mm' ? 'မွေးဖွားရာ မြို့/ဇာတိ' : 'Birth place'} <span className="text-coral">*</span></span>
               <span className="relative mt-1.5 block">
                 <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                <input value={place} onChange={(e) => onPlaceChange(e.target.value)} placeholder={lang === 'mm' ? 'မြို့ ရှာရန်…' : 'Search a city…'}
+                <input value={place} onChange={(e) => geo.search(e.target.value)} placeholder={lang === 'mm' ? 'မြို့ ရှာရန်…' : 'Search a city…'}
                   className={`w-full rounded-xl border bg-white/5 py-2.5 pl-9 pr-8 text-sm text-fg outline-none transition focus:border-accent/50 ${placeConfirmed ? 'border-jade/50' : 'border-coral/40'}`} />
-                {searching
+                {geo.searching
                   ? <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted" />
                   : placeConfirmed && <span className="absolute right-3 top-1/2 -translate-y-1/2 text-jade">✓</span>}
               </span>
-              {!placeConfirmed && place.trim().length > 0 && !searching && (
+              {/* A failed lookup used to render identically to "no such city" — say which it is. */}
+              {geo.error && (
+                <span className="mt-1 block font-mono text-[10px] text-coral">{lang === 'mm' ? 'မြို့ရှာဖွေမှု ခေတ္တ ရပ်နားနေပါသည်။ ထပ်စမ်းကြည့်ပါ သို့မဟုတ် အောက်ရှိ မြို့များမှ ရွေးပါ။' : 'City search is unavailable right now — try again, or pick from the quick locations below.'}</span>
+              )}
+              {!placeConfirmed && place.trim().length > 0 && !geo.searching && !geo.error && (
                 <span className="mt-1 block font-mono text-[10px] text-coral">{lang === 'mm' ? 'စာရင်းထဲမှ မြို့တစ်ခုကို ရွေးချယ်ပါ။' : 'Pick a city from the list.'}</span>
               )}
-              {results.length > 0 && (
+              {geo.results.length > 0 && (
                 <ul className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-white/15 bg-surface/95 backdrop-blur-md">
-                  {results.map((g, i) => (
-                    <li key={i}><button type="button" onClick={() => selectPlace(g)}
+                  {geo.results.map((g, i) => (
+                    <li key={i}><button type="button" onClick={() => geo.select(g)}
                       className="block w-full px-3 py-2 text-left text-xs text-fg/90 transition hover:bg-accent/15">{g.display_name}</button></li>
                   ))}
                 </ul>
               )}
             </label>
 
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <label><span className={labelCls}>Date of birth</span>
+            <div className="mt-4">
+              <span className={labelCls}>{lang === 'mm' ? 'မြို့များ အမြန်ရွေးရန်' : 'Quick locations'}</span>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {PRESETS.map((p) => (
+                  <button key={p.label} type="button" onClick={() => applyPreset(p)}
+                    className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs text-muted transition hover:border-accent/40 hover:text-fg">
+                    <MapPin size={11} /> {p.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            </>)}
+
+            {step === 3 && (<>
+            <div className="grid grid-cols-2 gap-3">
+              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးသက္ကရာဇ်' : 'Date of birth'}</span>
                 <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className={field} /></label>
-              <label><span className={labelCls}>Time (24h)</span>
-                <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required className={field} /></label>
-              <label><span className={labelCls}>Latitude</span>
+              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးချိန် (၂၄ နာရီ)' : 'Time (24h)'}</span>
+                <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required disabled={timeUnknown}
+                  className={`${field} ${timeUnknown ? 'cursor-not-allowed opacity-40' : ''}`} /></label>
+            </div>
+
+            <label className={`mt-3 flex items-start gap-2 rounded-xl border p-3 text-xs leading-relaxed transition ${timeUnknown ? 'border-accent/40 bg-accent/5' : 'border-white/12 bg-white/5'}`}>
+              <input type="checkbox" checked={timeUnknown} onChange={(e) => setTimeUnknownSafely(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-accent" />
+              <span className="text-muted">
+                {lang === 'mm' ? 'မွေးချိန် အတိအကျ မသိပါ' : "I don't know my exact birth time"}
+              </span>
+            </label>
+
+            {timeUnknown && (
+              <p className="mt-2 flex items-start gap-1.5 rounded-xl border border-accent/30 bg-accent/5 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
+                <Info size={13} className="mt-0.5 shrink-0 text-accent-light" />
+                {lang === 'mm'
+                  ? 'မွန်းတည့် ၁၂:၀၀ ဖြင့် တွက်ပါမည်။ လဂ်နှင့် အိမ်ခွဲများ တိကျမည် မဟုတ်ပါ — စန်း (Chandra) အခြေခံ ဟောကိန်းကိုသာ အားကိုးပါ။'
+                  : 'The chart will be cast for 12:00 noon. The Lagna and house cusps will not be reliable — rely on the Moon-based (Chandra) reading instead.'}
+              </p>
+            )}
+
+            <details open={advancedOpen} onToggle={(e) => setAdvancedOpen((e.target as HTMLDetailsElement).open)}
+              className="mt-3 rounded-xl border border-white/12 bg-white/[0.02] p-3">
+              <summary className="cursor-pointer select-none font-mono text-[11px] uppercase tracking-wider text-muted transition hover:text-fg">
+                {lang === 'mm' ? 'အဆင့်မြင့် ဆက်တင်များ' : 'Advanced settings'}
+              </summary>
+              <p className="mt-2 font-mono text-[10px] leading-relaxed text-muted">
+                {lang === 'mm'
+                  ? 'မြို့ရွေးချယ်မှုမှ အလိုအလျောက် ရယူထားပါသည်။ လိုအပ်မှသာ ပြင်ပါ။'
+                  : 'Derived automatically from the city you picked — only change these if you know you need to.'}
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+              <label><span className={labelCls}>{lang === 'mm' ? 'လတ္တီတွဒ်' : 'Latitude'}</span>
                 <input type="number" step="any" value={lat} onChange={(e) => setLat(e.target.value)} required className={field} /></label>
-              <label><span className={labelCls}>Longitude</span>
+              <label><span className={labelCls}>{lang === 'mm' ? 'လောင်ဂျီတွဒ်' : 'Longitude'}</span>
                 <input type="number" step="any" value={lon} onChange={(e) => setLon(e.target.value)} required className={field} /></label>
             </div>
-            <label className="mt-3 block"><span className={labelCls}>Time zone</span>
+            <label className="mt-3 block"><span className={labelCls}>{lang === 'mm' ? 'အချိန်ဇုန်' : 'Time zone'}</span>
               <select value={tz} onChange={(e) => setTz(e.target.value)} className={field}>
                 {[...new Set([tz, ...TZ_OPTIONS])].map((z) => <option key={z} value={z} className="text-black">{z}</option>)}
               </select>
@@ -913,18 +800,7 @@ export default function Vedin() {
                 <option value="truechitra" className="text-black">True Chitra</option>
               </select>
             </label>
-
-            <div className="mt-4">
-              <span className={labelCls}>Quick locations</span>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {PRESETS.map((p) => (
-                  <button key={p.label} type="button" onClick={() => applyPreset(p)}
-                    className="inline-flex items-center gap-1 rounded-full border border-white/12 bg-white/5 px-3 py-1 text-xs text-muted transition hover:border-accent/40 hover:text-fg">
-                    <MapPin size={11} /> {p.label}
-                  </button>
-                ))}
-              </div>
-            </div>
+            </details>
 
             <label className={`mt-4 flex items-start gap-2 rounded-xl border p-3 text-xs leading-relaxed transition ${consent ? 'border-jade/40 bg-jade/5 text-muted' : 'border-coral/40 bg-coral/5 text-fg/80'}`}>
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-accent" />
@@ -942,6 +818,31 @@ export default function Vedin() {
                 {!consent && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{lang === 'mm' ? 'အချက်အလက်သိမ်းဆည်းခွင့်ကို သဘောတူညီပေးပါ။' : 'Please agree to the data-storage consent.'}</li>}
               </ul>
             )}
+            </>)}
+
+            {/* Blockers are reported on the step that caused them, not as a list
+                at the bottom of a screen the querent has already scrolled past. */}
+            {step < 3 && currentStepError && (
+              <p className="mt-3 flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral">
+                <span>•</span>{currentStepError}
+              </p>
+            )}
+
+            <div className="mt-4 flex items-center gap-2">
+              {step > 1 && (
+                <button type="button" onClick={() => setStep((s) => s - 1)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-muted transition hover:border-accent/40 hover:text-fg">
+                  <ChevronLeft size={15} /> {lang === 'mm' ? 'နောက်သို့' : 'Back'}
+                </button>
+              )}
+              {step < 3 && (
+                <button type="button" disabled={!!currentStepError} onClick={() => setStep((s) => s + 1)}
+                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space shadow-lg shadow-accent/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
+                  {lang === 'mm' ? 'ဆက်လက်' : 'Continue'} <ChevronRight size={15} />
+                </button>
+              )}
+            </div>
+
             {error && <p className="mt-3 rounded-xl border border-coral/40 bg-coral/10 px-3 py-2 font-mono text-xs text-coral">{error}</p>}
             <p className="mt-4 font-mono text-[10px] leading-relaxed text-muted">{t.disclaimer}</p>
           </form>
@@ -955,6 +856,8 @@ export default function Vedin() {
             </div>
           )}
 
+          {loading && !data && <ChartSkeleton lang={lang} />}
+
           {data && reading && (
             <div className="min-w-0 space-y-5">
               {/* header + full-reading PDF download */}
@@ -965,179 +868,40 @@ export default function Vedin() {
                   <Download size={14} /> {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ ရယူရန်တောင်းဆိုပါ' : 'Download Full Natal Chart PDF'}
                 </button>
               </div>
-              <div className="no-print sticky top-14 z-30 -mx-1 border-b border-accent/20 px-1 py-2.5 backdrop-blur-md sm:top-16"
-                style={{ background: 'rgb(var(--space) / 0.85)' }}>
-                <div className="flex items-center gap-2">
-                  <div className="no-scrollbar flex flex-1 items-center gap-2 overflow-x-auto whitespace-nowrap py-0.5">
-                    {TABS.map((tb) => {
-                      const active = tab === tb.id
-                      // Active tabs are unmistakable: larger, bold, raised, strongly
-                      // coloured, scaled up. Inactive tabs are faded to maximise contrast.
-                      if (tb.variant === 'main') return (
-                        <button key={tb.id} type="button" onClick={() => setTab(tb.id)}
-                          className={`flex shrink-0 items-center gap-1.5 rounded-full border-2 font-groovy transition-all duration-200 ${active
-                            ? 'scale-105 border-amber-300 bg-gradient-to-r from-amber-500 to-yellow-400 px-6 py-2.5 text-lg font-bold text-white shadow-lg shadow-amber-500/40 dark:text-amber-950'
-                            : 'border-amber-400/40 bg-amber-400/5 px-5 py-2 text-sm font-medium text-amber-700/70 opacity-70 hover:opacity-100 dark:text-amber-200/70'}`}>
-                          <ScrollText size={active ? 18 : 15} /> {tb.label}
-                        </button>
-                      )
-                      if (tb.variant === 'ashtaka' || tb.variant === 'shadbala') {
-                        const grad = tb.variant === 'ashtaka'
-                          ? (active ? 'from-indigo-500 to-blue-600 shadow-indigo-500/40' : 'from-indigo-400/20 to-blue-500/10')
-                          : (active ? 'from-rose-500 to-pink-600 shadow-rose-500/40' : 'from-rose-400/20 to-pink-500/10')
-                        const faded = tb.variant === 'ashtaka' ? 'text-indigo-700/70 dark:text-indigo-200/70' : 'text-rose-700/70 dark:text-rose-200/70'
-                        return (
-                          <button key={tb.id} type="button" onClick={() => setTab(tb.id)}
-                            className={`shrink-0 rounded-full border bg-gradient-to-r font-groovy transition-all duration-200 ${active
-                              ? `scale-105 border-white/25 px-6 py-2.5 text-lg font-bold text-white shadow-lg ${grad}`
-                              : `border-white/10 px-5 py-2 text-sm font-medium opacity-70 hover:opacity-100 ${grad} ${faded}`}`}>
-                            {tb.label}
-                          </button>
-                        )
-                      }
-                      return (
-                        <button key={tb.id} type="button" onClick={() => setTab(tb.id)}
-                          className={`shrink-0 rounded-full border font-groovy transition-all duration-200 ${active
-                            ? 'scale-105 border-amber-300 bg-gradient-to-r from-amber-500 to-yellow-400 px-6 py-2.5 text-lg font-bold text-white shadow-lg shadow-amber-500/40 dark:text-amber-950'
-                            : 'border-white/12 bg-white/5 px-5 py-2 text-sm font-medium text-muted opacity-70 hover:opacity-100 hover:text-fg'}`}>
-                          {tb.label}
-                        </button>
-                      )
-                    })}
-                  </div>
-                  {(tab === 'd1' || tab === 'vargas') && (
-                    <div className="flex shrink-0 items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1">
-                      {(['diamond', 'grid'] as ChartStyle[]).map((s) => (
-                        <button key={s} type="button" onClick={() => setChartStyle(s)}
-                          className={`rounded-full px-2.5 py-1 font-mono text-[11px] transition ${chartStyle === s ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>
-                          {s === 'diamond' ? (lang === 'mm' ? 'စိန်ပုံစံ' : 'Diamond') : (lang === 'mm' ? 'ဇယားကွက်ပုံစံ' : 'Grid')}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
+              <ChartSummaryHero
+                data={data}
+                lang={lang}
+                mahadashaLord={reading.lord}
+                naynan={querent?.nn}
+                name={querent?.name}
+                timeUnknown={timeUnknown}
+              />
+              <TabBar
+                lang={lang}
+                tabs={TABS}
+                tab={tab}
+                onTab={setTab}
+                chartStyle={chartStyle}
+                onChartStyle={setChartStyle}
+              />
 
               {/* ── DETAILED READING (manual-approval workflow) ── */}
               {(tab === 'ai' || printAll) && (
-                <div className="space-y-5">
-                  {/* Auth gate — a reading can only be requested by a signed-in account */}
-                  {!customerToken && (reqStatus === 'none' || reqStatus === 'rejected') && (
-                    <div className="relative overflow-hidden rounded-2xl border border-accent/35 p-6 sm:p-8 no-print text-center"
-                      style={{ background: 'linear-gradient(135deg, rgb(var(--card)), rgb(var(--surface)))', boxShadow: '0 0 50px -20px rgb(var(--accent) / 0.5)' }}>
-                      <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full opacity-25 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--accent)) 0%, transparent 70%)' }} />
-                      <div className="relative flex flex-col items-center gap-3">
-                        <span className="grid h-14 w-14 place-items-center rounded-full border border-accent/40 bg-accent/15 text-accent-light"><Lock size={24} /></span>
-                        <h3 className="font-groovy text-xl text-fg">{lang === 'mm' ? 'အကောင့် ဖွင့်ထားရန် လိုအပ်ပါသည်' : 'An account is required'}</h3>
-                        <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'mm'
-                          ? 'ဟောစာတမ်းအပြည့်အစုံကို ရယူရန်နှင့် သင့်ဇာတာများ မှတ်သားထားရန် အကောင့် (Account) ဖွင့်ထားရန် လိုအပ်ပါသည်။'
-                          : 'To get the full reading and to save your charts, you need to have an account.'}</p>
-                        <button type="button" onClick={() => openAuth('signup')}
-                          className="mt-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110">
-                          <UserPlus size={16} /> {lang === 'mm' ? 'အကောင့်ဖွင့် / ဝင်ရန်' : 'Sign Up / Log In'}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Request card — signed-in, no active/approved request */}
-                  {customerToken && (reqStatus === 'none' || reqStatus === 'rejected') && (
-                    <div className="relative overflow-hidden rounded-2xl border border-accent/30 p-6 no-print"
-                      style={{ background: 'linear-gradient(135deg, rgb(var(--card)), rgb(var(--surface)))', boxShadow: '0 0 50px -18px rgb(var(--accent) / 0.5)' }}>
-                      <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--accent)) 0%, transparent 70%)' }} />
-                      <div className="relative">
-                        <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={15} /> {lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
-                        <h3 className="mt-2 font-groovy text-xl text-fg">{lang === 'mm' ? 'သင့်ဇာတာအတွက် ဆရာ ကိုယ်တိုင် စစ်ဆေးသော ဟောစာတမ်း' : 'A reading personally reviewed by the Sayar'}</h3>
-                        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{lang === 'mm'
-                          ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီးနောက်၊ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်းအပြည့်အစုံကို ရေးသားပေးပါမည်။'
-                          : 'Your chart is computed precisely with classical Vedic astrology formulas, verified and approved to get full details before your full 7-life-area reading is written.'}</p>
-                        <button type="button" onClick={requestReading} disabled={reqLoading}
-                          className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
-                          {reqLoading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-                          {reqLoading
-                            ? (lang === 'mm' ? 'ပေးပို့နေသည်…' : 'Sending…')
-                            : showDashboard
-                              ? (lang === 'mm' ? 'ကျွန်ုပ်၏ ပရိုဖိုင်ဖြင့် ဟောစာတမ်း တောင်းဆိုရန်' : 'Request Reading based on my profile')
-                              : (lang === 'mm' ? 'ဆရာ ကိုဘုန်းမင်းသိုက်ဒင်ထံမှ ဟောစာတမ်းအပြည့်အစုံ တောင်းဆိုရန်' : 'Request Full Reading from the Sayar')}
-                        </button>
-                        <p className="mt-2 font-mono text-[11px] text-muted">{lang === 'mm' ? 'တစ်လလျှင် တစ်ကြိမ် တောင်းဆိုနိုင်ပါသည်။' : 'One request per month.'}</p>
-                      </div>
-                    </div>
-                  )}
-
-                  {reqError && <div className="rounded-xl border border-coral/40 bg-coral/10 px-4 py-3 text-sm text-coral no-print">{reqError}</div>}
-                  {reqInfo && <div className="rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-sm text-accent-light no-print">{reqInfo}</div>}
-
-                  {/* Pending — awaiting the Sayar's approval */}
-                  {reqStatus === 'pending' && (
-                    <div className="relative overflow-hidden rounded-2xl border border-accent/30 p-6 sm:p-8 no-print"
-                      style={{ background: 'linear-gradient(135deg, rgb(var(--card)), rgb(var(--surface)))', boxShadow: '0 0 50px -20px rgb(var(--accent) / 0.5)' }}>
-                      <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full opacity-25 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--accent)) 0%, transparent 70%)' }} />
-                      <div className="relative flex flex-col items-center gap-3 text-center">
-                        <span className="grid h-14 w-14 place-items-center rounded-full border border-accent/40 bg-accent/15 text-accent-light">
-                          <Clock size={26} className="animate-pulse" />
-                        </span>
-                        <h3 className="font-groovy text-xl text-fg">{lang === 'mm' ? 'ဆရာမှ စစ်ဆေးနေပါသည်' : 'Awaiting the Sayar’s review'}</h3>
-                        <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'mm'
-                          ? 'ဆရာမှ သင့်ဇာတာအား အသေးစိတ် စစ်ဆေးနေပါသည်။ အတည်ပြုပြီးပါက ဟောစာတမ်းအပြည့်အစုံကို ဤနေရာတွင် ပြန်လည် ဝင်ရောက်ကြည့်ရှုနိုင်ပါသည်။ ခဏ စောင့်ဆိုင်းပေးပါ။'
-                          : 'The Sayar is personally reviewing your chart. Once approved, your full reading will appear here — please check back shortly.'}</p>
-                        <span className="mt-1 rounded-full bg-accent/15 px-3 py-1 font-mono text-[11px] text-accent-light">{lang === 'mm' ? 'အခြေအနေ — စစ်ဆေးဆဲ' : 'Status — Pending'}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Approved — majestic success banner + critical refresh warning */}
-                  {reqStatus === 'approved' && (
-                    <div className="no-print space-y-2.5">
-                      <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400/60 p-4 text-center sm:p-5"
-                        style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.24) 0%, rgba(234,179,8,0.24) 100%)', boxShadow: '0 0 46px -10px rgba(234,179,8,0.55)' }}>
-                        <p className="flex flex-wrap items-center justify-center gap-2 font-groovy text-lg text-fg sm:text-xl">
-                          <CheckCircle2 size={22} className="text-emerald-500" />
-                          {lang === 'mm' ? 'ဆရာမှ သင့်ဟောစာတမ်းကို အတည်ပြုပြီးပါပြီ။' : 'The Sayar has approved your reading.'}
-                        </p>
-                      </div>
-                      <p className="flex flex-wrap items-center justify-center gap-2 rounded-xl border border-rose-400/50 bg-rose-500/10 px-4 py-2.5 text-center text-sm font-bold text-rose-600 dark:text-rose-300">
-                        <AlertTriangle size={16} className="shrink-0" /> ဟောစာတမ်း အပြည့်အစုံကို ဖတ်ရှုရန် Page ကို Refresh (ပြန်လည်ဆွဲချ) လုပ်ပေးပါရန်။
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Approved — the finished reading (printable) */}
-                  {reqStatus === 'approved' && reqMarkdown && (
-                    <div className="relative overflow-hidden rounded-2xl border border-accent/35 p-6 sm:p-8"
-                      style={{ background: 'linear-gradient(160deg, rgb(var(--card)) 0%, rgb(var(--surface)) 100%)', boxShadow: '0 0 60px -20px rgb(var(--accent) / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.05)' }}>
-                      <div className="pointer-events-none absolute -left-16 -bottom-20 h-56 w-56 rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--jade)) 0%, transparent 70%)' }} />
-                      <div className="relative">
-                        <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-                          <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={14} /> {lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-jade/15 px-2.5 py-0.5 font-mono text-[10px] text-jade no-print"><CheckCircle2 size={11} /> {lang === 'mm' ? 'ဆရာ အတည်ပြုပြီး' : 'Approved by the Sayar'}</span>
-                        </div>
-                        <div ref={readingRef}><MarkdownView markdown={reqMarkdown} /></div>
-                        <p className="mt-5 border-t border-white/10 pt-3 text-[11px] leading-relaxed text-muted">{lang === 'mm'
-                          ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ထားပါသည်။သို့သော်လည်း ရလဒ်များမှာ မိမိကိုယ်တိုင် ပြန်လည်ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များသာဖြစ်ပါသည်။'
-                          : 'This reading was computed with classical Vedic astrology formulas and personally according to system.But The interpretations are guidance for self-reflection.'}</p>
-
-                        {/* Direct client-side PDF download (logged-in users only) */}
-                        <div className="mt-5 no-print">
-                          {customerToken ? (
-                            <button type="button" onClick={downloadReadingPdf}
-                              className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110">
-                              <Download size={16} /> {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ Download ဆွဲရန်' : 'Download Full Reading PDF'}
-                            </button>
-                          ) : (
-                            <div className="flex flex-col items-start gap-2">
-                              <p className="text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'PDF ဒေါင်းလုဒ်ရယူရန် အကောင့်ဝင်ရန် လိုအပ်ပါသည်။' : 'Log in to download the PDF.'}</p>
-                              <button type="button" onClick={() => openAuth('login')}
-                                className="inline-flex items-center gap-2 rounded-xl border border-accent/40 bg-accent/10 px-4 py-2.5 text-sm font-semibold text-accent-light transition hover:bg-accent/20">
-                                <Lock size={15} /> {lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <ReadingRequestPanel
+                  ref={readingRef}
+                  lang={lang}
+                  token={customerToken}
+                  status={reading$.status}
+                  markdown={reading$.markdown}
+                  loading={reading$.loading}
+                  error={reading$.error}
+                  info={reading$.info}
+                  showDashboard={showDashboard}
+                  onRequest={reading$.request}
+                  onOpenAuth={openAuth}
+                  onDownloadPdf={downloadReadingPdf}
+                  pdfBusy={pdfBusy}
+                />
               )}
 
               {/* ── READING ── */}
@@ -1485,55 +1249,18 @@ export default function Vedin() {
               )}
 
               {/* ── In-app consultation chat with the Sayar ── */}
-              <div ref={remedyRef} className="no-print glass-card border border-amber-400/25 p-6">
-                <h3 className="flex items-center gap-2 font-groovy text-lg text-fg"><Sparkles size={16} className="text-amber-500 dark:text-amber-300" /> {lang === 'mm' ? 'ယတြာ အစီအရင်နှင့် အသေးစိတ်မေးမြန်းရန် — ဆရာဘုန်းမင်းသိုက်ဒင်ထံ တိုက်ရိုက် ဆက်သွယ်ရန်' : 'Remedy (Yatra) & Consultation — chat with Saya Phone Myint Thaik Din'}</h3>
-                <p className="mt-1 text-sm leading-relaxed text-muted">
-                  {lang === 'mm' ? 'ဆရာနှင့် တိုက်ရိုက် စကားပြောနိုင်ပါသည်။ သင့် မေးခွန်းများနှင့် ယတြာ တောင်းဆိုမှုများကို အောက်တွင် ရိုက်ထည့်ပါ။' : 'Chat directly with the Sayar. Type your questions and remedy requests below.'}
-                </p>
-
-                {!customerToken ? (
-                  <div className="mt-4 flex flex-col items-start gap-3 rounded-xl border border-accent/30 bg-accent/10 px-5 py-4">
-                    <p className="text-sm text-accent-light">{lang === 'mm' ? 'ဆရာနှင့် စကားပြောရန် အကောင့်ဝင်ပါ။' : 'Log in to chat with the Sayar.'}</p>
-                    <button type="button" onClick={() => openAuth('login')} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-2 text-sm font-semibold text-space transition hover:brightness-110"><Lock size={15} /> {lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}</button>
-                  </div>
-                ) : (
-                  <div className="mt-4">
-                    <div className="flex h-80 flex-col gap-2.5 overflow-y-auto rounded-2xl border border-fg/10 bg-fg/[0.03] p-4">
-                      {chatMsgs.length === 0 ? (
-                        <p className="m-auto max-w-xs text-center text-sm text-muted">{lang === 'mm' ? 'စကားပြောဆိုမှု မရှိသေးပါ — အောက်တွင် စတင်မေးမြန်းပါ။' : 'No messages yet — start the conversation below.'}</p>
-                      ) : chatMsgs.map((m) => {
-                        const mine = m.senderRole === 'Customer'
-                        return (
-                          <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                            <div className={`max-w-[82%] rounded-2xl border px-3.5 py-2 text-sm leading-relaxed ${mine
-                              ? 'rounded-br-md border-amber-300/40 bg-gradient-to-br from-amber-200/30 to-violet-500/25 text-fg'
-                              : 'rounded-bl-md border-emerald-400/30 bg-emerald-500/15 text-fg'}`}>
-                              {!mine && <div className="mb-0.5 font-mono text-[10px] font-semibold text-emerald-600 dark:text-emerald-300">ဆရာဘုန်းမင်းသိုက်ဒင်</div>}
-                              <div className="whitespace-pre-wrap break-words">{m.text}</div>
-                              <div className="mt-1 text-right font-mono text-[9px] text-muted">{(m.createdAt || '').slice(5, 16)}</div>
-                            </div>
-                          </div>
-                        )
-                      })}
-                      <div ref={chatEndRef} />
-                    </div>
-                    <div className="mt-3 flex items-end gap-2">
-                      <textarea value={chatInput} onChange={(e) => setChatInput(e.target.value)} rows={2}
-                        onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage() } }}
-                        placeholder={lang === 'mm' ? 'မေးခွန်း ရိုက်ထည့်ပါ… (Enter = ပို့)' : 'Type your question… (Enter to send)'}
-                        className={`${field} flex-1 resize-none`} />
-                      <button type="button" onClick={sendMessage} disabled={chatBusy || !chatInput.trim()}
-                        className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
-                        {chatBusy ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />} {lang === 'mm' ? 'ပို့မည်' : 'Send'}
-                      </button>
-                    </div>
-                    <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] text-muted">
-                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-                      {lang === 'mm' ? 'အလိုအလျောက် အသစ်ပြန်ဆွဲနေသည်' : 'Auto-updating live'}
-                    </p>
-                  </div>
-                )}
-              </div>
+              <ChatPanel
+                ref={remedyRef}
+                lang={lang}
+                token={customerToken}
+                messages={chat.messages}
+                input={chat.input}
+                setInput={chat.setInput}
+                busy={chat.busy}
+                endRef={chat.endRef}
+                onSend={chat.send}
+                onOpenAuth={openAuth}
+              />
             </div>
           )}
         </div>
@@ -1578,15 +1305,15 @@ export default function Vedin() {
       )}
 
       {/* Approved-reading guidance modal (Phase 5) */}
-      {showApprovedModal && (
+      {reading$.showApprovedModal && (
         <div className="no-print fixed inset-0 z-[70] flex items-center justify-center p-4"
           style={{ background: 'rgba(6,5,12,0.72)', backdropFilter: 'blur(6px)' }}
-          onClick={dismissApprovedModal} role="dialog" aria-modal="true">
+          onClick={reading$.dismissApprovedModal} role="dialog" aria-modal="true">
           <div onClick={(e) => e.stopPropagation()}
             className="relative w-full max-w-md overflow-hidden rounded-2xl border-2 border-amber-400/50 p-6 text-center sm:p-8"
             style={{ background: 'linear-gradient(155deg, rgb(var(--card)) 0%, rgb(var(--surface)) 100%)', boxShadow: '0 0 70px -18px rgba(234,179,8,0.6)' }}>
             <div className="pointer-events-none absolute -right-14 -top-16 h-44 w-44 rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
-            <button type="button" onClick={dismissApprovedModal} aria-label="Close"
+            <button type="button" onClick={reading$.dismissApprovedModal} aria-label="Close"
               className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full text-muted transition hover:bg-fg/10 hover:text-fg">
               <X size={18} />
             </button>
@@ -1607,7 +1334,7 @@ export default function Vedin() {
                   ? "အောက်ပါ 'အသေးစိတ် ဟောစာတမ်း' ခလုတ်ကို နှိပ်၍ ဝင်ရောက်ဖတ်ရှုနိုင်ပါပြီ။"
                   : "Please click the 'Detailed Reading' tab below to view it."}
               </p>
-              <button type="button" onClick={() => { setTab('ai'); dismissApprovedModal() }}
+              <button type="button" onClick={() => { setTab('ai'); reading$.dismissApprovedModal() }}
                 className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 px-6 py-2.5 text-sm font-bold text-amber-950 shadow-lg shadow-amber-500/40 transition hover:brightness-110">
                 <ScrollText size={16} /> {lang === 'mm' ? 'ဆက်လက်ရန်' : 'Close'}
               </button>

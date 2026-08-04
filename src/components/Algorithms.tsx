@@ -1,8 +1,24 @@
-import { useState, useRef, useMemo, useLayoutEffect, type ReactNode } from 'react'
+import { useState, useRef, useEffect, useLayoutEffect, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Copy, Check, FlaskConical } from 'lucide-react'
-import katex from 'katex'
-import 'katex/dist/katex.min.css'
+import useLang from '../hooks/useLang'
+
+/**
+ * KaTeX (the library plus its stylesheet and web fonts) is by far the heaviest
+ * thing on this page, and every formula needs the same instance. It is imported
+ * once, on demand, and shared through this promise so N formulas trigger one load.
+ */
+let katexPromise: Promise<typeof import('katex').default> | null = null
+
+function loadKatex() {
+  if (!katexPromise) {
+    katexPromise = Promise.all([
+      import('katex'),
+      import('katex/dist/katex.min.css'),
+    ]).then(([mod]) => mod.default)
+  }
+  return katexPromise
+}
 
 type Lang = 'en' | 'mm'
 
@@ -45,9 +61,19 @@ function MathBlock({ tex }: { tex: string }) {
   const wrapRef = useRef<HTMLDivElement>(null)
   const innerRef = useRef<HTMLDivElement>(null)
 
-  const html = useMemo(() => {
-    try { return katex.renderToString(tex, { displayMode: true, throwOnError: false, output: 'html' }) }
-    catch { return `<span class="font-mono text-coral">${tex}</span>` }
+  // Until KaTeX arrives the raw TeX is shown in monospace: readable, and it keeps
+  // the block's height roughly stable so the page does not jump on hydration.
+  const [html, setHtml] = useState(() => `<span class="font-mono text-muted">${tex}</span>`)
+
+  useEffect(() => {
+    let cancelled = false
+    loadKatex()
+      .then((katex) => {
+        if (cancelled) return
+        setHtml(katex.renderToString(tex, { displayMode: true, throwOnError: false, output: 'html' }))
+      })
+      .catch(() => { if (!cancelled) setHtml(`<span class="font-mono text-coral">${tex}</span>`) })
+    return () => { cancelled = true }
   }, [tex])
 
   // Scale the formula's FONT-SIZE (not a CSS transform) down until it fits the
@@ -243,7 +269,7 @@ test('SAV always totals 337', () => {
 ]
 
 export default function Algorithms() {
-  const [lang, setLang] = useState<Lang>('mm')
+  const { lang, setLang } = useLang()
   const t = (en: string, mm: string) => (lang === 'mm' ? mm : en)
 
   return (

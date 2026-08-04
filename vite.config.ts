@@ -13,8 +13,8 @@ export default defineConfig({
   build: {
     // NOTE: we intentionally do NOT use a custom `manualChunks`.
     //
-    // A hand-rolled manualChunks that split React / three / @react-three /
-    // framer-motion into separate files broke production with:
+    // A hand-rolled manualChunks that split React / framer-motion and the (now
+    // removed) three.js packages into separate files broke production with:
     //   "ReferenceError: Cannot access 'wh' before initialization"
     // When you force interdependent modules into different chunks, Rollup can no
     // longer guarantee the original module-execution order, so a binding ends up

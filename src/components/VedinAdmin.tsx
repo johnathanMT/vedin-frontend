@@ -46,7 +46,9 @@ interface AdminReadingReq extends RegisteredInfo { id: number; querentName: stri
 interface AdminUser extends RegisteredInfo { id: number; username: string; email: string; isSuspended: boolean; emailConfirmed: boolean; hasProfile: boolean; createdAt: string }
 interface MessageThread { customerId: number; username: string; email: string; lastMessage: string; lastAt: string; unread: number }
 interface ChatMsg { id: number; senderRole: string; text: string; createdAt: string }
-type ReadingsFilter = 'Pending' | 'Approved' | 'Rejected'
+// "Generating" is a server-side union of Queued / Processing / Failed — the states
+// owned by the background worker once the Sayar has approved a request.
+type ReadingsFilter = 'Pending' | 'Generating' | 'Approved' | 'Rejected'
 
 interface LoginResponse { data?: { token?: string; role?: string }; message?: string }
 
@@ -526,7 +528,7 @@ export default function VedinAdmin() {
             {tab === 'readings' && (
               <>
                 <div className="mt-4 flex flex-wrap gap-1.5">
-                  {(['Pending', 'Approved', 'Rejected'] as ReadingsFilter[]).map((f) => (
+                  {(['Pending', 'Generating', 'Approved', 'Rejected'] as ReadingsFilter[]).map((f) => (
                     <button key={f} type="button" onClick={() => setReadingsFilter(f)}
                       className={`rounded-full border px-3.5 py-1.5 font-mono text-[11px] transition ${readingsFilter === f ? 'border-violet-400/60 bg-violet-500/15 text-violet-100' : 'border-fg/15 bg-fg/5 text-fg/60 hover:bg-fg/10'}`}>
                       {f}
@@ -571,7 +573,7 @@ export default function VedinAdmin() {
                                   <div className="flex flex-wrap gap-1.5">
                                     <button onClick={() => approveReading(r.id)} disabled={busy}
                                       className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-300/50 bg-emerald-400/20 px-3 py-1.5 font-mono text-[11px] font-semibold text-emerald-100 transition hover:bg-emerald-400/30 disabled:opacity-60">
-                                      {busy && rowBusy?.action === 'approve' ? <><RefreshCw size={12} className="animate-spin" /> Generating Reading…</> : <><Check size={12} /> Approve</>}
+                                      {busy && rowBusy?.action === 'approve' ? <><RefreshCw size={12} className="animate-spin" /> Queueing…</> : <><Check size={12} /> Approve</>}
                                     </button>
                                     <button onClick={() => rejectReading(r.id)} disabled={busy}
                                       className="inline-flex items-center gap-1.5 rounded-lg border border-rose-400/30 bg-rose-400/10 px-3 py-1.5 font-mono text-[11px] text-rose-300 transition hover:bg-rose-400/20 disabled:opacity-60">
@@ -579,7 +581,10 @@ export default function VedinAdmin() {
                                     </button>
                                   </div>
                                 ) : (
-                                  <span className={`rounded-full px-2.5 py-0.5 font-mono text-[11px] ${r.status === 'Approved' ? 'bg-emerald-400/15 text-emerald-200' : 'bg-rose-400/15 text-rose-200'}`}>{r.status}</span>
+                                  <span className={`rounded-full px-2.5 py-0.5 font-mono text-[11px] ${
+                                    r.status === 'Approved' ? 'bg-emerald-400/15 text-emerald-200'
+                                      : r.status === 'Queued' || r.status === 'Processing' ? 'bg-violet-400/15 text-violet-200'
+                                        : 'bg-rose-400/15 text-rose-200'}`}>{r.status}</span>
                                 )}
                               </td>
                             </tr>

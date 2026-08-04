@@ -1,6 +1,5 @@
 import { useState, useEffect, useCallback, useImperativeHandle, useRef, forwardRef, type FormEvent } from 'react'
 import { LogOut, LogIn, Loader2, UserRound, UserPlus, X, Search } from 'lucide-react'
-import tzlookup from 'tz-lookup'
 import { SITE } from '../config/site'
 import type { Lang } from '../lib/vedin'
 
@@ -72,10 +71,15 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
       } catch { setSHits([]) } finally { setSSearching(false) }
     }, 450)
   }
-  const selectSPlace = (g: GeoHit) => {
+  const selectSPlace = async (g: GeoHit) => {
     const la = Number(g.lat), lo = Number(g.lon)
     setSLat(String(la)); setSLon(String(lo)); setSPlace(g.display_name.split(',').slice(0, 2).join(',').trim()); setSHits([]); setSPlaceOk(true)
-    try { setSTz(tzlookup(la, lo)) } catch { /* keep */ }
+    // Loaded on demand — the timezone polygon table is far too heavy to sit on the
+    // critical path for a panel most visits never open.
+    try {
+      const { default: tzlookup } = await import('tz-lookup')
+      setSTz(tzlookup(la, lo))
+    } catch { /* keep the current zone */ }
   }
 
   useEffect(() => {
