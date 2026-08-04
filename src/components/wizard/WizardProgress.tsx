@@ -20,13 +20,13 @@ export const WIZARD_STEPS: StepDef[] = [
   },
   {
     id: 2,
-    title: { mm: 'မွေးဖွားရာ အရပ်', en: 'Birth place' },
-    hint: { mm: 'မွေးဖွားရာ မြို့ကို ရှာ၍ စာရင်းထဲမှ ရွေးပါ။', en: 'Search your birth city and pick it from the list.' },
+    title: { mm: 'မွေးသက္ကရာဇ်နှင့် အချိန်', en: 'Date & time' },
+    hint: { mm: 'မွေးသက္ကရာဇ်နှင့် မွေးချိန်ကို တိကျစွာ ဖြည့်ပါ။', en: 'Your exact date and time of birth.' },
   },
   {
     id: 3,
-    title: { mm: 'မွေးသက္ကရာဇ်နှင့် အချိန်', en: 'Date & time' },
-    hint: { mm: 'မွေးသက္ကရာဇ်နှင့် မွေးချိန်ကို တိကျစွာ ဖြည့်ပါ။', en: 'Your exact date and time of birth.' },
+    title: { mm: 'မွေးဖွားရာ အရပ်', en: 'Birth place' },
+    hint: { mm: 'မြို့ကို ရှာပါ (သို့) မြေပုံပေါ်တွင် အမှတ်ချပါ။', en: 'Search a city or drop a pin on the map.' },
   },
 ]
 

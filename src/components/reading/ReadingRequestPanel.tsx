@@ -1,7 +1,8 @@
 import { forwardRef } from 'react'
 import { Lock, UserPlus, ScrollText, Sparkles, Loader2, Clock, CheckCircle2, Download, AlertTriangle } from 'lucide-react'
-import MarkdownView from '../MarkdownView'
 import { Appear } from '../motion/Reveal'
+import ReadingReveal from './ReadingReveal'
+import ReadingChatBox from './ReadingChatBox'
 import type { Lang } from '../../lib/vedin'
 import type { ReadingStatus } from '../../hooks/useReadingRequest'
 
@@ -10,6 +11,8 @@ interface Props {
   token: string | null
   status: ReadingStatus
   markdown: string
+  /** The approved reading's id — powers the grounded follow-up chat + streamed reveal. */
+  requestId: number | null
   loading: boolean
   error: string
   info: string
@@ -31,7 +34,7 @@ const CARD_GLOW = '0 0 50px -20px rgb(var(--accent) / 0.5)'
  * client-side PDF export reads that node's innerHTML.
  */
 const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRequestPanel(
-  { lang, token, status, markdown, loading, error, info, showDashboard, onRequest, onOpenAuth, onDownloadPdf, pdfBusy = false },
+  { lang, token, status, markdown, requestId, loading, error, info, showDashboard, onRequest, onOpenAuth, onDownloadPdf, pdfBusy = false },
   readingRef,
 ) {
   const idle = status === 'none' || status === 'rejected'
@@ -166,7 +169,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
               <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={14} /> {lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
               <span className="inline-flex items-center gap-1 rounded-full bg-jade/15 px-2.5 py-0.5 font-mono text-[10px] text-jade no-print"><CheckCircle2 size={11} /> {lang === 'mm' ? 'ဆရာ အတည်ပြုပြီး' : 'Approved by the Sayar'}</span>
             </div>
-            <div ref={readingRef}><MarkdownView markdown={markdown} /></div>
+            <ReadingReveal ref={readingRef} markdown={markdown} readingId={requestId} token={token} lang={lang} />
             <p className="mt-5 border-t border-white/10 pt-3 text-[11px] leading-relaxed text-muted">{lang === 'mm'
               ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ထားပါသည်။သို့သော်လည်း ရလဒ်များမှာ မိမိကိုယ်တိုင် ပြန်လည်ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များသာဖြစ်ပါသည်။'
               : 'This reading was computed with classical Vedic astrology formulas and personally according to system.But The interpretations are guidance for self-reflection.'}</p>
@@ -189,6 +192,9 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
                 </div>
               )}
             </div>
+
+            {/* Grounded follow-up chat — ask questions about this reading */}
+            <ReadingChatBox readingId={requestId} token={token} lang={lang} />
           </div>
         </div>
       )}

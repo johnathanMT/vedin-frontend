@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
+import { AnimatePresence, m } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { Sparkles, MapPin, Loader2, Search, Download, Star, Info, Sigma, FlaskConical, ArrowRight, ScrollText, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, Pencil, Cake, X } from 'lucide-react'
+import { Sparkles, MapPin, Loader2, Search, Download, Star, Info, Sigma, FlaskConical, ArrowRight, ScrollText, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, Pencil, Cake, X, MousePointerClick } from 'lucide-react'
 import { SITE } from '../config/site'
 import KundliChart from './KundliChart'
 import DiamondChart from './DiamondChart'
@@ -21,6 +22,8 @@ import TabBar, { type TabDef } from './TabBar'
 import ChartSummaryHero from './ChartSummaryHero'
 import ChartSkeleton from './ChartSkeleton'
 import WizardProgress from './wizard/WizardProgress'
+// Leaflet (~150 kB + CSS) is pulled in only when the Birth-place step renders.
+const BirthPlaceMap = lazy(() => import('./BirthPlaceMap'))
 import { loadBirthDraft, draftValue, saveBirthDraft } from '../hooks/useBirthDraft'
 import type { BirthChartData, PlanetPosition, TransitPos } from '../types/astrology'
 import { JT, type Lang, type Naynan, vargaSign, signLabel, planetName, readingFor, naynan, activeBhukti, activePratyantar, toMmDigits, themeWord, transitNoteText, findPlanet, dignityLabel, currentAreaEffect } from '../lib/vedin'
@@ -92,6 +95,19 @@ export default function Vedin() {
   const place = geo.place
   const placeConfirmed = geo.confirmed
 
+  // Dropping / dragging the map pin resolves the timezone from the exact coordinates
+  // (tz-lookup, loaded on demand) and confirms the place — so a pin is as valid a
+  // birth location as a searched city. The label keeps the searched name if present.
+  const pickFromMap = async (la: number, lo: number) => {
+    let zone = tz
+    try {
+      const { default: tzlookup } = await import('tz-lookup')
+      zone = tzlookup(la, lo)
+    } catch { /* ocean / unmapped → keep the current zone */ }
+    const label = place.trim() || (lang === 'mm' ? 'မြေပုံပေါ်တွင် ရွေးချယ်ထားသည်' : 'Pinned on the map')
+    geo.apply({ label, lat: la, lon: lo, tz: zone })
+  }
+
   // The geocoded city lives inside useGeocode, so restore it once on mount.
   useEffect(() => {
     if (draft0.placeConfirmed && draft0.place) geo.hydrate(draft0.place)
@@ -156,16 +172,11 @@ export default function Vedin() {
   // rather than as an error list at the very bottom of the form.
   const stepError = (s: number): string => {
     if (s === 1 && !name.trim()) return lang === 'mm' ? 'အမည် ဖြည့်သွင်းပါ။' : 'Please enter a name.'
-    if (s === 2 && !placeConfirmed) {
+    if (s === 2 && !date) return lang === 'mm' ? 'မွေးသက္ကရာဇ် ဖြည့်ပါ။' : 'Please enter your date of birth.'
+    if (s === 3 && !placeConfirmed) {
       return lang === 'mm'
-        ? 'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ။'
-        : 'Search and select your birth city from the list.'
-    }
-    if (s === 3 && !date) return lang === 'mm' ? 'မွေးသက္ကရာဇ် ဖြည့်ပါ။' : 'Please enter your date of birth.'
-    if (s === 3 && !consent) {
-      return lang === 'mm'
-        ? 'အချက်အလက်သိမ်းဆည်းခွင့်ကို သဘောတူညီပေးပါ။'
-        : 'Please agree to the data-storage consent.'
+        ? 'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ (သို့) မြေပုံပေါ်တွင် အမှတ်ချပါ။'
+        : 'Search and select your birth city, or drop a pin on the map.'
     }
     return ''
   }
@@ -709,6 +720,11 @@ export default function Vedin() {
           <form onSubmit={submit} className="glass-card mx-auto w-full max-w-3xl p-6 no-print">
             <WizardProgress lang={lang} step={step} />
 
+            <AnimatePresence mode="wait" initial={false}>
+            <m.div key={step}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}>
+
             {step === 1 && (<>
             <div className="mb-3 grid grid-cols-2 gap-3">
               <label><span className={labelCls}>{t.fldName} <span className="text-coral">*</span></span>
@@ -722,7 +738,7 @@ export default function Vedin() {
             </div>
             </>)}
 
-            {step === 2 && (<>
+            {step === 3 && (<>
             <label className="relative block">
               <span className={labelCls}>{lang === 'mm' ? 'မွေးဖွားရာ မြို့/ဇာတိ' : 'Birth place'} <span className="text-coral">*</span></span>
               <span className="relative mt-1.5 block">
@@ -761,33 +777,22 @@ export default function Vedin() {
                 ))}
               </div>
             </div>
-            </>)}
 
-            {step === 3 && (<>
-            <div className="grid grid-cols-2 gap-3">
-              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးသက္ကရာဇ်' : 'Date of birth'}</span>
-                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className={field} /></label>
-              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးချိန် (၂၄ နာရီ)' : 'Time (24h)'}</span>
-                <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required disabled={timeUnknown}
-                  className={`${field} ${timeUnknown ? 'cursor-not-allowed opacity-40' : ''}`} /></label>
+            {/* Interactive map — click or drag the pin to set the exact birth spot */}
+            <div className="mt-4">
+              <div className="mb-1.5 flex items-center justify-between">
+                <span className={labelCls}>{lang === 'mm' ? 'မြေပုံပေါ်တွင် အတိအကျ ရွေးရန်' : 'Fine-tune on the map'}</span>
+                <span className="inline-flex items-center gap-1 font-mono text-[10px] text-muted"><MousePointerClick size={11} /> {lang === 'mm' ? 'နှိပ်၍ (သို့) ဆွဲ၍ ရွှေ့ပါ' : 'Click or drag the pin'}</span>
+              </div>
+              <Suspense fallback={<div className="flex h-64 w-full items-center justify-center rounded-xl border border-white/12 bg-white/[0.03] text-xs text-muted"><Loader2 size={16} className="mr-2 animate-spin" /> {lang === 'mm' ? 'မြေပုံ ဖွင့်နေသည်…' : 'Loading map…'}</div>}>
+                <BirthPlaceMap lat={Number(lat) || 0} lon={Number(lon) || 0} onPick={pickFromMap} />
+              </Suspense>
+              {placeConfirmed && (
+                <p className="mt-1.5 font-mono text-[10px] text-muted">
+                  {lang === 'mm' ? 'နေရာ' : 'Location'} — {(Number(lat) || 0).toFixed(3)}, {(Number(lon) || 0).toFixed(3)} · {tz}
+                </p>
+              )}
             </div>
-
-            <label className={`mt-3 flex items-start gap-2 rounded-xl border p-3 text-xs leading-relaxed transition ${timeUnknown ? 'border-accent/40 bg-accent/5' : 'border-white/12 bg-white/5'}`}>
-              <input type="checkbox" checked={timeUnknown} onChange={(e) => setTimeUnknownSafely(e.target.checked)}
-                className="mt-0.5 h-4 w-4 shrink-0 accent-accent" />
-              <span className="text-muted">
-                {lang === 'mm' ? 'မွေးချိန် အတိအကျ မသိပါ' : "I don't know my exact birth time"}
-              </span>
-            </label>
-
-            {timeUnknown && (
-              <p className="mt-2 flex items-start gap-1.5 rounded-xl border border-accent/30 bg-accent/5 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
-                <Info size={13} className="mt-0.5 shrink-0 text-accent-light" />
-                {lang === 'mm'
-                  ? 'မွန်းတည့် ၁၂:၀၀ ဖြင့် တွက်ပါမည်။ လဂ်နှင့် အိမ်ခွဲများ တိကျမည် မဟုတ်ပါ — စန်း (Chandra) အခြေခံ ဟောကိန်းကိုသာ အားကိုးပါ။'
-                  : 'The chart will be cast for 12:00 noon. The Lagna and house cusps will not be reliable — rely on the Moon-based (Chandra) reading instead.'}
-              </p>
-            )}
 
             <details open={advancedOpen} onToggle={(e) => setAdvancedOpen((e.target as HTMLDetailsElement).open)}
               className="mt-3 rounded-xl border border-white/12 bg-white/[0.02] p-3">
@@ -837,6 +842,42 @@ export default function Vedin() {
               </ul>
             )}
             </>)}
+
+            {step === 2 && (<>
+            <div className="grid grid-cols-2 gap-3">
+              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးသက္ကရာဇ်' : 'Date of birth'}</span>
+                <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className={field} /></label>
+              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးချိန် (၂၄ နာရီ)' : 'Time (24h)'}</span>
+                <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required disabled={timeUnknown}
+                  className={`${field} ${timeUnknown ? 'cursor-not-allowed opacity-40' : ''}`} /></label>
+            </div>
+
+            <label className={`mt-3 flex items-start gap-2 rounded-xl border p-3 text-xs leading-relaxed transition ${timeUnknown ? 'border-accent/40 bg-accent/5' : 'border-white/12 bg-white/5'}`}>
+              <input type="checkbox" checked={timeUnknown} onChange={(e) => setTimeUnknownSafely(e.target.checked)}
+                className="mt-0.5 h-4 w-4 shrink-0 accent-accent" />
+              <span className="text-muted">
+                {lang === 'mm' ? 'မွေးချိန် အတိအကျ မသိပါ' : "I don't know my exact birth time"}
+              </span>
+            </label>
+
+            {timeUnknown && (<>
+              <div className="mt-2 flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/45 bg-amber-400/10 px-3 py-1 font-mono text-[11px] font-semibold text-amber-300">
+                  <Info size={12} /> {lang === 'mm' ? 'ယုံကြည်စိတ်ချမှု — စန်းအခြေခံ' : 'Confidence — Moon-based'}
+                </span>
+                <span className="font-mono text-[10px] text-muted">{lang === 'mm' ? 'မွန်းတည့် ၁၂:၀၀ ဖြင့် တွက်မည်' : 'Cast for 12:00 noon'}</span>
+              </div>
+              <p className="mt-2 flex items-start gap-1.5 rounded-xl border border-accent/30 bg-accent/5 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
+                <Info size={13} className="mt-0.5 shrink-0 text-accent-light" />
+                {lang === 'mm'
+                  ? 'လဂ်နှင့် အိမ်ခွဲများ ရွှေ့ပြောင်းသွားနိုင်သဖြင့် တိကျမည် မဟုတ်ပါ — စန်း (Chandra) အခြေခံ ဟောကိန်းကိုသာ အားကိုးပါ။'
+                  : 'The Ascendant and house cusps may shift, so they will not be reliable — rely on the Moon-based (Chandra) reading instead.'}
+              </p>
+            </>)}
+
+            </>)}
+            </m.div>
+            </AnimatePresence>
 
             {/* Blockers are reported on the step that caused them, not as a list
                 at the bottom of a screen the querent has already scrolled past. */}
@@ -911,6 +952,7 @@ export default function Vedin() {
                   token={customerToken}
                   status={reading$.status}
                   markdown={reading$.markdown}
+                  requestId={reading$.requestId}
                   loading={reading$.loading}
                   error={reading$.error}
                   info={reading$.info}

@@ -223,6 +223,24 @@ html[data-theme="dark"] .vedin-page {
   100% { stroke-dashoffset: -460; }
 }
 
+/* Blinking caret trailing the reading while it types in over the SSE stream. */
+.reading-caret {
+  display: inline-block;
+  margin-left: 1px;
+  color: rgb(var(--accent));
+  animation: readingCaret 1s step-end infinite;
+}
+
+@keyframes readingCaret {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+/* Tighten markdown spacing inside a chat answer bubble. */
+.reading-chat-answer > :first-child { margin-top: 0; }
+.reading-chat-answer > :last-child { margin-bottom: 0; }
+.reading-chat-answer p { margin: 0.35rem 0; }
+
 @media (prefers-reduced-motion: reduce) {
   .chart-stroke,
   .chart-glyph,
@@ -231,6 +249,7 @@ html[data-theme="dark"] .vedin-page {
     stroke-dashoffset: 0;
     opacity: 1;
   }
+  .reading-caret { animation: none; }
 }
 
 @layer base {
