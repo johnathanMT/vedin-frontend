@@ -195,6 +195,24 @@ export default function Vedin() {
     }
   }
 
+  // Prefetch-on-intent: as soon as the birth inputs are valid (city confirmed +
+  // parseable date/time), warm the chart cache in the background so pressing
+  // "calculate" resolves instantly. Debounced against rapid edits; failures are
+  // swallowed by prefetch(). Name/consent aren't needed — the chart is a pure
+  // function of the birth moment + place.
+  useEffect(() => {
+    if (!placeConfirmed) return
+    const [y, mo, d] = date.split('-').map(Number)
+    const [h, mi] = time.split(':').map(Number)
+    const la = Number(lat), lo = Number(lon)
+    if (!y || !mo || !d || Number.isNaN(la) || Number.isNaN(lo) || !tz) return
+    const t = setTimeout(() => chart$.prefetch({
+      year: y, month: mo, day: d, hour: h || 0, minute: mi || 0, second: 0,
+      timeZone: tz, latitude: la, longitude: lo, ayanamsa,
+    }), 400)
+    return () => clearTimeout(t)
+  }, [placeConfirmed, date, time, lat, lon, tz, ayanamsa]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Current age from a yyyy-mm-dd date of birth.
   const ageFromDob = (dob?: string): number | null => {
     if (!dob) return null

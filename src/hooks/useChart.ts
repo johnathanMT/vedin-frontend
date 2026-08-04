@@ -7,6 +7,17 @@ export const chartKey = (req: BirthChartRequest) =>
   ['chart', req.year, req.month, req.day, req.hour, req.minute,
     req.timeZone, req.latitude, req.longitude, req.ayanamsa] as const
 
+/**
+ * Single source of truth for how a chart is fetched + cached — shared by the
+ * imperative compute (on submit) and the prefetch-on-intent (before submit), so
+ * warming the cache and reading it hit the exact same query.
+ */
+export const chartQueryOptions = (req: BirthChartRequest) => ({
+  queryKey: chartKey(req),
+  queryFn: () => api<BirthChartData>('/api/astrology/chart', { method: 'POST', body: req }),
+  staleTime: Infinity,   // the sky at a given instant does not change
+})
+
 export interface SaveChartPayload {
   name: string
   gender: string
@@ -39,11 +50,7 @@ export default function useChart() {
     setLoading(true)
     setData(null)
     try {
-      const chart = await qc.fetchQuery({
-        queryKey: chartKey(req),
-        queryFn: () => api<BirthChartData>('/api/astrology/chart', { method: 'POST', body: req }),
-        staleTime: Infinity,   // the sky at a given instant does not change
-      })
+      const chart = await qc.fetchQuery(chartQueryOptions(req))
       setData(chart)
       return chart
     } catch (err) {
@@ -55,6 +62,16 @@ export default function useChart() {
   }, [qc])
 
   /**
+   * Warm the cache for a chart the user is *about* to request (birth form valid but
+   * not yet submitted). Fire-and-forget and idempotent: prefetchQuery no-ops when the
+   * chart is already cached, so submit resolves instantly. Failures are swallowed —
+   * a speculative miss must never surface an error.
+   */
+  const prefetch = useCallback((req: BirthChartRequest) => {
+    void qc.prefetchQuery(chartQueryOptions(req))
+  }, [qc])
+
+  /**
    * Archive the chart. Fire-and-forget by design: a failed archive must never
    * block or fail the reading the querent is waiting for.
    */
@@ -63,5 +80,5 @@ export default function useChart() {
     if (token) api('/api/customer/save-chart', { method: 'POST', token, body: payload }).catch(() => { })
   }, [])
 
-  return { data, setData, loading, error, setError, compute, archive }
+  return { data, setData, loading, error, setError, compute, prefetch, archive }
 }
