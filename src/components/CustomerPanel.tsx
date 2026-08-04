@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useImperativeHandle, useRef, forwardRef, type FormEvent } from 'react'
-import { LogOut, Loader2, UserRound, X, Search } from 'lucide-react'
+import { LogOut, LogIn, Loader2, UserRound, UserPlus, X, Search } from 'lucide-react'
 import tzlookup from 'tz-lookup'
 import { SITE } from '../config/site'
 import type { Lang } from '../lib/vedin'
@@ -243,11 +243,23 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
     <div className="no-print">
       {/* ── Auth bar ── */}
       {!token ? (
-        <div className="glass-card flex flex-wrap items-center justify-between gap-3 p-4">
-          <span className="text-sm text-muted">{t('Sign in to save your charts and download your reading PDF.', 'အကောင့်ဝင်၍ ဇာတာများ သိမ်းပြီး PDF ဟောစာတမ်း ရယူနိုင်ပါသည်။')}</span>
-          <div className="flex gap-2">
-            <button type="button" onClick={() => { setModal('login'); setMsg(null) }} className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs text-fg transition hover:border-accent/40">{t('Sign in', 'အကောင့်ဝင်')}</button>
-            <button type="button" onClick={() => { setModal('signup'); setMsg(null) }} className="rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-2 text-xs font-semibold text-space transition hover:brightness-110">{t('Sign up', 'အကောင့်ဖွင့်')}</button>
+        <div className="glass-card flex flex-col items-center gap-5 p-6 text-center md:flex-row md:justify-between md:gap-8 md:text-left">
+          <p className="max-w-md text-sm leading-relaxed text-muted md:text-base">{t('Sign in to save your charts and download your reading PDF.', 'အကောင့်ဝင်၍ ဇာတာများ သိမ်းပြီး PDF ဟောစာတမ်း ရယူနိုင်ပါသည်။')}</p>
+          <div className="flex w-full shrink-0 flex-col gap-4 sm:w-auto sm:flex-row sm:items-center">
+            <button
+              type="button"
+              onClick={() => { setModal('login'); setMsg(null) }}
+              className="inline-flex items-center justify-center gap-2 rounded-xl border-2 border-accent/50 bg-white/5 px-6 py-3 text-base font-semibold text-fg backdrop-blur-sm transition-colors hover:border-accent hover:bg-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60"
+            >
+              <LogIn size={18} /> {t('Sign in', 'အကောင့်ဝင်')}
+            </button>
+            <button
+              type="button"
+              onClick={() => { setModal('signup'); setMsg(null) }}
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-8 py-3 text-base font-semibold text-space shadow-lg shadow-accent/40 transition duration-200 hover:scale-105 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 active:scale-100 motion-reduce:hover:scale-100"
+            >
+              <UserPlus size={18} /> {t('Sign up', 'အကောင့်ဖွင့်')}
+            </button>
           </div>
         </div>
       ) : (
