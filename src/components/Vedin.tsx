@@ -830,11 +830,13 @@ export default function Vedin() {
                 <ol className={`space-y-3.5 border-t border-accent/15 px-4 py-4 text-sm text-muted sm:px-5 ${lang === 'mm' ? 'leading-loose' : 'leading-relaxed'}`}>
                   {(lang === 'mm'
                     ? [
-                      'အသေးစိတ်ဟောစာတမ်းများကို တွက်ချက်ဖို့ မွေးသက္ကရာဇ် နှင့် သက်ဆိုင်ရာ အချက်အလက်များကို ဖြည့်သွင်းပါ။',
+                      'ဇာတာအသေးစိတ် တွက်ချက်ရန် အတွက် အရင်ဦးစွာ ကိုယ်ပိုင်အကောင့်ဖွင့်ပါ။',
+                      'အသေးစိတ်ဟောစာတမ်းကို တွက်ချက်နိုင်ရန် မွေးသက္ကရာဇ် နှင့် သက်ဆိုင်ရာ အချက်အလက်များကို ဖြည့်သွင်းပါ။',
                       '"အသေးစိတ် ဟောစာတမ်းများ" နေရာမှတစ်ဆင့် ဆရာ့ထံသို့ တောင်းဆိုမှု ပြုလုပ်ပါ။',
                       'ဆရာမှ အတည်ပြု (Approve) ပြီးပါက ဟောစာတမ်းဖတ်ရှုနိုင်ပြီး PDF ရယူနိုင်ပါသည်။',
                     ]
                     : [
+                      'First, create your own account.',
                       'Fill in your birth date and related details to calculate your detailed reading.',
                       'Submit a request to the Sayar from the “Detailed Reading” tab.',
                       'Once the Sayar approves, you can read the reading and get the PDF.',
