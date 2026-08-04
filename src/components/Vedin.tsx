@@ -827,24 +827,22 @@ export default function Vedin() {
                 <ChevronDown size={18} className={`shrink-0 text-accent-light transition-transform ${howtoOpen ? 'rotate-180' : ''}`} />
               </button>
               {howtoOpen && (
-                <ol className="space-y-2.5 border-t border-accent/15 px-5 py-4 text-sm leading-relaxed text-muted">
+                <ol className={`space-y-3.5 border-t border-accent/15 px-4 py-4 text-sm text-muted sm:px-5 ${lang === 'mm' ? 'leading-loose' : 'leading-relaxed'}`}>
                   {(lang === 'mm'
                     ? [
-                      'မွေးသက္ကရာဇ် အချက်အလက်များ ဖြည့်သွင်းပါ။',
-                      'ဇာတာများ သိမ်းဆည်းရန်နှင့် ဟောစာတမ်းတောင်းယူရန် အကောင့် ဖွင့်/ဝင်ပါ။',
+                      'အသေးစိတ်ဟောစာတမ်းများကို တွက်ချက်ဖို့ မွေးသက္ကရာဇ် နှင့် သက်ဆိုင်ရာ အချက်အလက်များကို ဖြည့်သွင်းပါ။',
                       '"အသေးစိတ် ဟောစာတမ်းများ" နေရာမှတစ်ဆင့် ဆရာ့ထံသို့ တောင်းဆိုမှု ပြုလုပ်ပါ။',
                       'ဆရာမှ အတည်ပြု (Approve) ပြီးပါက ဟောစာတမ်းဖတ်ရှုနိုင်ပြီး PDF ရယူနိုင်ပါသည်။',
                     ]
                     : [
-                      'Fill in your birth details.',
-                      'Create / sign in to an account to save charts and request a reading.',
+                      'Fill in your birth date and related details to calculate your detailed reading.',
                       'Submit a request to the Sayar from the “Detailed Reading” tab.',
                       'Once the Sayar approves, you can read the reading and get the PDF.',
                     ]
                   ).map((step, i) => (
-                    <li key={i} className="flex gap-3">
-                      <span className="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-accent/20 font-mono text-[11px] font-semibold text-accent-light">{i + 1}</span>
-                      <span>{step}</span>
+                    <li key={i} className="flex items-start gap-3">
+                      <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-accent/20 font-mono text-[11px] font-semibold text-accent-light">{i + 1}</span>
+                      <span className="min-w-0 flex-1 break-words">{step}</span>
                     </li>
                   ))}
                 </ol>
