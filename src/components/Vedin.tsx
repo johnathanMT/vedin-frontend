@@ -24,6 +24,17 @@ import ChartSkeleton from './ChartSkeleton'
 import WizardProgress from './wizard/WizardProgress'
 // Leaflet (~150 kB + CSS) is pulled in only when the Birth-place step renders.
 const BirthPlaceMap = lazy(() => import('./BirthPlaceMap'))
+
+// Credential-pill palette — muted, pastel "jewel tones" (never saturated toy colours),
+// one distinct hue per pill, each with a light + dark pair for perfect contrast.
+const PILL_TONES = [
+  'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800/40 dark:text-slate-300 dark:border-slate-700/50',
+  'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-300 dark:border-emerald-800/50',
+  'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/30 dark:text-rose-300 dark:border-rose-800/50',
+  'bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-950/30 dark:text-indigo-300 dark:border-indigo-800/50',
+  'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-950/30 dark:text-amber-300 dark:border-amber-800/50',
+  'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/30 dark:text-teal-300 dark:border-teal-800/50',
+] as const
 import { loadBirthDraft, draftValue, saveBirthDraft } from '../hooks/useBirthDraft'
 import type { BirthChartData, PlanetPosition, TransitPos } from '../types/astrology'
 import { JT, type Lang, type Naynan, vargaSign, signLabel, planetName, readingFor, naynan, activeBhukti, activePratyantar, toMmDigits, themeWord, transitNoteText, findPlanet, dignityLabel, currentAreaEffect } from '../lib/vedin'
@@ -516,9 +527,18 @@ export default function Vedin() {
 
   return (
     <section className="section-container vedin-page">
+      {/* ── Elegant astrology watermark — a sophisticated, barely-there texture, NOT a
+          loud photo. Fixed behind everything; heavily faded (3% light / 10% dark) and
+          blended smoothly into the base colour by the gradient overlay below. As the
+          first (opacity-bearing) children of the page, both layers paint above the
+          page background yet beneath all content. ── */}
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-center bg-no-repeat opacity-[0.03] dark:opacity-[0.10]"
+        style={{ backgroundImage: 'url(https://images.unsplash.com/photo-1532968961962-8bfc2ac38287?q=80&w=2000&auto=format&fit=crop)' }} />
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-transparent to-[#F8F9FA] dark:to-[#0a0a0a]" />
+
       {/* ── Grand Astrologer Profile — centered, large photo, bio below ── */}
       {/* print-hide: the photo + bio are omitted from the printed PDF (Phase 4) */}
-      <div className="print-hide relative mb-8 overflow-hidden rounded-3xl border border-amber-500/20 bg-neutral-900/50 p-6 text-center sm:p-10">
+      <div className="print-hide relative mb-8 overflow-hidden rounded-3xl border border-amber-500/30 bg-[#ffffff] shadow-sm dark:border-amber-500/20 dark:bg-neutral-900/50 p-6 text-center sm:p-10">
 
         {/* language toggle — pinned top-right */}
         <div className="no-print absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur">
@@ -552,8 +572,8 @@ export default function Vedin() {
             </h1>
             {/* Credential tags — uniform, monochrome, professional (no rainbow). */}
             <div className="mt-3.5 flex flex-wrap justify-center gap-2">
-              {PROFILE_PILLS.map((p) => (
-                <span key={p.en} className="inline-flex items-center rounded-full border border-neutral-800 bg-neutral-900/80 px-3 py-1 text-sm font-medium text-neutral-300 transition-colors hover:border-neutral-700">
+              {PROFILE_PILLS.map((p, i) => (
+                <span key={p.en} className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${PILL_TONES[i % PILL_TONES.length]}`}>
                   {lang === 'mm' ? p.mm : p.en}
                 </span>
               ))}
@@ -567,7 +587,7 @@ export default function Vedin() {
       <div className="mb-8 grid gap-4 sm:grid-cols-2 no-print">
         {/* Portal 1 — The Algorithm */}
         <Link to="/algorithms"
-          className="group relative overflow-hidden rounded-2xl border border-white/5 bg-neutral-900/40 p-6 transition-colors duration-300 hover:border-white/10 hover:bg-neutral-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40">
+          className="group relative overflow-hidden rounded-2xl border border-slate-200/60 bg-[#ffffff] shadow-sm transition-colors duration-300 hover:border-slate-300 hover:bg-slate-50 dark:border-white/5 dark:bg-neutral-900/40 dark:shadow-none dark:hover:border-white/10 dark:hover:bg-neutral-800/50 p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40">
           <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-accent/20 blur-3xl transition duration-500 group-hover:bg-accent/30" />
           <div className="relative flex items-start gap-4">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-accent/40 bg-accent/15 text-accent-light shadow-inner">
@@ -584,7 +604,7 @@ export default function Vedin() {
 
         {/* Portal 2 — Falsifiable research protocol */}
         <Link to="/research"
-          className="group relative overflow-hidden rounded-2xl border border-white/5 bg-neutral-900/40 p-6 transition-colors duration-300 hover:border-white/10 hover:bg-neutral-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40">
+          className="group relative overflow-hidden rounded-2xl border border-slate-200/60 bg-[#ffffff] shadow-sm transition-colors duration-300 hover:border-slate-300 hover:bg-slate-50 dark:border-white/5 dark:bg-neutral-900/40 dark:shadow-none dark:hover:border-white/10 dark:hover:bg-neutral-800/50 p-6 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40">
           <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-jade/20 blur-3xl transition duration-500 group-hover:bg-jade/30" />
           <div className="relative flex items-start gap-4">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-jade/40 bg-jade/15 text-jade shadow-inner">
@@ -607,7 +627,7 @@ export default function Vedin() {
 
       {/* ── Registered dashboard banner (Emerald/Mint + Deep Purple) ── */}
       {showDashboard && profile && (
-        <div className="relative mb-6 overflow-hidden rounded-3xl border border-amber-500/25 bg-neutral-900/60 p-6 sm:p-8 no-print">
+        <div className="relative mb-6 overflow-hidden rounded-3xl border border-amber-500/30 bg-[#ffffff] shadow-sm dark:border-amber-500/25 dark:bg-neutral-900/60 dark:shadow-none p-6 sm:p-8 no-print">
           <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
           <div className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)' }} />
           <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -670,7 +690,7 @@ export default function Vedin() {
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 rounded-2xl border border-accent/30 bg-accent/10 px-5 py-4 text-sm leading-relaxed text-accent-light no-print sm:flex-row sm:items-center sm:justify-between">
               <span>{lang === 'mm' ? 'သင့်အကောင့်တွင် မွေးဇာတာ ပရိုဖိုင် မရှိသေးပါ။ ပရိုဖိုင် ထည့်ပါ (သို့) အောက်ရှိ ဖောင်တွင် ဖြည့်ပါ။' : 'Your account has no birth profile yet — add one, or use the form below.'}</span>
               <button type="button" onClick={() => customerPanelRef.current?.openProfileEdit()}
-                className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-space transition hover:brightness-110 sm:self-auto">
+                className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-amber-600 shadow-md px-4 py-2 text-sm font-semibold text-amber-50 transition hover:brightness-110 sm:self-auto">
                 <Pencil size={15} /> {lang === 'mm' ? 'ပရိုဖိုင် ထည့်ရန်' : 'Add Profile'}
               </button>
             </div>
@@ -827,7 +847,7 @@ export default function Vedin() {
             </label>
 
             <button type="submit" disabled={loading || !canSubmit}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
               {loading ? <><Loader2 size={16} className="animate-spin" /> {lang === 'mm' ? 'တွက်ချက်ပေးနေပါသည်…' : 'Calculating…'}</> : <><Sparkles size={16} /> {lang === 'mm' ? 'ဇာတာ တွက်မည်' : 'Generate Chart'}</>}
             </button>
             {!canSubmit && (
@@ -892,7 +912,7 @@ export default function Vedin() {
               )}
               {step < 3 && (
                 <button type="button" disabled={!!currentStepError} onClick={() => setStep((s) => s + 1)}
-                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
+                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-amber-600 shadow-md px-5 py-2.5 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
                   {lang === 'mm' ? 'ဆက်လက်' : 'Continue'} <ChevronRight size={15} />
                 </button>
               )}
@@ -919,7 +939,7 @@ export default function Vedin() {
               <div className="flex flex-col gap-3 no-print sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="font-groovy text-lg text-fg">{place || t.portalTitle}</h2>
                 <button type="button" onClick={downloadPdf}
-                  className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2 text-xs font-semibold text-space transition hover:brightness-110">
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-4 py-2 text-xs font-semibold text-amber-50 transition hover:brightness-110">
                   <Download size={14} /> {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ ရယူရန်တောင်းဆိုပါ' : 'Download Full Natal Chart PDF'}
                 </button>
               </div>
@@ -1366,7 +1386,7 @@ export default function Vedin() {
           style={{ background: 'rgba(6,5,12,0.72)', backdropFilter: 'blur(6px)' }}
           onClick={reading$.dismissApprovedModal} role="dialog" aria-modal="true">
           <div onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-amber-500/25 bg-neutral-900/80 p-6 text-center sm:p-8"
+            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-amber-500/30 bg-[#ffffff] shadow-xl dark:border-amber-500/25 dark:bg-neutral-900/95 p-6 text-center sm:p-8"
             style={{ boxShadow: '0 20px 60px -20px rgba(0,0,0,0.7)' }}>
             <div className="pointer-events-none absolute -right-14 -top-16 h-44 w-44 rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
             <button type="button" onClick={reading$.dismissApprovedModal} aria-label="Close"
@@ -1374,7 +1394,7 @@ export default function Vedin() {
               <X size={18} />
             </button>
             <div className="relative">
-              <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-amber-400/50 bg-gradient-to-br from-emerald-400/25 to-amber-400/25">
+              <span className="mx-auto grid h-16 w-16 place-items-center rounded-full border border-amber-500/40 bg-amber-500/10">
                 <CheckCircle2 size={34} className="text-emerald-500" />
               </span>
               <h3 className="mt-4 font-groovy text-xl text-fg sm:text-2xl">

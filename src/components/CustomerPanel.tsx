@@ -260,7 +260,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
             <button
               type="button"
               onClick={() => { setModal('signup'); setMsg(null) }}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-8 py-3 text-base font-semibold text-space transition-colors duration-200 hover:bg-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 shadow-md px-8 py-3 text-base font-semibold text-amber-50 transition-colors duration-200 hover:bg-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"
             >
               <UserPlus size={18} /> {t('Sign up', 'အကောင့်ဖွင့်')}
             </button>
@@ -357,7 +357,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
                 </div>
               )}
 
-              <button type="submit" disabled={busy} className="w-full rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:opacity-60">
+              <button type="submit" disabled={busy} className="w-full rounded-xl bg-amber-600 shadow-md px-5 py-2.5 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:opacity-60">
                 {busy ? <Loader2 size={15} className="mx-auto animate-spin" /> : modal === 'login' ? t('Sign in', 'ဝင်မည်') : modal === 'profile' ? t('Save profile', 'ပရိုဖိုင် သိမ်းမည်') : modal === 'forgot' ? t('Send reset link', 'ပြန်သတ်မှတ်လင့်ခ် ပို့မည်') : t('Create account', 'အကောင့်ဖွင့်မည်')}
               </button>
             </form>

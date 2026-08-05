@@ -3,6 +3,7 @@ import { ExternalLink } from 'lucide-react'
 import useTheme from '../hooks/useTheme'
 import AmbientBackground from './AmbientBackground'
 import ThemeToggle from './ThemeToggle'
+import Footer from './Footer'
 
 /**
  * VedinShell — the standalone layout for the decoupled Vedin app.
@@ -43,6 +44,8 @@ export default function VedinShell({ children }: { children: ReactNode }) {
       >
         {children}
       </main>
+
+      <Footer />
     </div>
   )
 }

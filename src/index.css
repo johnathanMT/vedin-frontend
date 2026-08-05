@@ -72,8 +72,12 @@ html[data-theme="dark"] [class*="bg-cyan"]:not([class*="bg-cyan/"]) {
   --accent-light: 228 199 126;  /* #E4C77E — light gold (hover / highlights) */
   --jade: 132 169 140;          /* muted sage — reserved for "benefic" semantics only */
   --jade-light: 163 194 170;
-  --fg: 229 229 229;            /* neutral-200 — primary readable text */
-  --muted: 163 163 163;         /* neutral-400 — descriptions / secondary hierarchy */
+  /* NOTE: --fg / --muted are set per-theme below (dark = off-white, light = slate)
+     so light mode never inherits a dark-mode text colour. */
+  /* Own stacking context so the fixed -z-10 watermark paints above the page
+     background yet below all content. */
+  position: relative;
+  isolation: isolate;
   /* Latin uses Inter; Myanmar glyphs fall through to the elegant Padauk. */
   font-family: 'Inter', 'Padauk', 'Noto Sans Myanmar', system-ui, sans-serif;
 }
@@ -188,8 +192,12 @@ html[data-theme="dark"] .vedin-page .font-groovy {
   text-shadow: none;
 }
 /* Grounded background: solid eerie black with, at most, one barely-there
-   monochrome vignette (≈2% white) — never a coloured radial bloom. */
+   monochrome vignette (≈2% white) — never a coloured radial bloom. Text tokens
+   are off-white / muted-gray in dark mode (set here, NOT on the unscoped rule,
+   so light mode keeps its own slate ink). */
 html[data-theme="dark"] .vedin-page {
+  --fg: 229 229 229;            /* neutral-200 */
+  --muted: 163 163 163;         /* neutral-400 */
   background:
     radial-gradient(1200px 520px at 50% -12%, rgb(255 255 255 / 0.02), transparent 60%),
     #0a0a0a;
@@ -375,21 +383,30 @@ html[data-theme="light"] ::selection {
   color: rgb(var(--fg));
 }
 
-/* ── Majestic parchment light mode — scoped to the Vedin page only ──
-   Warm cream base + sepia ink instead of cool white/grey, so the reading
-   feels like an ancient illuminated manuscript. */
+/* ── Premium light mode — crisp off-white with slate ink and readable gold ──
+   Replaces the old parchment look: a clean, high-end "gallery" surface that
+   pairs with the deep-charcoal dark mode. */
 html[data-theme="light"] .vedin-page {
-  --space: 250 246 236;      /* #FAF6EC warm parchment */
-  --surface: 245 238 221;    /* #F5EEDD aged panel */
-  --card: 255 253 247;       /* #FFFDF7 warm ivory card */
-  --card-hover: 250 244 230;
-  --fg: 43 35 24;            /* #2B2318 sepia ink */
-  --muted: 107 93 69;        /* #6B5D45 faded ink */
+  --space: 248 249 250;      /* #F8F9FA crisp off-white base */
+  --surface: 241 245 249;    /* slate-100 inset panels */
+  --card: 255 255 255;       /* crisp white cards */
+  --card-hover: 248 250 252; /* slate-50 */
+  --fg: 15 23 42;            /* slate-900 — AA on white */
+  --muted: 71 85 105;        /* slate-600 — secondary text */
+  --accent: 180 83 9;        /* amber-700 — gold that stays readable on white */
+  --accent-light: 146 64 14; /* amber-800 */
+  background: #F8F9FA;
 }
+/* Crisp white cards with a soft, elegant shadow — no blur, no bloom. */
 html[data-theme="light"] .vedin-page .glass-card {
-  border-color: rgba(176, 132, 42, 0.24);   /* antique gold rule */
-  background: linear-gradient(180deg, #fffdf7, #f7f0df);
-  box-shadow: 0 12px 32px -20px rgba(120, 90, 30, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.65);
+  background: #ffffff;
+  border-color: rgb(226 232 240 / 0.6);   /* slate-200/60 */
+  box-shadow: 0 1px 2px rgb(15 23 42 / 0.04), 0 4px 12px -6px rgb(15 23 42 / 0.08);
+  backdrop-filter: none;
+}
+html[data-theme="light"] .vedin-page .glass-card:hover {
+  border-color: rgb(203 213 225 / 0.9);   /* slate-300 */
+  box-shadow: 0 2px 4px rgb(15 23 42 / 0.05), 0 8px 20px -8px rgb(15 23 42 / 0.12);
 }
 
 /* Solid accent/cyan/magenta fills keep white text in light mode — the fill is

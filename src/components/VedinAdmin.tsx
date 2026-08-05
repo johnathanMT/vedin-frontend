@@ -342,7 +342,7 @@ export default function VedinAdmin() {
   )
 
   const UserBadge = ({ reg }: { reg?: boolean }) => reg
-    ? <span className="inline-flex items-center gap-1 rounded-full border border-violet-400/40 bg-gradient-to-r from-violet-500/25 to-emerald-400/20 px-2 py-0.5 font-mono text-[10px] text-violet-100"><UserRound size={10} /> Registered</span>
+    ? <span className="inline-flex items-center gap-1 rounded-full border border-indigo-200 bg-indigo-50 text-indigo-700 dark:border-indigo-800/50 dark:bg-indigo-950/30 dark:text-indigo-300 px-2 py-0.5 font-mono text-[10px]"><UserRound size={10} /> Registered</span>
     : <span className="inline-flex items-center gap-1 rounded-full border border-fg/15 bg-fg/5 px-2 py-0.5 font-mono text-[10px] text-fg/50">Guest</span>
 
   // Full registered-account context + inline computed natal chart.
@@ -355,7 +355,7 @@ export default function VedinAdmin() {
     return (
       <tr className="border-t border-fg/5 bg-violet-500/[0.06]">
         <td colSpan={cols} className="px-4 py-4">
-          <div className="rounded-xl border border-violet-400/25 bg-gradient-to-br from-violet-500/[0.08] to-emerald-400/[0.06] p-4">
+          <div className="rounded-xl border border-slate-200/60 bg-[#ffffff] shadow-sm dark:border-white/5 dark:bg-neutral-900/40 dark:shadow-none p-4">
             <p className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-violet-200"><UserRound size={12} /> Registered account · full natal info</p>
             <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
               {([
@@ -371,7 +371,7 @@ export default function VedinAdmin() {
             </div>
             <div className="mt-4">
               <button type="button" onClick={() => toggleChart(r.id, r)} disabled={busy || !canChart}
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-300/40 bg-gradient-to-r from-emerald-400/20 to-violet-500/25 px-4 py-2 font-mono text-[12px] font-semibold text-emerald-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50">
+                className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-4 py-2 font-mono text-[12px] font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50">
                 {busy ? <RefreshCw size={13} className="animate-spin" /> : <BarChart3 size={13} />}
                 📊 ဇာတာခွင် တွက်ချက်ကြည့်ရှုရန် (View Natal Chart)
               </button>
@@ -447,7 +447,7 @@ export default function VedinAdmin() {
                 <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Password</span>
                 <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
               </label>
-              <button type="submit" disabled={loading} className="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-400 to-emerald-400 px-5 py-3 font-serif text-sm font-bold text-[#160f22] transition hover:brightness-105 disabled:opacity-60">
+              <button type="submit" disabled={loading} className="mt-5 w-full rounded-xl bg-amber-600 shadow-md px-5 py-3 font-serif text-sm font-bold text-amber-50 transition hover:brightness-110 disabled:opacity-60">
                 {loading ? 'Signing in…' : 'Sign in'}
               </button>
               <button type="button" onClick={() => { setAuthView('forgot'); setError(''); setFpMsg('') }}
@@ -476,7 +476,7 @@ export default function VedinAdmin() {
                     <span className="font-mono text-[11px] uppercase tracking-wider text-fg/50">Admin email</span>
                     <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1.5 w-full rounded-xl border border-fg/15 bg-fg/5 px-4 py-3 text-base outline-none focus:border-violet-400/50 sm:py-2.5 sm:text-sm" />
                   </label>
-                  <button type="submit" disabled={fpBusy} className="mt-5 w-full rounded-xl bg-gradient-to-r from-violet-400 to-emerald-400 px-5 py-3 font-serif text-sm font-bold text-[#160f22] transition hover:brightness-105 disabled:opacity-60">
+                  <button type="submit" disabled={fpBusy} className="mt-5 w-full rounded-xl bg-amber-600 shadow-md px-5 py-3 font-serif text-sm font-bold text-amber-50 transition hover:brightness-110 disabled:opacity-60">
                     {fpBusy ? <RefreshCw size={15} className="mx-auto animate-spin" /> : 'Send reset link'}
                   </button>
                   <button type="button" onClick={() => { setAuthView('login'); setError('') }}
@@ -798,7 +798,7 @@ export default function VedinAdmin() {
                           const isAdmin = (m.senderRole || '').toLowerCase() === 'admin'
                           return (
                             <div key={m.id} className={`flex ${isAdmin ? 'justify-end' : 'justify-start'}`}>
-                              <div className={`max-w-[78%] rounded-2xl px-3.5 py-2 text-sm ${isAdmin ? 'rounded-br-sm bg-gradient-to-br from-violet-500/30 to-amber-400/20 text-fg' : 'rounded-bl-sm border border-emerald-400/30 bg-emerald-500/10 text-fg'}`}>
+                              <div className={`max-w-[78%] rounded-2xl px-3.5 py-2 text-sm ${isAdmin ? 'rounded-br-sm bg-amber-600/90 text-amber-50' : 'rounded-bl-sm border border-jade/30 bg-jade/10 text-fg'}`}>
                                 <div className="mb-0.5 font-mono text-[9px] uppercase tracking-wider text-fg/40">{isAdmin ? 'ဆရာဘုန်းမင်းသိုက်ဒင်' : (activeThread.username || 'Customer')}</div>
                                 <div className="whitespace-pre-wrap break-words leading-relaxed">{m.text}</div>
                                 <div className="mt-1 text-right font-mono text-[9px] text-fg/35">{(m.createdAt || '').slice(0, 16).replace('T', ' ')}</div>
@@ -883,7 +883,7 @@ export default function VedinAdmin() {
             <textarea value={replyBody} onChange={(e) => setReplyBody(e.target.value)} rows={9} placeholder="Type or paste the horoscope reading / remedy response here…" className="w-full resize-y rounded-xl border border-fg/15 bg-fg/5 px-3 py-2 text-sm text-fg outline-none focus:border-accent/50" />
             <div className="mt-3 flex items-center justify-end gap-2">
               <button onClick={() => setReply(null)} className="rounded-xl border border-fg/15 px-4 py-2 text-xs text-fg/70 transition hover:text-fg">Cancel</button>
-              <button onClick={sendReply} disabled={replyBusy || !replyBody.trim()} className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-2 text-xs font-semibold text-space transition hover:brightness-110 disabled:opacity-50">
+              <button onClick={sendReply} disabled={replyBusy || !replyBody.trim()} className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-2 text-xs font-semibold text-amber-50 transition hover:brightness-110 disabled:opacity-50">
                 {replyBusy ? <RefreshCw size={13} className="animate-spin" /> : <Send size={13} />} Send Reading to Client Email
               </button>
             </div>

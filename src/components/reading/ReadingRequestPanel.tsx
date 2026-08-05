@@ -24,9 +24,10 @@ interface Props {
   pdfBusy?: boolean
 }
 
-// Solid dark surface, no coloured bloom — a subtle inset top highlight is the only depth cue.
-const CARD_BG = 'rgb(23 23 23 / 0.40)'
-const CARD_GLOW = 'inset 0 1px 0 rgb(255 255 255 / 0.04)'
+// Theme-aware surface via the --card token (white in light mode, near-black in dark),
+// with a soft drop shadow for premium depth in light mode and a faint top highlight.
+const CARD_BG = 'rgb(var(--card))'
+const CARD_GLOW = '0 1px 3px rgb(0 0 0 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.04)'
 
 /**
  * The "Detailed Reading" tab: auth gate → request card → pending → approved
@@ -53,7 +54,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
               ? 'ဟောစာတမ်းအပြည့်အစုံကို ရယူရန်နှင့် သင့်ဇာတာများ မှတ်သားထားရန် အကောင့် (Account) ဖွင့်ထားရန် လိုအပ်ပါသည်။'
               : 'To get the full reading and to save your charts, you need to have an account.'}</p>
             <button type="button" onClick={() => onOpenAuth('signup')}
-              className="mt-1 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110">
+              className="mt-1 inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110">
               <UserPlus size={16} /> {lang === 'mm' ? 'အကောင့်ဖွင့် / ဝင်ရန်' : 'Sign Up / Log In'}
             </button>
           </div>
@@ -72,7 +73,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
               ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီးနောက်၊ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်းအပြည့်အစုံကို ရေးသားပေးပါမည်။'
               : 'Your chart is computed precisely with classical Vedic astrology formulas, verified and approved to get full details before your full 7-life-area reading is written.'}</p>
             <button type="button" onClick={onRequest} disabled={loading}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
               {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
               {loading
                 ? (lang === 'mm' ? 'ပေးပို့နေသည်…' : 'Sending…')
@@ -142,7 +143,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
       {status === 'approved' && (
         <div className="no-print">
           <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400/60 p-4 text-center sm:p-5"
-            style={{ background: 'rgb(23 23 23 / 0.60)', boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.04)' }}>
+            style={{ background: 'rgb(var(--card))', boxShadow: '0 1px 3px rgb(0 0 0 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.04)' }}>
             <p className="flex flex-wrap items-center justify-center gap-2 font-groovy text-lg text-fg sm:text-xl">
               <CheckCircle2 size={22} className="text-emerald-500" />
               {lang === 'mm' ? 'ဆရာမှ သင့်ဟောစာတမ်းကို အတည်ပြုပြီးပါပြီ။' : 'The Sayar has approved your reading.'}
@@ -162,7 +163,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
       {/* Approved — the finished reading (printable) */}
       {status === 'approved' && markdown && (
         <div className="relative overflow-hidden rounded-2xl border border-accent/35 p-6 sm:p-8"
-          style={{ background: 'rgb(23 23 23 / 0.40)', boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.05)' }}>
+          style={{ background: 'rgb(var(--card))', boxShadow: '0 1px 3px rgb(0 0 0 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.05)' }}>
           <div className="pointer-events-none absolute -left-16 -bottom-20 h-56 w-56 rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--jade)) 0%, transparent 70%)' }} />
           <div className="relative">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
@@ -178,7 +179,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
             <div className="mt-5 no-print">
               {token ? (
                 <button type="button" onClick={onDownloadPdf} disabled={pdfBusy}
-                  className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
                   {pdfBusy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                   {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ Download ဆွဲရန်' : 'Download Full Reading PDF'}
                 </button>

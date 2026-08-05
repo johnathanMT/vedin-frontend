@@ -281,7 +281,7 @@ export default function Research() {
             <select value={valence} onChange={(e) => setValence(e.target.value as Valence)} className={field}>
               {(['supportive', 'demanding', 'mixed', 'neutral'] as Valence[]).map((v) => <option key={v} value={v} className="text-black">{v}</option>)}
             </select></label>
-          <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 sm:col-span-2"><Lock size={15} /> {t('Lock prediction', 'ဟောကိန်းကို Lock ချ၍ သိမ်းမည်')}</button>
+          <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-2.5 text-sm font-semibold text-amber-50 transition hover:brightness-110 sm:col-span-2"><Lock size={15} /> {t('Lock prediction', 'ဟောကိန်းကို Lock ချ၍ သိမ်းမည်')}</button>
         </form>
       </div>
 

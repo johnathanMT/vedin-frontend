@@ -60,7 +60,7 @@ export default function WizardProgress({ lang, step }: { lang: Lang; step: numbe
       </div>
 
       <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/8">
-        <div className="h-full rounded-full bg-amber-600 transition-[width] duration-500 ease-out"
+        <div className="h-full rounded-full bg-amber-600 shadow-md transition-[width] duration-500 ease-out"
           style={{ width: `${pct}%` }} />
       </div>
 
