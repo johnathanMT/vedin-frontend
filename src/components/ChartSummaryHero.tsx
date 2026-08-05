@@ -69,9 +69,9 @@ function ChartSummaryHero({
 
   return (
     <Appear className="glass-card relative overflow-hidden p-5 sm:p-6">
-      {/* soft aurora so the hero reads as the primary surface, not another card */}
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-70"
-        style={{ background: 'radial-gradient(120% 90% at 0% 0%, rgb(var(--accent) / 0.14), transparent 60%), radial-gradient(90% 80% at 100% 0%, rgb(var(--jade) / 0.10), transparent 60%)' }} />
+      {/* a barely-there monochrome vignette — grounds the hero without a coloured aurora */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0"
+        style={{ background: 'radial-gradient(120% 90% at 0% 0%, rgb(255 255 255 / 0.02), transparent 60%)' }} />
 
       <div className="relative">
         {name && (

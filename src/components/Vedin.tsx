@@ -518,10 +518,7 @@ export default function Vedin() {
     <section className="section-container vedin-page">
       {/* ── Grand Astrologer Profile — centered, large photo, bio below ── */}
       {/* print-hide: the photo + bio are omitted from the printed PDF (Phase 4) */}
-      <div className="print-hide relative mb-8 overflow-hidden rounded-3xl border border-amber-400/30 p-6 text-center sm:p-10"
-        style={{ background: 'linear-gradient(135deg, rgb(var(--card)) 0%, rgb(var(--surface)) 100%)', boxShadow: '0 0 64px -22px rgba(234,179,8,0.42), 0 0 44px -18px rgb(var(--accent) / 0.35)' }}>
-        <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--accent)) 0%, transparent 70%)' }} />
-        <div className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)' }} />
+      <div className="print-hide relative mb-8 overflow-hidden rounded-3xl border border-amber-500/20 bg-neutral-900/50 p-6 text-center sm:p-10">
 
         {/* language toggle — pinned top-right */}
         <div className="no-print absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur">
@@ -534,8 +531,8 @@ export default function Vedin() {
         </div>
 
         <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-5">
-          <div className="relative h-36 w-36 shrink-0 rounded-full p-[4px] ring-2 ring-amber-400/40 sm:h-44 sm:w-44"
-            style={{ background: 'conic-gradient(from 210deg, #fef3c7, #eab308, #b45309, #f59e0b, #fde68a, #eab308)', boxShadow: '0 0 48px -4px rgba(234,179,8,0.72), 0 0 32px -8px rgba(180,83,9,0.55)' }}>
+          <div className="relative h-36 w-36 shrink-0 rounded-full p-[3px] ring-1 ring-amber-500/30 sm:h-44 sm:w-44"
+            style={{ background: 'conic-gradient(from 210deg, #e4c77e, #c9a24b, #8a6d2f, #c9a24b, #e4c77e)', boxShadow: '0 2px 14px -6px rgba(0,0,0,0.7)' }}>
             <div className="relative h-full w-full overflow-hidden rounded-full bg-card">
               <span className="absolute inset-0 flex items-center justify-center font-groovy text-5xl text-amber-500">ဘ</span>
               <picture className="block h-full w-full">
@@ -549,14 +546,14 @@ export default function Vedin() {
             <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-amber-700 dark:text-amber-200">
               <Sparkles size={11} className="text-amber-500 dark:text-amber-300" /> {lang === 'mm' ? 'ဗေဒင်ပညာ လေ့လာဆည်းပူးသူ' : 'Vedic Astrology Enthusiast'}
             </p>
-            <h1 className="mt-2.5 mb-4 pb-2 bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-600 bg-clip-text font-groovy text-4xl font-bold leading-[1.35] text-transparent sm:text-5xl"
-              style={{ filter: 'drop-shadow(0 1px 12px rgba(234,179,8,0.4))' }}>
+            <h1 className="mt-2.5 mb-4 pb-2 bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text font-groovy text-4xl font-bold leading-[1.35] text-transparent sm:text-5xl"
+              style={{ filter: 'drop-shadow(0 1px 6px rgba(201,162,75,0.18))' }}>
               {lang === 'mm' ? 'ဘုန်းမင်းသိုက်ဒင်' : 'Bhone Min Thike Din'}
             </h1>
-            {/* colourful credential pills — readable in light & dark */}
+            {/* Credential tags — uniform, monochrome, professional (no rainbow). */}
             <div className="mt-3.5 flex flex-wrap justify-center gap-2">
               {PROFILE_PILLS.map((p) => (
-                <span key={p.en} className={`inline-flex items-center rounded-full border px-3 py-1 font-mono text-[11px] font-semibold shadow-md transition hover:brightness-105 ${p.cls}`}>
+                <span key={p.en} className="inline-flex items-center rounded-full border border-neutral-800 bg-neutral-900/80 px-3 py-1 text-sm font-medium text-neutral-300 transition-colors hover:border-neutral-700">
                   {lang === 'mm' ? p.mm : p.en}
                 </span>
               ))}
@@ -570,7 +567,7 @@ export default function Vedin() {
       <div className="mb-8 grid gap-4 sm:grid-cols-2 no-print">
         {/* Portal 1 — The Algorithm */}
         <Link to="/algorithms"
-          className="group relative overflow-hidden rounded-2xl border border-accent/25 bg-gradient-to-br from-accent/[0.12] via-card to-jade/[0.06] p-6 transition duration-300 hover:border-accent/50 hover:shadow-[0_0_44px_-10px_rgba(168,85,247,0.55)] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/60">
+          className="group relative overflow-hidden rounded-2xl border border-white/5 bg-neutral-900/40 p-6 transition-colors duration-300 hover:border-white/10 hover:bg-neutral-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40">
           <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-accent/20 blur-3xl transition duration-500 group-hover:bg-accent/30" />
           <div className="relative flex items-start gap-4">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-accent/40 bg-accent/15 text-accent-light shadow-inner">
@@ -587,7 +584,7 @@ export default function Vedin() {
 
         {/* Portal 2 — Falsifiable research protocol */}
         <Link to="/research"
-          className="group relative overflow-hidden rounded-2xl border border-jade/25 bg-gradient-to-br from-jade/[0.12] via-card to-accent/[0.06] p-6 transition duration-300 hover:border-jade/50 hover:shadow-[0_0_44px_-10px_rgba(52,211,153,0.5)] focus:outline-none focus-visible:ring-2 focus-visible:ring-jade/60">
+          className="group relative overflow-hidden rounded-2xl border border-white/5 bg-neutral-900/40 p-6 transition-colors duration-300 hover:border-white/10 hover:bg-neutral-800/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/40">
           <span aria-hidden className="pointer-events-none absolute -right-8 -top-10 h-32 w-32 rounded-full bg-jade/20 blur-3xl transition duration-500 group-hover:bg-jade/30" />
           <div className="relative flex items-start gap-4">
             <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl border border-jade/40 bg-jade/15 text-jade shadow-inner">
@@ -610,8 +607,7 @@ export default function Vedin() {
 
       {/* ── Registered dashboard banner (Emerald/Mint + Deep Purple) ── */}
       {showDashboard && profile && (
-        <div className="relative mb-6 overflow-hidden rounded-3xl border p-6 sm:p-8 no-print"
-          style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.34) 0%, rgba(15,12,26,0.94) 46%, rgba(124,58,237,0.44) 100%)', borderColor: 'rgba(234,179,8,0.4)', boxShadow: '0 0 70px -20px rgba(16,185,129,0.4), 0 0 60px -22px rgba(234,179,8,0.35)' }}>
+        <div className="relative mb-6 overflow-hidden rounded-3xl border border-amber-500/25 bg-neutral-900/60 p-6 sm:p-8 no-print">
           <div className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
           <div className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)' }} />
           <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -1370,8 +1366,8 @@ export default function Vedin() {
           style={{ background: 'rgba(6,5,12,0.72)', backdropFilter: 'blur(6px)' }}
           onClick={reading$.dismissApprovedModal} role="dialog" aria-modal="true">
           <div onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-md overflow-hidden rounded-2xl border-2 border-amber-400/50 p-6 text-center sm:p-8"
-            style={{ background: 'linear-gradient(155deg, rgb(var(--card)) 0%, rgb(var(--surface)) 100%)', boxShadow: '0 0 70px -18px rgba(234,179,8,0.6)' }}>
+            className="relative w-full max-w-md overflow-hidden rounded-2xl border border-amber-500/25 bg-neutral-900/80 p-6 text-center sm:p-8"
+            style={{ boxShadow: '0 20px 60px -20px rgba(0,0,0,0.7)' }}>
             <div className="pointer-events-none absolute -right-14 -top-16 h-44 w-44 rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, #34d399 0%, transparent 70%)' }} />
             <button type="button" onClick={reading$.dismissApprovedModal} aria-label="Close"
               className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full text-muted transition hover:bg-fg/10 hover:text-fg">

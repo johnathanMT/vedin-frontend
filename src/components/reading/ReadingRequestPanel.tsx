@@ -24,8 +24,9 @@ interface Props {
   pdfBusy?: boolean
 }
 
-const CARD_BG = 'linear-gradient(135deg, rgb(var(--card)), rgb(var(--surface)))'
-const CARD_GLOW = '0 0 50px -20px rgb(var(--accent) / 0.5)'
+// Solid dark surface, no coloured bloom — a subtle inset top highlight is the only depth cue.
+const CARD_BG = 'rgb(23 23 23 / 0.40)'
+const CARD_GLOW = 'inset 0 1px 0 rgb(255 255 255 / 0.04)'
 
 /**
  * The "Detailed Reading" tab: auth gate → request card → pending → approved
@@ -141,7 +142,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
       {status === 'approved' && (
         <div className="no-print">
           <div className="relative overflow-hidden rounded-2xl border-2 border-amber-400/60 p-4 text-center sm:p-5"
-            style={{ background: 'linear-gradient(135deg, rgba(16,185,129,0.24) 0%, rgba(234,179,8,0.24) 100%)', boxShadow: '0 0 46px -10px rgba(234,179,8,0.55)' }}>
+            style={{ background: 'rgb(23 23 23 / 0.60)', boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.04)' }}>
             <p className="flex flex-wrap items-center justify-center gap-2 font-groovy text-lg text-fg sm:text-xl">
               <CheckCircle2 size={22} className="text-emerald-500" />
               {lang === 'mm' ? 'ဆရာမှ သင့်ဟောစာတမ်းကို အတည်ပြုပြီးပါပြီ။' : 'The Sayar has approved your reading.'}
@@ -161,7 +162,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
       {/* Approved — the finished reading (printable) */}
       {status === 'approved' && markdown && (
         <div className="relative overflow-hidden rounded-2xl border border-accent/35 p-6 sm:p-8"
-          style={{ background: 'linear-gradient(160deg, rgb(var(--card)) 0%, rgb(var(--surface)) 100%)', boxShadow: '0 0 60px -20px rgb(var(--accent) / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.05)' }}>
+          style={{ background: 'rgb(23 23 23 / 0.40)', boxShadow: 'inset 0 1px 0 rgb(255 255 255 / 0.05)' }}>
           <div className="pointer-events-none absolute -left-16 -bottom-20 h-56 w-56 rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--jade)) 0%, transparent 70%)' }} />
           <div className="relative">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">

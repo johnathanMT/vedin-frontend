@@ -64,12 +64,16 @@ html[data-theme="dark"] [class*="bg-cyan"]:not([class*="bg-cyan/"]) {
   color: #06080F;
 }
 
-/* ── Vedin (Vedic astrology) page — premium violet / gold / jade identity ── */
+/* ── Vedin (Vedic astrology) page — grounded charcoal + antique-gold identity ──
+   A serious, human-crafted palette: deep neutral surfaces, one mature brass accent,
+   off-white text with a muted-gray secondary. No neon, no rainbow, no bloom. */
 .vedin-page {
-  --accent: 167 139 250;        /* violet-400 — mystical primary */
-  --accent-light: 196 181 253;  /* violet-300 */
-  --jade: 52 211 153;           /* emerald/jade — benefic (good) */
-  --jade-light: 110 231 183;
+  --accent: 201 162 75;         /* #C9A24B — antique/brass gold (primary emphasis) */
+  --accent-light: 228 199 126;  /* #E4C77E — light gold (hover / highlights) */
+  --jade: 132 169 140;          /* muted sage — reserved for "benefic" semantics only */
+  --jade-light: 163 194 170;
+  --fg: 229 229 229;            /* neutral-200 — primary readable text */
+  --muted: 163 163 163;         /* neutral-400 — descriptions / secondary hierarchy */
   /* Latin uses Inter; Myanmar glyphs fall through to the elegant Padauk. */
   font-family: 'Inter', 'Padauk', 'Noto Sans Myanmar', system-ui, sans-serif;
 }
@@ -167,24 +171,35 @@ html[data-theme="dark"] [class*="bg-cyan"]:not([class*="bg-cyan/"]) {
   .vedin-page .text-\[11px\] { font-size: 0.82rem; }
   .vedin-page .text-\[10px\] { font-size: 0.8rem; }
 }
+/* Solid, clean dark cards — no heavy blur, no coloured bloom. Hover is a subtle
+   structural shift (border + surface), not a glow. */
 html[data-theme="dark"] .vedin-page .glass-card {
-  border-color: rgb(var(--accent) / 0.20);
-  background: linear-gradient(180deg, rgb(var(--card) / 0.92), rgb(var(--surface) / 0.82));
-  box-shadow: 0 0 46px -26px rgb(var(--accent) / 0.55), inset 0 1px 0 rgb(255 255 255 / 0.05);
-  backdrop-filter: blur(12px);
+  border-color: rgb(255 255 255 / 0.05);
+  background: rgb(23 23 23 / 0.40);   /* neutral-900/40 */
+  box-shadow: none;
+  backdrop-filter: none;
 }
 html[data-theme="dark"] .vedin-page .glass-card:hover {
-  border-color: rgb(var(--accent) / 0.42);
-  box-shadow: 0 0 60px -22px rgb(var(--accent) / 0.68), inset 0 1px 0 rgb(255 255 255 / 0.07);
+  border-color: rgb(255 255 255 / 0.10);
+  background: rgb(38 38 38 / 0.50);   /* neutral-800/50 */
 }
+/* Elegant title — no neon text-shadow. */
 html[data-theme="dark"] .vedin-page .font-groovy {
-  text-shadow: 0 0 26px rgb(var(--accent) / 0.30);
+  text-shadow: none;
 }
+/* Grounded background: solid eerie black with, at most, one barely-there
+   monochrome vignette (≈2% white) — never a coloured radial bloom. */
 html[data-theme="dark"] .vedin-page {
   background:
-    radial-gradient(1100px 480px at 12% -6%, rgb(var(--accent) / 0.10), transparent 60%),
-    radial-gradient(900px 460px at 88% 4%, rgb(234 179 8 / 0.06), transparent 60%);
+    radial-gradient(1200px 520px at 50% -12%, rgb(255 255 255 / 0.02), transparent 60%),
+    #0a0a0a;
 }
+
+/* Retire the decorative radial "glow orbs" scattered across the astrology app —
+   the blurred accent/violet/jade blobs are the main source of the "AI/sci-fi"
+   look. Hiding them here removes every one in a single, grounded stroke. */
+.vedin-page [class*="blur-3xl"],
+.vedin-page [class*="blur-2xl"] { display: none !important; }
 
 /* ── Chart draw-in — the board strokes trace themselves, then the planet
    glyphs fade in on a stagger, so casting a chart feels performed rather than
