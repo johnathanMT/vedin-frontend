@@ -23,7 +23,6 @@ import ChartSummaryHero from './ChartSummaryHero'
 import ChartSkeleton from './ChartSkeleton'
 import WizardProgress from './wizard/WizardProgress'
 import TopicExplainer from './TopicExplainer'
-import LanguageSwitcher from './LanguageSwitcher'
 // Leaflet (~150 kB + CSS) is pulled in only when the Birth-place step renders.
 const BirthPlaceMap = lazy(() => import('./BirthPlaceMap'))
 
@@ -568,11 +567,6 @@ export default function Vedin() {
       {/* ── Grand Astrologer Profile — centered, large photo, bio below ── */}
       {/* print-hide: the photo + bio are omitted from the printed PDF (Phase 4) */}
       <div className="print-hide relative mb-8 overflow-hidden rounded-3xl border border-amber-500/30 bg-[#ffffff] shadow-sm dark:border-amber-500/20 dark:bg-neutral-900/50 p-6 text-center sm:p-10">
-
-        {/* language switcher — pinned top-right */}
-        <div className="no-print absolute right-4 top-4 z-10">
-          <LanguageSwitcher />
-        </div>
 
         <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-5">
           <div className="relative h-36 w-36 shrink-0 rounded-full p-[3px] ring-1 ring-amber-500/30 sm:h-44 sm:w-44"
@@ -1366,11 +1360,6 @@ export default function Vedin() {
             </div>
           )}
         </div>
-      </div>
-
-      {/* Bottom language switcher — mirrors the header so users needn't scroll back up */}
-      <div className="mt-12 flex justify-center no-print">
-        <LanguageSwitcher />
       </div>
 
       {/* ── Methodology (a genuine differentiator) + honest disclaimer ── */}
