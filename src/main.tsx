@@ -22,6 +22,8 @@ const Algorithms = lazy(() => import('./components/Algorithms'))
 const VedinAdmin = lazy(() => import('./components/VedinAdmin'))
 const ResetPassword = lazy(() => import('./components/ResetPassword'))
 const ConfirmEmail = lazy(() => import('./components/ConfirmEmail'))
+const Privacy = lazy(() => import('./components/Privacy'))
+const Terms = lazy(() => import('./components/Terms'))
 
 const fallback = <div className="py-24 text-center font-mono text-sm text-muted">Loading…</div>
 
@@ -67,6 +69,11 @@ ReactDOM.createRoot(rootEl).render(
           {/* Auth flows (not indexed): email-confirm + auto-login, and password reset. */}
           <Route path="/confirm" element={<><Seo title="Confirm email — Vedin" path="/confirm" noindex /><Suspense fallback={fallback}><ConfirmEmail /></Suspense></>} />
           <Route path="/reset-password" element={<><Seo title="Reset password — Vedin" path="/reset-password" noindex /><Suspense fallback={fallback}><ResetPassword /></Suspense></>} />
+
+          {/* Legal pages — wrapped in VedinShell so they carry the top bar + footer. */}
+          <Route path="/privacy" element={<><Seo title="Privacy Policy — Vedin" path="/privacy" description="What Vedin collects and how your birth details and readings are handled." /><VedinShell><Suspense fallback={fallback}><Privacy /></Suspense></VedinShell></>} />
+          <Route path="/terms" element={<><Seo title="Terms of Service — Vedin" path="/terms" description="The terms for using Vedin's Vedic astrology charts and readings." /><VedinShell><Suspense fallback={fallback}><Terms /></Suspense></VedinShell></>} />
+
 
           {/* Legacy paths → the new root. */}
           <Route path="/vedin" element={<Navigate to="/" replace />} />

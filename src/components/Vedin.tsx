@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState, type FormEvent } from 'react'
 import { AnimatePresence, m } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Sparkles, MapPin, Loader2, Search, Download, Star, Info, Sigma, FlaskConical, ArrowRight, ScrollText, CheckCircle2, ChevronDown, ChevronLeft, ChevronRight, Pencil, Cake, X, MousePointerClick } from 'lucide-react'
 import { SITE } from '../config/site'
 import KundliChart from './KundliChart'
@@ -131,6 +131,21 @@ export default function Vedin() {
   const [querent, setQuerent] = useState<{ name: string; gender: 'male' | 'female'; nn: Naynan | null } | null>(null)
   const [tab, setTab] = useState<Tab>('reading')
   const [chartStyle, setChartStyle] = useState<ChartStyle>('diamond')
+  const location = useLocation()
+
+  // Footer / deep-link support: a hash like "/#ashtaka", "/#shadbala" or "/#account"
+  // selects the matching tab and scrolls to it. Re-runs when the hash changes or once
+  // the chart finishes computing (so a link followed before results exist still lands).
+  useEffect(() => {
+    const h = location.hash.replace('#', '').toLowerCase()
+    if (!h) return
+    if (h === 'ashtaka' || h === 'ashtakavarga' || h === 'shadbala') {
+      setTab(h === 'ashtakavarga' ? 'ashtaka' : (h as Tab))
+      document.getElementById('vedin-charts')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    } else if (h === 'account' || h === 'dashboard') {
+      document.getElementById('vedin-account')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }, [location.hash, data])
   const [vargaN, setVargaN] = useState(9)
   const [ayanamsa, setAyanamsa] = useState(() => draftValue(draft0, 'ayanamsa', 'lahiri'))
   const [consent, setConsent] = useState(() => draftValue(draft0, 'consent', false))
@@ -621,7 +636,7 @@ export default function Vedin() {
       </div>
 
       {/* ── Customer account (sign in / saved charts) ── */}
-      <div className="mb-6">
+      <div className="mb-6 scroll-mt-24" id="vedin-account">
         <CustomerPanel ref={customerPanelRef} lang={lang} onAuthChange={setCustomerToken} onLoadChart={loadSavedChart} onProfileSaved={refreshProfile} />
       </div>
 
@@ -934,7 +949,7 @@ export default function Vedin() {
           {loading && !data && <ChartSkeleton lang={lang} />}
 
           {data && reading && (
-            <div className="min-w-0 space-y-5">
+            <div className="min-w-0 space-y-5 scroll-mt-24" id="vedin-charts">
               {/* header + full-reading PDF download */}
               <div className="flex flex-col gap-3 no-print sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="font-groovy text-lg text-fg">{place || t.portalTitle}</h2>
