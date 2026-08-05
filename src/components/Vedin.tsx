@@ -140,11 +140,19 @@ export default function Vedin() {
   useEffect(() => {
     const h = location.hash.replace('#', '').toLowerCase()
     if (!h) return
-    if (h === 'ashtaka' || h === 'ashtakavarga' || h === 'shadbala') {
-      setTab(h === 'ashtakavarga' ? 'ashtaka' : (h as Tab))
-      document.getElementById('vedin-charts')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    } else if (h === 'account' || h === 'dashboard') {
+    if (h === 'account' || h === 'dashboard') {
       document.getElementById('vedin-account')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+    const hashToTab: Record<string, Tab> = {
+      ai: 'ai', reading: 'reading', timeline: 'timeline',
+      vargas: 'vargas', charts: 'vargas',
+      ashtaka: 'ashtaka', ashtakavarga: 'ashtaka', shadbala: 'shadbala',
+    }
+    const target = hashToTab[h]
+    if (target) {
+      setTab(target)
+      document.getElementById('vedin-charts')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [location.hash, data])
 
@@ -947,7 +955,7 @@ export default function Vedin() {
         <div className="min-w-0">
           {!data && !loading && (
             <div id="vedin-charts" className="scroll-mt-24 no-print">
-              {(tab === 'ashtaka' || tab === 'shadbala') ? (
+              {(tab === 'ai' || tab === 'timeline' || tab === 'vargas' || tab === 'ashtaka' || tab === 'shadbala') ? (
                 <TopicExplainer topic={tab} lang={lang} onCast={scrollToForm} />
               ) : (
                 <div className="glass-card flex min-h-[300px] items-center justify-center p-8 text-center text-sm text-muted">

@@ -1,7 +1,7 @@
-import { Sigma, Scale, Sparkles, ArrowUp } from 'lucide-react'
+import { Sigma, Scale, Sparkles, ArrowUp, ScrollText, LayoutGrid, CalendarClock } from 'lucide-react'
 import type { Lang } from '../lib/vedin'
 
-export type ExplainerTopic = 'ashtaka' | 'shadbala'
+export type ExplainerTopic = 'ai' | 'timeline' | 'vargas' | 'ashtaka' | 'shadbala'
 
 interface Props {
   topic: ExplainerTopic
@@ -19,6 +19,48 @@ interface Copy {
 }
 
 const COPY: Record<ExplainerTopic, Copy> = {
+  ai: {
+    Icon: ScrollText,
+    kicker: { en: 'Detailed Reading', mm: 'အသေးစိတ် ဟောစာတမ်း' },
+    title: { en: 'Your life, read across seven areas', mm: 'ဘဝ ကဏ္ဍ ခုနစ်ရပ်ဖြင့် ဖတ်ရှုခြင်း' },
+    lede: {
+      en: 'A full written reading — personally reviewed by the Sayar before it reaches you — that weaves your placements, dashas, and yogas into clear guidance across the seven pillars of life: education, career, wealth, marriage, health, community, and dharma. Every line is grounded in your own computed chart, never generic.',
+      mm: 'ဆရာ ကိုယ်တိုင် စစ်ဆေးအတည်ပြုပြီးမှ သင့်ထံ ရောက်ရှိသော ဟောစာတမ်းအပြည့်အစုံ — သင့်ဂြိုဟ်တည်နေရာများ၊ ဒသာနှင့် ယောဂများကို ဘဝ၏ အခြေခံ ခုနစ်ရပ် (ပညာရေး၊ အလုပ်အကိုင်၊ ဓန၊ အိမ်ထောင်ရေး၊ ကျန်းမာရေး၊ လူမှုရေးနှင့် ဓမ္မ) တွင် ရှင်းလင်းသော လမ်းညွှန်ချက်အဖြစ် ရက်လုပ်ပေးသည်။ စာကြောင်းတိုင်း သင့်ဇာတာအပေါ်တွင်သာ အခြေခံသည်။',
+    },
+    points: [
+      { en: 'Seven life areas — from education to dharma, each with its own verdict.', mm: 'ဘဝ ကဏ္ဍ ခုနစ်ရပ် — ပညာရေးမှ ဓမ္မအထိ၊ တစ်ခုစီအတွက် သီးခြား သုံးသပ်ချက်။' },
+      { en: 'Grounded in your exact placements, dasha, and active yogas.', mm: 'သင့် တိကျသော ဂြိုဟ်တည်နေရာ၊ ဒသာနှင့် ယောဂများအပေါ် အခြေခံသည်။' },
+      { en: 'Personally reviewed and approved before it is delivered.', mm: 'ပေးပို့မီ ဆရာ ကိုယ်တိုင် စစ်ဆေး အတည်ပြုသည်။' },
+    ],
+  },
+  vargas: {
+    Icon: LayoutGrid,
+    kicker: { en: 'Divisional Charts (Vargas)', mm: 'ဇာတာခွဲများ (Vargas)' },
+    title: { en: 'Sixteen lenses on a single life', mm: 'ဘဝတစ်ခုကို မှန်ဘီလူး ၁၆ ချက်' },
+    lede: {
+      en: 'Beyond the birth chart (D1), Vedic astrology divides each sign into finer harmonics — the vargas — and each one magnifies a single domain of life. The D9 refines marriage and the soul, D10 career and status, D7 children, on through to the D60. Together they turn a flat chart into a layered portrait.',
+      mm: 'မွေးဇာတာ (D1) ထက်ကျော်၍ ဗေဒင်ပညာသည် ရာသီတစ်ခုစီကို သိမ်မွေ့သော အစိတ်အပိုင်းများ — ဇာတာခွဲများ (vargas) — အဖြစ် ခွဲခြမ်းပြီး၊ တစ်ခုစီက ဘဝ၏ နယ်ပယ်တစ်ခုကို ချဲ့ပြသည်။ D9 က အိမ်ထောင်ရေးနှင့် ဝိညာဉ်၊ D10 က အလုပ်အကိုင်နှင့် ဂုဏ်အဆင့်၊ D7 က သားသမီး — D60 အထိ။ ၎င်းတို့ ပေါင်းစပ်၍ ဇာတာကို အလွှာလိုက် ပုံရိပ်အဖြစ် ပြောင်းလဲပေးသည်။',
+    },
+    points: [
+      { en: 'From D1 (Rasi) through the classical D60 divisional charts.', mm: 'D1 (ရာသီ) မှ ဂန္ထဝင် D60 ဇာတာခွဲများအထိ။' },
+      { en: 'D9 Navamsa — the essential marriage and destiny chart.', mm: 'D9 နဝင်း — အိမ်ထောင်ရေးနှင့် ကံကြမ္မာ၏ အဓိက ဇာတာ။' },
+      { en: 'View any chart in elegant diamond or grid style.', mm: 'ဇာတာများကို စိန်ပုံ (သို့) ဇယားကွက် ပုံစံဖြင့် ကြည့်ရှုနိုင်သည်။' },
+    ],
+  },
+  timeline: {
+    Icon: CalendarClock,
+    kicker: { en: 'Dasha Timeline', mm: 'ဒသာ ကာလဇယား' },
+    title: { en: 'When the chart comes alive', mm: 'ဇာတာ အသက်ဝင်လာသည့် အချိန်' },
+    lede: {
+      en: 'A chart shows what is promised; the Vimshottari dasha shows when. The timeline maps the planetary periods and sub-periods that rule your life — past, present, and future — so you can see which chapters carry which planet\'s signature, and when its results are due to unfold.',
+      mm: 'ဇာတာက ကတိပေးထားသည်ကို ပြသည်။ ဝိံရှောတ္တရီ ဒသာက ဘယ်အချိန်ကို ပြသည်။ ကာလဇယားသည် သင့်ဘဝကို အုပ်စိုးသော ဂြိုဟ် ကာလကြီးနှင့် ကာလခွဲများ — အတိတ်၊ ပစ္စုပ္ပန်နှင့် အနာဂတ် — ကို ဖော်ပြသဖြင့် မည်သည့်အခန်းက မည်သည့်ဂြိုဟ်၏ လက္ခဏာကို ဆောင်သည်၊ ရလဒ်များ ဘယ်တော့ ပေါ်ပေါက်မည်ကို မြင်နိုင်သည်။',
+    },
+    points: [
+      { en: 'Mahadasha → Antardasha → Pratyantardasha, nested in order.', mm: 'မဟာဒသာ → အန္တရဒသာ → ပြတျန္တရဒသာ — အစဉ်လိုက်။' },
+      { en: 'Your current running period highlighted at a glance.', mm: 'လက်ရှိ ပြေးဆွဲနေသော ကာလကို တစ်ချက်တည်းဖြင့် မြင်နိုင်သည်။' },
+      { en: 'Sees Sade Sati and the key transits shaping each phase.', mm: 'အဆင့်တစ်ခုစီကို ပုံဖော်နေသော သာဒေသတ်နှင့် အဓိက ဂြိုဟ်သွားများ။' },
+    ],
+  },
   ashtaka: {
     Icon: Sigma,
     kicker: { en: 'Ashtakavarga', mm: 'အဋ္ဌကဝဂ်' },
