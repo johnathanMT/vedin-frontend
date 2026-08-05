@@ -53,13 +53,13 @@ export const BIO_MM = 'ရှေးဟောင်း ဂဏန်းသင်�
 
 // Astrologer credential pills — readable in BOTH light and dark (dark shades on
 // light bg, light shades on dark bg), each with a distinct colour + soft glow.
-export const PROFILE_PILLS: { mm: string; en: string; cls: string }[] = [
-  { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology', cls: 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-900/40 dark:text-emerald-200 dark:border-emerald-400/40 shadow-emerald-500/20' },
-  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa', cls: 'bg-red-100 text-red-800 border-red-300 dark:bg-red-900/40 dark:text-red-200 dark:border-red-400/40 shadow-red-500/20' },
-  { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha', cls: 'bg-violet-100 text-violet-800 border-violet-300 dark:bg-violet-900/40 dark:text-violet-200 dark:border-violet-400/40 shadow-violet-500/25' },
-  { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas', cls: 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-900/40 dark:text-amber-200 dark:border-amber-400/50 shadow-amber-500/25' },
-  { mm: 'ဆဒ္ဗလ', en: 'Shadbala', cls: 'bg-rose-100 text-rose-800 border-rose-300 dark:bg-rose-900/40 dark:text-rose-200 dark:border-rose-400/40 shadow-rose-500/20' },
-  { mm: 'အဋ္ဌကဝဂ်', en: 'Ashtakavarga', cls: 'bg-indigo-100 text-indigo-800 border-indigo-300 dark:bg-indigo-900/40 dark:text-indigo-200 dark:border-indigo-400/40 shadow-indigo-500/20' },
+export const PROFILE_PILLS: { mm: string; en: string }[] = [
+  { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology' },
+  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa' },
+  { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha' },
+  { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas' },
+  { mm: 'ဆဒ္ဗလ', en: 'Shadbala' },
+  { mm: 'အဋ္ဌကဝဂ်', en: 'Ashtakavarga' },
 ]
 
 // D1–D60 educational meanings (simple, bilingual).

@@ -13,7 +13,9 @@ function AshtakavargaView({ data, lang }: { data: BirthChartData; lang: Lang }) 
   const av = data.ashtakavarga
   if (!av?.sav?.length) return null
   const maxSav = Math.max(...av.sav, 1)
-  const col = (v: number) => (v >= 30 ? 'rgb(var(--jade))' : v <= 25 ? 'rgb(var(--coral))' : 'rgb(var(--accent))')
+  // Grounded strength scale: strong = sage, weak = dim neutral (faded), mid = gold.
+  // No red — strength reads through emphasis, not a traffic-light palette.
+  const col = (v: number) => (v >= 30 ? 'rgb(var(--jade))' : v <= 25 ? 'rgb(115 115 115)' : 'rgb(var(--accent))')
 
   return (
     <div className="space-y-5">
@@ -21,8 +23,8 @@ function AshtakavargaView({ data, lang }: { data: BirthChartData; lang: Lang }) 
         <h3 className="mb-1 font-groovy text-lg text-fg">{lang === 'mm' ? 'အဋ္ဌကဝဂ် (Ashtakavarga)' : 'Ashtakavarga'}</h3>
         <p className="text-sm leading-relaxed text-muted">
           {lang === 'mm'
-            ? 'ရာသီတစ်ခုချင်း၏ မင်္ဂလာအမှတ် (bindu)။ SAV ≥ ၃၀ = အားကောင်း (အစိမ်း)၊ ≤ ၂၅ = အားနည်း (အနီ)။ ဂြိုဟ်သွား အားကောင်း/နည်းကို ဤအမှတ်များက ဆုံးဖြတ်သည်။'
-            : 'Benefic points (bindus) per sign. SAV ≥ 30 = strong (green), ≤ 25 = weak (red). A planet transiting a high-bindu sign gives fuller results.'}
+            ? 'ရာသီတစ်ခုချင်း၏ မင်္ဂလာအမှတ် (bindu)။ SAV ≥ ၃၀ = အားကောင်း၊ ≤ ၂၅ = အားနည်း။ ဂြိုဟ်သွား အားကောင်း/နည်းကို ဤအမှတ်များက ဆုံးဖြတ်သည်။'
+            : 'Benefic points (bindus) per sign. SAV ≥ 30 = strong, ≤ 25 = weak. A planet transiting a high-bindu sign gives fuller results.'}
         </p>
       </div>
 

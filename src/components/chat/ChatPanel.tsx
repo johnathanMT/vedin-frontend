@@ -37,7 +37,7 @@ const ChatPanel = forwardRef<HTMLDivElement, Props>(function ChatPanel(
         <div className="mt-4 flex flex-col items-start gap-3 rounded-xl border border-accent/30 bg-accent/10 px-5 py-4">
           <p className="text-sm text-accent-light">{lang === 'mm' ? 'ဆရာနှင့် စကားပြောရန် အကောင့်ဝင်ပါ။' : 'Log in to chat with the Sayar.'}</p>
           <button type="button" onClick={() => onOpenAuth('login')}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-2 text-sm font-semibold text-space transition hover:brightness-110">
+            className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-space transition hover:brightness-110">
             <Lock size={15} /> {lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}
           </button>
         </div>
@@ -68,7 +68,7 @@ const ChatPanel = forwardRef<HTMLDivElement, Props>(function ChatPanel(
               placeholder={lang === 'mm' ? 'မေးခွန်း ရိုက်ထည့်ပါ… (Enter = ပို့)' : 'Type your question… (Enter to send)'}
               className={`${field} flex-1 resize-none`} />
             <button type="button" onClick={onSend} disabled={busy || !input.trim()}
-              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
+              className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-amber-600 px-4 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
               {busy ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />} {lang === 'mm' ? 'ပို့မည်' : 'Send'}
             </button>
           </div>

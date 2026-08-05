@@ -260,7 +260,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
             <button
               type="button"
               onClick={() => { setModal('signup'); setMsg(null) }}
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-8 py-3 text-base font-semibold text-space shadow-lg shadow-accent/40 transition duration-200 hover:scale-105 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/60 active:scale-100 motion-reduce:hover:scale-100"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-600 px-8 py-3 text-base font-semibold text-space transition-colors duration-200 hover:bg-amber-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/50"
             >
               <UserPlus size={18} /> {t('Sign up', 'အကောင့်ဖွင့်')}
             </button>
@@ -302,7 +302,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
               <button type="button" onClick={() => setModal(null)} className="text-muted hover:text-fg"><X size={18} /></button>
             </div>
             {modal === 'forgot' && !msg && <p className="mb-3 text-xs leading-relaxed text-muted">{t('Enter your account email and we’ll send a link to reset your password.', 'သင့်အကောင့် email ကို ထည့်ပါ — စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ် ပို့ပေးပါမည်။')}</p>}
-            {msg && <p className={`mb-3 rounded-xl border px-3 py-2 text-xs ${msg.ok ? 'border-emerald-400/40 bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-200' : 'border-coral/40 bg-coral/10 text-coral'}`}>{msg.text}</p>}
+            {msg && <p className={`mb-3 rounded-xl border px-3 py-2 text-xs ${msg.ok ? 'border-jade/30 bg-jade/10 text-jade' : 'border-coral/40 bg-coral/10 text-coral'}`}>{msg.text}</p>}
             <form onSubmit={modal === 'login' ? login : modal === 'signup' ? signup : modal === 'forgot' ? forgotPassword : saveProfile} className="space-y-3">
               {modal !== 'profile' && (
                 <label className="block"><span className="font-mono text-[11px] uppercase tracking-wider text-muted">{t('Email', 'အီးမေးလ်')}</span>
@@ -324,7 +324,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
               {/* Natal profile — makes the account render its own chart instantly */}
               {(modal === 'signup' || modal === 'profile') && (
                 <div className="space-y-3 rounded-xl border border-jade/25 bg-jade/[0.05] p-3">
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-emerald-700 dark:text-emerald-300">{modal === 'profile' ? t('Your birth details', 'သင့်မွေးဖွားချက်') : t('Your birth details (optional — unlocks your dashboard)', 'သင့်မွေးဖွားချက် (ရွေးချယ်နိုင် — Dashboard ဖွင့်ပေးသည်)')}</p>
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-accent-light">{modal === 'profile' ? t('Your birth details', 'သင့်မွေးဖွားချက်') : t('Your birth details (optional — unlocks your dashboard)', 'သင့်မွေးဖွားချက် (ရွေးချယ်နိုင် — Dashboard ဖွင့်ပေးသည်)')}</p>
                   {modal === 'profile' && (
                     <p className="rounded-lg border border-amber-400/30 bg-amber-400/10 px-2.5 py-2 text-[11px] leading-relaxed text-amber-200">⚠️ မွေးဇာတာ အချက်အလက်များကို ရက်ပေါင်း 90 မှ တစ်ကြိမ်သာ ပြောင်းလဲနိုင်ပါသည်။</p>
                   )}
@@ -353,11 +353,11 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
                       </ul>
                     )}
                   </label>
-                  {sPlaceOk && <p className="font-mono text-[10px] text-emerald-700 dark:text-emerald-300">✓ {sPlace} · {sTz}</p>}
+                  {sPlaceOk && <p className="font-mono text-[10px] text-jade">✓ {sPlace} · {sTz}</p>}
                 </div>
               )}
 
-              <button type="submit" disabled={busy} className="w-full rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:opacity-60">
+              <button type="submit" disabled={busy} className="w-full rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:opacity-60">
                 {busy ? <Loader2 size={15} className="mx-auto animate-spin" /> : modal === 'login' ? t('Sign in', 'ဝင်မည်') : modal === 'profile' ? t('Save profile', 'ပရိုဖိုင် သိမ်းမည်') : modal === 'forgot' ? t('Send reset link', 'ပြန်သတ်မှတ်လင့်ခ် ပို့မည်') : t('Create account', 'အကောင့်ဖွင့်မည်')}
               </button>
             </form>
@@ -373,7 +373,7 @@ const CustomerPanel = forwardRef<CustomerPanelHandle, {
             )}
             {modal === 'login' && needsVerify && (
               <>
-                <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-2.5 text-center text-xs text-emerald-700 dark:text-emerald-200">
+                <div className="mt-3 flex items-center justify-center gap-2 rounded-xl border border-jade/30 bg-jade/10 px-4 py-2.5 text-center text-xs text-jade">
                   <Loader2 size={14} className="animate-spin" />
                   {t('Waiting for verification — this device will sign you in automatically.', 'အတည်ပြုချက်ကို စောင့်နေသည် — အတည်ပြုပြီးသည်နှင့် ဤစက်တွင် အလိုအလျောက် ဝင်ရောက်ပေးပါမည်။')}
                 </div>

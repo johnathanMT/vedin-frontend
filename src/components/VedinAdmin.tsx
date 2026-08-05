@@ -883,7 +883,7 @@ export default function VedinAdmin() {
             <textarea value={replyBody} onChange={(e) => setReplyBody(e.target.value)} rows={9} placeholder="Type or paste the horoscope reading / remedy response here…" className="w-full resize-y rounded-xl border border-fg/15 bg-fg/5 px-3 py-2 text-sm text-fg outline-none focus:border-accent/50" />
             <div className="mt-3 flex items-center justify-end gap-2">
               <button onClick={() => setReply(null)} className="rounded-xl border border-fg/15 px-4 py-2 text-xs text-fg/70 transition hover:text-fg">Cancel</button>
-              <button onClick={sendReply} disabled={replyBusy || !replyBody.trim()} className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2 text-xs font-semibold text-space transition hover:brightness-110 disabled:opacity-50">
+              <button onClick={sendReply} disabled={replyBusy || !replyBody.trim()} className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-2 text-xs font-semibold text-space transition hover:brightness-110 disabled:opacity-50">
                 {replyBusy ? <RefreshCw size={13} className="animate-spin" /> : <Send size={13} />} Send Reading to Client Email
               </button>
             </div>

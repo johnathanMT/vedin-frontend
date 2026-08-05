@@ -68,7 +68,7 @@ export default function ConfirmEmail() {
           <><CheckCircle2 size={44} className="mx-auto text-emerald-500" />
             <h1 className="mt-3 font-groovy text-xl text-fg">Email confirmed</h1>
             <p className="mt-2 text-sm leading-relaxed text-fg/90">For your security, please return to the device/browser you signed up on and sign in there.</p>
-            <Link to="/" className="mt-5 inline-block rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110">Go to Vedin</Link></>
+            <Link to="/" className="mt-5 inline-block rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110">Go to Vedin</Link></>
         )}
         {state === 'error' && (
           <><AlertTriangle size={40} className="mx-auto text-rose-400" />

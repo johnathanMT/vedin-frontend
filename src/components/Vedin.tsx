@@ -670,7 +670,7 @@ export default function Vedin() {
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 rounded-2xl border border-accent/30 bg-accent/10 px-5 py-4 text-sm leading-relaxed text-accent-light no-print sm:flex-row sm:items-center sm:justify-between">
               <span>{lang === 'mm' ? 'သင့်အကောင့်တွင် မွေးဇာတာ ပရိုဖိုင် မရှိသေးပါ။ ပရိုဖိုင် ထည့်ပါ (သို့) အောက်ရှိ ဖောင်တွင် ဖြည့်ပါ။' : 'Your account has no birth profile yet — add one, or use the form below.'}</span>
               <button type="button" onClick={() => customerPanelRef.current?.openProfileEdit()}
-                className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-2 text-sm font-semibold text-space transition hover:brightness-110 sm:self-auto">
+                className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-amber-600 px-4 py-2 text-sm font-semibold text-space transition hover:brightness-110 sm:self-auto">
                 <Pencil size={15} /> {lang === 'mm' ? 'ပရိုဖိုင် ထည့်ရန်' : 'Add Profile'}
               </button>
             </div>
@@ -827,7 +827,7 @@ export default function Vedin() {
             </label>
 
             <button type="submit" disabled={loading || !canSubmit}
-              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
+              className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
               {loading ? <><Loader2 size={16} className="animate-spin" /> {lang === 'mm' ? 'တွက်ချက်ပေးနေပါသည်…' : 'Calculating…'}</> : <><Sparkles size={16} /> {lang === 'mm' ? 'ဇာတာ တွက်မည်' : 'Generate Chart'}</>}
             </button>
             {!canSubmit && (
@@ -892,7 +892,7 @@ export default function Vedin() {
               )}
               {step < 3 && (
                 <button type="button" disabled={!!currentStepError} onClick={() => setStep((s) => s + 1)}
-                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space shadow-lg shadow-accent/25 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
+                  className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
                   {lang === 'mm' ? 'ဆက်လက်' : 'Continue'} <ChevronRight size={15} />
                 </button>
               )}
@@ -919,7 +919,7 @@ export default function Vedin() {
               <div className="flex flex-col gap-3 no-print sm:flex-row sm:items-center sm:justify-between">
                 <h2 className="font-groovy text-lg text-fg">{place || t.portalTitle}</h2>
                 <button type="button" onClick={downloadPdf}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent to-violet-500 px-4 py-2 text-xs font-semibold text-space shadow-lg shadow-accent/25 transition hover:brightness-110">
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-4 py-2 text-xs font-semibold text-space transition hover:brightness-110">
                   <Download size={14} /> {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ ရယူရန်တောင်းဆိုပါ' : 'Download Full Natal Chart PDF'}
                 </button>
               </div>

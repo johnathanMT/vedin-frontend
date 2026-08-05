@@ -53,7 +53,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
               ? 'ဟောစာတမ်းအပြည့်အစုံကို ရယူရန်နှင့် သင့်ဇာတာများ မှတ်သားထားရန် အကောင့် (Account) ဖွင့်ထားရန် လိုအပ်ပါသည်။'
               : 'To get the full reading and to save your charts, you need to have an account.'}</p>
             <button type="button" onClick={() => onOpenAuth('signup')}
-              className="mt-1 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110">
+              className="mt-1 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110">
               <UserPlus size={16} /> {lang === 'mm' ? 'အကောင့်ဖွင့် / ဝင်ရန်' : 'Sign Up / Log In'}
             </button>
           </div>
@@ -72,7 +72,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
               ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီးနောက်၊ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်းအပြည့်အစုံကို ရေးသားပေးပါမည်။'
               : 'Your chart is computed precisely with classical Vedic astrology formulas, verified and approved to get full details before your full 7-life-area reading is written.'}</p>
             <button type="button" onClick={onRequest} disabled={loading}
-              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
+              className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
               {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
               {loading
                 ? (lang === 'mm' ? 'ပေးပို့နေသည်…' : 'Sending…')
@@ -178,7 +178,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
             <div className="mt-5 no-print">
               {token ? (
                 <button type="button" onClick={onDownloadPdf} disabled={pdfBusy}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-accent via-violet-500 to-jade px-5 py-3 text-sm font-semibold text-space shadow-lg shadow-accent/30 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
+                  className="inline-flex items-center gap-2 rounded-xl bg-amber-600 px-5 py-3 text-sm font-semibold text-space transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
                   {pdfBusy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                   {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ Download ဆွဲရန်' : 'Download Full Reading PDF'}
                 </button>

@@ -51,7 +51,7 @@ export default function ResetPassword() {
           <div className="mt-4 text-center">
             <CheckCircle2 size={40} className="mx-auto text-emerald-500" />
             <p className="mt-3 text-sm text-fg/90">Your password has been reset. You can now sign in with your new password.</p>
-            <Link to={signInHref} className="mt-5 inline-block rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110">Go to sign in</Link>
+            <Link to={signInHref} className="mt-5 inline-block rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110">Go to sign in</Link>
           </div>
         ) : (
           <>
@@ -62,7 +62,7 @@ export default function ResetPassword() {
                 <input type="password" required minLength={8} value={pw} onChange={(e) => setPw(e.target.value)} className="mt-1 w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-fg outline-none focus:border-accent/50" /></label>
               <label className="block"><span className="font-mono text-[11px] uppercase tracking-wider text-muted">Confirm new password</span>
                 <input type="password" required minLength={8} value={pw2} onChange={(e) => setPw2(e.target.value)} className={`mt-1 w-full rounded-xl border bg-white/5 px-3 py-2.5 text-sm text-fg outline-none focus:border-accent/50 ${pw2 && pw !== pw2 ? 'border-coral/50' : 'border-white/15'}`} /></label>
-              <button type="submit" disabled={busy} className="w-full rounded-xl bg-gradient-to-r from-accent to-violet-500 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:opacity-60">
+              <button type="submit" disabled={busy} className="w-full rounded-xl bg-amber-600 px-5 py-2.5 text-sm font-semibold text-space transition hover:brightness-110 disabled:opacity-60">
                 {busy ? <Loader2 size={15} className="mx-auto animate-spin" /> : 'Set new password'}
               </button>
             </form>
