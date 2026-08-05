@@ -37,13 +37,18 @@ export function vargaSign(lon: number, varga: number): number {
 // ── Names ─────────────────────────────────────────────────────────────────────
 export const SIGN_MM = ['မိဿ', 'ပြိဿ', 'မေထုန်', 'ကရကဋ်', 'သိဟ်', 'ကန်', 'တူ', 'ဗြိစ္ဆာ', 'ဓနု', 'မကာရ', 'ကုမ်', 'မိန်']
 export const SIGN_EN = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
-export const signLabel = (i: number, lang: Lang) => (lang === 'mm' ? SIGN_MM[i] : SIGN_EN[i])
+export const SIGN_JA = ['牡羊座', '牡牛座', '双子座', '蟹座', '獅子座', '乙女座', '天秤座', '蠍座', '射手座', '山羊座', '水瓶座', '魚座']
+export const signLabel = (i: number, lang: Lang) => (lang === 'ja' ? SIGN_JA[i] : lang === 'mm' ? SIGN_MM[i] : SIGN_EN[i])
 export const PLANET_MM: Record<string, string> = {
   Sun: 'နေ (တနင်္ဂနွေ)', Moon: 'စန်း (တနင်္လာ)', Mars: 'အင်္ဂါ', Mercury: 'ဗုဒ္ဓဟူး',
   Jupiter: 'ကြာသပတေး', Venus: 'သောကြာ', Saturn: 'စနေ', Rahu: 'ရာဟု', Ketu: 'ကိတ်',
 }
-export const signName = (i: number, lang: Lang, en: string) => (lang === 'mm' ? SIGN_MM[i] : en)
-export const planetName = (n: string, lang: Lang) => (lang === 'mm' ? (PLANET_MM[n] ?? n) : n)
+export const PLANET_JA: Record<string, string> = {
+  Sun: '太陽', Moon: '月', Mars: '火星', Mercury: '水星',
+  Jupiter: '木星', Venus: '金星', Saturn: '土星', Rahu: 'ラーフ', Ketu: 'ケートゥ',
+}
+export const signName = (i: number, lang: Lang, en: string) => (lang === 'ja' ? SIGN_JA[i] : lang === 'mm' ? SIGN_MM[i] : en)
+export const planetName = (n: string, lang: Lang) => (lang === 'ja' ? (PLANET_JA[n] ?? n) : lang === 'mm' ? (PLANET_MM[n] ?? n) : n)
 
 // ── UI dictionary (EN / MM) ───────────────────────────────────────────────────
 const JT_EN: Record<string, string> = {
@@ -132,16 +137,16 @@ const JT_JA: Record<string, string> = {
 export const JT: Record<Lang, Record<string, string>> = { en: JT_EN, mm: JT_MM, ja: JT_JA }
 
 // ── Basic reading generator (frontend, until the backend engine lands) ────────
-const LORD_NATURE: Record<string, { en: string; mm: string; benefic: boolean }> = {
-  Sun: { en: 'authority, vitality, recognition and the father', mm: 'ဩဇာအာဏာ၊ သန်စွမ်းမှု၊ ဂုဏ်သိက္ခာနှင့် ဖခင်', benefic: false },
-  Moon: { en: 'the mind, emotions, comfort and the mother', mm: 'စိတ်နှလုံး၊ ခံစားချက်၊ သက်တောင့်သက်သာနှင့် မိခင်', benefic: true },
-  Mars: { en: 'courage, energy, property and initiative', mm: 'ရဲစွမ်းသတ္တိ၊ စွမ်းအင်၊ အိမ်ခြံမြေနှင့် စွန့်စားလုပ်ဆောင်မှု', benefic: false },
-  Mercury: { en: 'intellect, communication, trade and learning', mm: 'ဉာဏ်ရည်၊ ဆက်သွယ်ပြောဆိုမှု၊ ကူးသန်းရောင်းဝယ်ရေးနှင့် အသိပညာ', benefic: true },
-  Jupiter: { en: 'wisdom, growth, wealth, teachers and dharma', mm: 'ပညာဉာဏ်၊ ကြီးပွားတိုးတက်မှု၊ ဥစ္စာဓန၊ ဆရာသမားနှင့် ဓမ္မ', benefic: true },
-  Venus: { en: 'love, relationships, comfort, art and beauty', mm: 'အချစ်၊ ဆက်ဆံရေး၊ သက်သာချမ်းသာမှု၊ အနုပညာနှင့် အလှ', benefic: true },
-  Saturn: { en: 'discipline, hard work, patience, delay and endurance', mm: 'စည်းကမ်း၊ ကြိုးစားအားထုတ်မှု၊ သည်းခံမှု၊ နှောင့်နှေးမှုနှင့် ခံနိုင်ရည်', benefic: false },
-  Rahu: { en: 'ambition, the unconventional, sudden change and foreign matters', mm: 'ရည်မှန်းချက်ကြီးမား၊ ထုံးစံမကျမှု၊ ရုတ်တရက်ပြောင်းလဲမှုနှင့် နိုင်ငံခြားကိစ္စ', benefic: false },
-  Ketu: { en: 'detachment, spirituality, research and letting go', mm: 'စွန့်လွှတ်မှု၊ ဝိညာဉ်ရေးရာ၊ သုတေသနနှင့် စွဲလမ်းမှုလျှော့ချမှု', benefic: false },
+const LORD_NATURE: Record<string, { en: string; mm: string; ja: string; benefic: boolean }> = {
+  Sun: { en: 'authority, vitality, recognition and the father', mm: 'ဩဇာအာဏာ၊ သန်စွမ်းမှု၊ ဂုဏ်သိက္ခာနှင့် ဖခင်', ja: '権威・活力・名誉、そして父', benefic: false },
+  Moon: { en: 'the mind, emotions, comfort and the mother', mm: 'စိတ်နှလုံး၊ ခံစားချက်၊ သက်တောင့်သက်သာနှင့် မိခင်', ja: '心・感情・安らぎ、そして母', benefic: true },
+  Mars: { en: 'courage, energy, property and initiative', mm: 'ရဲစွမ်းသတ္တိ၊ စွမ်းအင်၊ အိမ်ခြံမြေနှင့် စွန့်စားလုပ်ဆောင်မှု', ja: '勇気・行動力・不動産、そして進取の気性', benefic: false },
+  Mercury: { en: 'intellect, communication, trade and learning', mm: 'ဉာဏ်ရည်၊ ဆက်သွယ်ပြောဆိုမှု၊ ကူးသန်းရောင်းဝယ်ရေးနှင့် အသိပညာ', ja: '知性・伝達・商い・学び', benefic: true },
+  Jupiter: { en: 'wisdom, growth, wealth, teachers and dharma', mm: 'ပညာဉာဏ်၊ ကြီးပွားတိုးတက်မှု၊ ဥစ္စာဓန၊ ဆရာသမားနှင့် ဓမ္မ', ja: '智慧・発展・富・師・ダルマ', benefic: true },
+  Venus: { en: 'love, relationships, comfort, art and beauty', mm: 'အချစ်၊ ဆက်ဆံရေး၊ သက်သာချမ်းသာမှု၊ အနုပညာနှင့် အလှ', ja: '愛・人間関係・快適さ・芸術・美', benefic: true },
+  Saturn: { en: 'discipline, hard work, patience, delay and endurance', mm: 'စည်းကမ်း၊ ကြိုးစားအားထုတ်မှု၊ သည်းခံမှု၊ နှောင့်နှေးမှုနှင့် ခံနိုင်ရည်', ja: '規律・努力・忍耐・遅延・持久力', benefic: false },
+  Rahu: { en: 'ambition, the unconventional, sudden change and foreign matters', mm: 'ရည်မှန်းချက်ကြီးမား၊ ထုံးစံမကျမှု၊ ရုတ်တရက်ပြောင်းလဲမှုနှင့် နိုင်ငံခြားကိစ္စ', ja: '野心・型破り・急激な変化・異国の事柄', benefic: false },
+  Ketu: { en: 'detachment, spirituality, research and letting go', mm: 'စွန့်လွှတ်မှု၊ ဝိညာဉ်ရေးရာ၊ သုတေသနနှင့် စွဲလမ်းမှုလျှော့ချမှု', ja: '離欲・霊性・探究・手放すこと', benefic: false },
 }
 
 export interface AreaDef { key: string; en: string; mm: string; favLords: string[] }
@@ -168,104 +173,133 @@ export const AREA_META: Record<string, { house: number; karakas: string[] }> = {
 
 export interface AreaReading { key: string; label: string; tone: string; score: number; stars: number; lord: string; karakas: string[]; points: string[] }
 
-const AREA_LABEL: Record<string, { en: string; mm: string }> = {
-  love: { en: 'Love & Marriage', mm: 'အချစ်ရေး နှင့် အိမ်ထောင်ရေး' },
-  career: { en: 'Career & Business', mm: 'အလုပ်အကိုင် နှင့် စီးပွားရေး' },
-  education: { en: 'Education & Knowledge', mm: 'ပညာရေး နှင့် အသိပညာ' },
-  social: { en: 'Social & Relationships', mm: 'လူမှုရေး နှင့် ဆက်ဆံရေး' },
-  health: { en: 'Health & Wellbeing', mm: 'ကျန်းမာရေး' },
-  wealth: { en: 'Wealth & Finances', mm: 'ဥစ္စာဓန နှင့် ငွေကြေး' },
-  property: { en: 'Home & Property', mm: 'အိုးအိမ် နှင့် နေရာထိုင်ခင်း' },
+const AREA_LABEL: Record<string, { en: string; mm: string; ja: string }> = {
+  love: { en: 'Love & Marriage', mm: 'အချစ်ရေး နှင့် အိမ်ထောင်ရေး' , ja: '恋愛と結婚' },
+  career: { en: 'Career & Business', mm: 'အလုပ်အကိုင် နှင့် စီးပွားရေး' , ja: '仕事と事業' },
+  education: { en: 'Education & Knowledge', mm: 'ပညာရေး နှင့် အသိပညာ' , ja: '学業と知識' },
+  social: { en: 'Social & Relationships', mm: 'လူမှုရေး နှင့် ဆက်ဆံရေး' , ja: '人間関係と社会' },
+  health: { en: 'Health & Wellbeing', mm: 'ကျန်းမာရေး' , ja: '健康と幸福' },
+  wealth: { en: 'Wealth & Finances', mm: 'ဥစ္စာဓန နှင့် ငွေကြေး' , ja: '財産と金運' },
+  property: { en: 'Home & Property', mm: 'အိုးအိမ် နှင့် နေရာထိုင်ခင်း' , ja: '住居と不動産' },
 }
-const DIGNITY_LABEL: Record<string, { en: string; mm: string }> = {
-  Exalted: { en: 'exalted (uccha)', mm: 'ဥစ် (မြင့်မြတ်)' },
-  Debilitated: { en: 'debilitated (neecha)', mm: 'နိစ် (ကျဆင်း)' },
-  Own: { en: 'in its own sign', mm: 'ကိုယ်ပိုင်ရာသီ' },
-  Neutral: { en: 'in a neutral sign', mm: 'သာမန်ရာသီ' },
+const DIGNITY_LABEL: Record<string, { en: string; mm: string; ja: string }> = {
+  Exalted: { en: 'exalted (uccha)', mm: 'ဥစ် (မြင့်မြတ်)' , ja: '高揚（ウッチャ）' },
+  Debilitated: { en: 'debilitated (neecha)', mm: 'နိစ် (ကျဆင်း)' , ja: '減衰（ニーチャ）' },
+  Own: { en: 'in its own sign', mm: 'ကိုယ်ပိုင်ရာသီ' , ja: '自室（スワクシェートラ）' },
+  Neutral: { en: 'in a neutral sign', mm: 'သာမန်ရာသီ' , ja: '中立の星座' },
 }
 const ordEn = (h: number) => { const s = ['th', 'st', 'nd', 'rd'], v = h % 100; return `${h}${s[(v - 20) % 10] ?? s[v] ?? s[0]}` }
-const houseLabel = (h: number, lang: Lang) => (lang === 'mm' ? `${h} တန့်` : `${ordEn(h)} house`)
+const houseLabel = (h: number, lang: Lang) => (lang === 'ja' ? `第${h}ハウス` : lang === 'mm' ? `${h} တန့်` : `${ordEn(h)} house`)
 
 // Deep-dive helpers (used by the life-area cards).
-export const dignityLabel = (v: string, lang: Lang) => (DIGNITY_LABEL[v] ?? DIGNITY_LABEL.Neutral)[lang === 'ja' ? 'en' : lang]
+export const dignityLabel = (v: string, lang: Lang) => (DIGNITY_LABEL[v] ?? DIGNITY_LABEL.Neutral)[lang]
 export const houseLabelOf = (h: number, lang: Lang) => houseLabel(h, lang)
 export const starsFromScore = (score: number) => Math.max(1, Math.min(5, Math.round(score / 20)))
 export const findPlanet = (data: BirthChartData, name: string) => data.planets.find((p) => p.name === name)
 
 const natureOf = (planet: string, lang: Lang): string => {
   const n = LORD_NATURE[planet]
-  return n ? (lang === 'mm' ? n.mm : n.en) : ''
+  return n ? (lang === 'ja' ? n.ja : lang === 'mm' ? n.mm : n.en) : ''
 }
 
 function renderFinding(f: Finding, lang: Lang): string {
   const P = planetName(f.planet, lang)
   const dg = DIGNITY_LABEL[f.value] ?? DIGNITY_LABEL.Neutral
   const nat = natureOf(f.planet, lang)
+  const H = houseLabel(f.house, lang)
   switch (f.code) {
     case 'lordDignity': {
       if (f.value === 'Exalted' || f.value === 'Own')
-        return lang === 'mm'
+        return lang === 'ja'
+          ? `${f.house}ハウスの支配星${P}は${dg.ja}にあり、この分野の基盤は強固に支えられています。${nat}に関わる事柄は円滑に運びやすいでしょう。`
+          : lang === 'mm'
           ? `${f.house} တန့်သခင် ${P} သည် ${dg.mm}၌ တည်ရှိသဖြင့် ဤကဏ္ဍ၏ အခြေခံသည် ခိုင်မာအားကောင်းသည်။ ${nat} ဆိုင်ရာ ကိစ္စများ အဆင်ပြေတတ်သည်။`
           : `The ${ordEn(f.house)}-house lord ${P} is ${dg.en} — a strong, well-supported foundation, so matters of ${nat} tend to flow with grace.`
       if (f.value === 'Debilitated')
-        return lang === 'mm'
+        return lang === 'ja'
+          ? `${f.house}ハウスの支配星${P}は${dg.ja}のため、この分野はより多くの努力を要し、時間をかけて実を結びます。`
+          : lang === 'mm'
           ? `${f.house} တန့်သခင် ${P} သည် ${dg.mm} ဖြစ်နေသဖြင့် ဤကဏ္ဍတွင် ကြိုးစားအားထုတ်မှု ပိုမိုလိုအပ်ပြီး အချိန်ယူ ရင့်ကျက်လာတတ်သည်။`
           : `The ${ordEn(f.house)}-house lord ${P} is ${dg.en}, so this area asks for extra effort and ripens more slowly before it rewards you.`
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `${f.house}ハウスの支配星${P}は${dg.ja}です。`
+        : lang === 'mm'
         ? `${f.house} တန့်သခင် ${P} သည် ${dg.mm} ဖြစ်သည်။`
         : `The ${ordEn(f.house)}-house lord ${P} is ${dg.en}.`
     }
     case 'lordPlacement': {
       if (f.value === 'strong')
-        return lang === 'mm'
+        return lang === 'ja'
+          ? `その支配星${P}は${H}（ケンドラ／トリコーナ）という好位置にあり、この分野の約束を強めています。`
+          : lang === 'mm'
           ? `ထိုသခင် ${P} သည် ${houseLabel(f.house, 'mm')} (ကေန္ဒြ/တြိကုဏ) ကောင်းသောနေရာတွင် ကျရောက်နေသဖြင့် အကျိုးပေးအား ပိုမိုခိုင်မာသည်။`
           : `That lord ${P} occupies the ${houseLabel(f.house, 'en')} — a strong kendra/trikona — reinforcing the promise of this area.`
       if (f.value === 'dusthana')
-        return lang === 'mm'
+        return lang === 'ja'
+          ? `その支配星${P}は${H}（ドゥシュターナ 6/8/12）にあり、成果が定まる前にいくらかの障害が予想されます。`
+          : lang === 'mm'
           ? `ထိုသခင် ${P} သည် ${houseLabel(f.house, 'mm')} (ဒုဿဌာန ၆/၈/၁၂) တွင် ကျရောက်နေသဖြင့် အကျိုးမပေးမီ အခက်အခဲ အနည်းငယ် ဖြတ်သန်းရတတ်သည်။`
           : `That lord ${P} falls in the ${houseLabel(f.house, 'en')} — a dusthana (6/8/12) — so expect some hurdles before results settle.`
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `その支配星${P}は${H}に位置しています。`
+        : lang === 'mm'
         ? `ထိုသခင် ${P} သည် ${houseLabel(f.house, 'mm')} တွင် တည်ရှိသည်။`
         : `That lord ${P} is placed in the ${houseLabel(f.house, 'en')}.`
     }
     case 'karakaDignity': {
       const good = f.value !== 'Debilitated'
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `表示星（カラカ）${P}は${dg.ja}であり、${nat}に関わる事柄を${good ? '強め' : '試し'}ます。`
+        : lang === 'mm'
         ? `ကဏ္ဍအိမ်ရှင် (ကာရက) ${P} သည် ${dg.mm} ဖြစ်ခြင်းက ${nat} တို့ကို ${good ? 'အားဖြည့်' : 'စိန်ခေါ်'}ပေးသည်။`
         : `The significator (karaka) ${P} is ${dg.en}, which ${good ? 'strengthens' : 'challenges'} matters of ${nat}.`
     }
     case 'occupant': {
       const ben = f.value === 'benefic'
-      const kind = ben ? (lang === 'mm' ? 'မင်္ဂလာဂြိုဟ်' : 'a benefic') : (lang === 'mm' ? 'ပါပဂြိုဟ်' : 'a malefic')
-      return lang === 'mm'
+      const kind = ben ? (lang === 'ja' ? '吉星' : lang === 'mm' ? 'မင်္ဂလာဂြိုဟ်' : 'a benefic') : (lang === 'ja' ? '凶星' : lang === 'mm' ? 'ပါပဂြိုဟ်' : 'a malefic')
+      return lang === 'ja'
+        ? `${P}（${kind}）が${H}に在住し、${ben ? '恩恵を与えて' : '試練を課して'}います。`
+        : lang === 'mm'
         ? `${P} (${kind}) သည် ${houseLabel(f.house, 'mm')}တွင် ကိန်းဝပ်လျက် ${ben ? 'ကောင်းမြတ်သောအရှိန်' : 'စမ်းသပ်မှုအရှိန်'} ပေးသည်။`
         : `${P} (${kind}) sits in the ${houseLabel(f.house, 'en')}, ${ben ? 'lending it grace' : 'putting it to the test'}.`
     }
     case 'aspectOnHouse': {
       const ben = f.value === 'benefic'
-      const kind = ben ? (lang === 'mm' ? 'မင်္ဂလာ' : 'benefic') : (lang === 'mm' ? 'ပါပ' : 'malefic')
-      return lang === 'mm'
+      const kind = ben ? (lang === 'ja' ? '吉' : lang === 'mm' ? 'မင်္ဂလာ' : 'benefic') : (lang === 'ja' ? '凶' : lang === 'mm' ? 'ပါပ' : 'malefic')
+      return lang === 'ja'
+        ? `${P}の${kind}のアスペクト（ドリシュティ）がこのハウスに及び、${ben ? '保護して' : '圧力をかけて'}います。`
+        : lang === 'mm'
         ? `${P} ၏ ${kind} အမြင် (ဒြိဋ္ဌိ) သည် ဤကဏ္ဍအိမ်ကို ${ben ? 'ထောက်ကူ' : 'ဖိစီး'}ပေးနေသည်။`
         : `${P} casts a ${kind} aspect (drishti) on this house, ${ben ? 'protecting it' : 'pressuring it'}.`
     }
     case 'dashaActive':
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `現在の${P}マハーダシャーがこの分野を直接活性化しており、${nat}に関わる事柄が現れる好機です。`
+        : lang === 'mm'
         ? `လက်ရှိ ${P} မဟာဒသာသည် ဤကဏ္ဍကို တိုက်ရိုက် လှုံ့ဆော်နေသဖြင့် ${nat} ကိစ္စများ ပေါ်ထွန်းရန် အချိန်ကောင်းဖြစ်သည်။`
         : `The running ${P} mahadasha activates this area directly — a live window for matters of ${nat}.`
     case 'bhuktiActive':
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `現在の${P}アンタルダシャー（ブクティ）も、今この分野をさらに後押ししています。`
+        : lang === 'mm'
         ? `လက်ရှိ ${P} အန္တရ်ဒသာ (ဘုတ္တိ) ကလည်း ဤကဏ္ဍကို ထပ်ဆင့် ပံ့ပိုးထောက်ကူ ပေးနေသည်။`
         : `The current ${P} antardasha (bhukti) lends this area a further push right now.`
     case 'pratyantarActive':
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `${P}プラティヤンタル（サブサブ期）も、今この瞬間にこの分野を刺激しています。`
+        : lang === 'mm'
         ? `${P} ပစ္စန္တရဒသာ (အသေးစိတ်ကာလ) ကလည်း ဤကဏ္ဍကို ယခုအချိန်တွင် နှိုးဆွပေးနေသည်။`
         : `The ${P} pratyantar (sub-sub-period) is also stirring this area at this moment.`
     case 'combust':
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `${f.house}ハウスの支配星${P}は太陽に近すぎて燃焼（アスタ）しており、その成果は弱まり、表に出すには努力を要します。`
+        : lang === 'mm'
         ? `${f.house} တန့်သခင် ${P} သည် နေနှင့်ပူး (အသ္တ) ဖြစ်နေသဖြင့် အားနည်းကာ အကျိုးပေး တိမ်မြုပ်တတ်သည်။`
         : `The ${ordEn(f.house)}-house lord ${P} is combust (too close to the Sun), so its results are dimmed and need effort to surface.`
     case 'retro':
-      return lang === 'mm'
+      return lang === 'ja'
+        ? `${f.house}ハウスの支配星${P}は逆行（ヴァクラ）しており、その成果は遅れ、多くの場合二度目の挑戦を要します。`
+        : lang === 'mm'
         ? `${f.house} တန့်သခင် ${P} သည် ဂြိုဟ်ပြန် (ဝက္ရ) ဖြစ်နေသဖြင့် အကျိုးများ နှောင့်နှေး၍ ပြန်လည်ကြိုးစားမှ ရတတ်သည်။`
         : `The ${ordEn(f.house)}-house lord ${P} is retrograde — its gains come with delay and often a second attempt.`
     default:
@@ -283,7 +317,7 @@ export function readingFor(data: BirthChartData, lang: Lang): { lord: string; ar
   if (data.predictions && data.predictions.length) {
     const areas = data.predictions.map((pr): AreaReading => ({
       key: pr.area,
-      label: (AREA_LABEL[pr.area] ?? { en: pr.area, mm: pr.area })[lang === 'ja' ? 'en' : lang],
+      label: (AREA_LABEL[pr.area] ?? { en: pr.area, mm: pr.area, ja: pr.area })[lang],
       tone: pr.tone,
       score: pr.score,
       stars: starsFromScore(pr.score),
@@ -351,30 +385,30 @@ export function activePratyantar(data: BirthChartData): DashaPeriod | undefined 
 }
 
 // ── Life-timeline helpers (gochara / transits) ────────────────────────────────
-const THEME_WORD: Record<string, { en: string; mm: string }> = {
-  Sun: { en: 'Authority', mm: 'ဩဇာ' },
-  Moon: { en: 'Emotion', mm: 'စိတ်ခံစား' },
-  Mars: { en: 'Drive', mm: 'ဇွဲလုံ့လ' },
-  Mercury: { en: 'Intellect', mm: 'ဉာဏ်ရည်' },
-  Jupiter: { en: 'Wisdom', mm: 'ပညာ' },
-  Venus: { en: 'Comfort', mm: 'သာယာ' },
-  Saturn: { en: 'Endurance', mm: 'ခံနိုင်ရည်' },
-  Rahu: { en: 'Ambition', mm: 'ရည်မှန်းချက်' },
-  Ketu: { en: 'Release', mm: 'စွန့်လွှတ်' },
+const THEME_WORD: Record<string, { en: string; mm: string; ja: string }> = {
+  Sun: { en: 'Authority', mm: 'ဩဇာ', ja: '権威' },
+  Moon: { en: 'Emotion', mm: 'စိတ်ခံစား', ja: '感情' },
+  Mars: { en: 'Drive', mm: 'ဇွဲလုံ့လ', ja: '行動力' },
+  Mercury: { en: 'Intellect', mm: 'ဉာဏ်ရည်', ja: '知性' },
+  Jupiter: { en: 'Wisdom', mm: 'ပညာ', ja: '智慧' },
+  Venus: { en: 'Comfort', mm: 'သာယာ', ja: '快適' },
+  Saturn: { en: 'Endurance', mm: 'ခံနိုင်ရည်', ja: '忍耐' },
+  Rahu: { en: 'Ambition', mm: 'ရည်မှန်းချက်', ja: '野心' },
+  Ketu: { en: 'Release', mm: 'စွန့်လွှတ်', ja: '離欲' },
 }
-export const themeWord = (lord: string, lang: Lang): string => (THEME_WORD[lord] ?? { en: lord, mm: lord })[lang === 'ja' ? 'en' : lang]
+export const themeWord = (lord: string, lang: Lang): string => (THEME_WORD[lord] ?? { en: lord, mm: lord, ja: lord })[lang]
 
 /** Localize a structured transit note. */
 export function transitNoteText(n: TransitNote, lang: Lang): string {
-  const map: Record<string, { en: string; mm: string }> = {
-    sadeSati: { en: 'Sade Sati (Saturn over the Moon)', mm: 'သာဓေသတီ (စနေ စန်းပေါ်)' },
-    ashtamaSani: { en: 'Ashtama Sani (Saturn 8th from Moon)', mm: 'အဋ္ဌမစနေ (စန်းမှ ၈)' },
-    kantakaSani: { en: 'Kantaka Sani (Saturn 4th from Moon)', mm: 'ကဏ္ဋကစနေ (စန်းမှ ၄)' },
-    jupLagna: { en: 'Jupiter transits your Lagna', mm: 'ကြာသပတေး လဂ်နာပေါ်ဖြတ်' },
-    jupTrineMoon: { en: `Jupiter ${n.house}th from the Moon`, mm: `ကြာသပတေး စန်းမှ ${toMmDigits(n.house)}` },
-    rahuTransit: { en: 'Rahu over Lagna / Moon', mm: 'ရာဟု လဂ်/စန်းပေါ်' },
+  const map: Record<string, { en: string; mm: string; ja: string }> = {
+    sadeSati: { en: 'Sade Sati (Saturn over the Moon)', mm: 'သာဓေသတီ (စနေ စန်းပေါ်)', ja: 'サデサティ（土星が月を通過）' },
+    ashtamaSani: { en: 'Ashtama Sani (Saturn 8th from Moon)', mm: 'အဋ္ဌမစနေ (စန်းမှ ၈)', ja: 'アシュタマ・サニ（月から8番目の土星）' },
+    kantakaSani: { en: 'Kantaka Sani (Saturn 4th from Moon)', mm: 'ကဏ္ဋကစနေ (စန်းမှ ၄)', ja: 'カンタカ・サニ（月から4番目の土星）' },
+    jupLagna: { en: 'Jupiter transits your Lagna', mm: 'ကြာသပတေး လဂ်နာပေါ်ဖြတ်', ja: '木星がラグナを通過' },
+    jupTrineMoon: { en: `Jupiter ${n.house}th from the Moon`, mm: `ကြာသပတေး စန်းမှ ${toMmDigits(n.house)}`, ja: `月から${n.house}番目の木星` },
+    rahuTransit: { en: 'Rahu over Lagna / Moon', mm: 'ရာဟု လဂ်/စန်းပေါ်', ja: 'ラーフがラグナ／月を通過' },
   }
-  return (map[n.code] ?? { en: n.code, mm: n.code })[lang === 'ja' ? 'en' : lang]
+  return (map[n.code] ?? { en: n.code, mm: n.code, ja: n.code })[lang]
 }
 
 /** How the CURRENT-year transits (gochara) touch a given life area right now. */
@@ -391,12 +425,12 @@ export function currentAreaEffect(data: BirthChartData, areaKey: string, lang: L
   const rah = row.transits.find((t) => t.planet === 'Rahu')
 
   if (jup && (jup.houseFromLagna === H || trines.has(jup.houseFromLagna)))
-    return { tone: 'good', text: lang === 'mm' ? 'လက်ရှိ ကြာသပတေး ဂြိုဟ်သွားက ဤကဏ္ဍကို ပံ့ပိုးထောက်ကူ ပေးနေသည် — အခွင့်အလမ်းကောင်း။' : "Jupiter's current transit is supporting this area — a good window." }
+    return { tone: 'good', text: lang === 'ja' ? '現在の木星のトランジットがこの分野を後押ししています — 好機です。' : lang === 'mm' ? 'လက်ရှိ ကြာသပတေး ဂြိုဟ်သွားက ဤကဏ္ဍကို ပံ့ပိုးထောက်ကူ ပေးနေသည် — အခွင့်အလမ်းကောင်း။' : "Jupiter's current transit is supporting this area — a good window." }
   if (sat && sat.houseFromLagna === H)
-    return { tone: 'warn', text: lang === 'mm' ? 'လက်ရှိ စနေ ဂြိုဟ်သွားက ဤကဏ္ဍကို ဖိစီးစမ်းသပ်နေသည် — ဇွဲနှင့် သည်းခံမှု လိုအပ်သည်။' : "Saturn's current transit is testing this area — patience and steady effort help." }
+    return { tone: 'warn', text: lang === 'ja' ? '現在の土星のトランジットがこの分野を試しています — 忍耐と着実な努力が助けになります。' : lang === 'mm' ? 'လက်ရှိ စနေ ဂြိုဟ်သွားက ဤကဏ္ဍကို ဖိစီးစမ်းသပ်နေသည် — ဇွဲနှင့် သည်းခံမှု လိုအပ်သည်။' : "Saturn's current transit is testing this area — patience and steady effort help." }
   if (row.sadeSati && (areaKey === 'health' || areaKey === 'social'))
-    return { tone: 'warn', text: lang === 'mm' ? 'သာဓေသတီ ကာလဖြစ်၍ စိတ်ဓာတ်နှင့် ကျန်းမာရေးကို အထူးဂရုစိုက်ပါ။' : 'Sade Sati is active — mind your mood and health with extra care.' }
+    return { tone: 'warn', text: lang === 'ja' ? 'サデサティの期間中です — 気分と健康に特にご注意ください。' : lang === 'mm' ? 'သာဓေသတီ ကာလဖြစ်၍ စိတ်ဓာတ်နှင့် ကျန်းမာရေးကို အထူးဂရုစိုက်ပါ။' : 'Sade Sati is active — mind your mood and health with extra care.' }
   if (rah && rah.houseFromLagna === H)
-    return { tone: 'warn', text: lang === 'mm' ? 'ရာဟု ဂြိုဟ်သွားက ဤကဏ္ဍတွင် မတည်ငြိမ်မှု အနည်းငယ် ဖြစ်စေနိုင်သည်။' : "Rahu's transit may bring some instability here." }
-  return { tone: 'neutral', text: lang === 'mm' ? 'လက်ရှိကာလတွင် သိသာသော ဂြိုဟ်သွား သက်ရောက်မှု မရှိပါ။' : 'No strong current transit is touching this area right now.' }
+    return { tone: 'warn', text: lang === 'ja' ? 'ラーフのトランジットは、この分野に多少の不安定さをもたらす可能性があります。' : lang === 'mm' ? 'ရာဟု ဂြိုဟ်သွားက ဤကဏ္ဍတွင် မတည်ငြိမ်မှု အနည်းငယ် ဖြစ်စေနိုင်သည်။' : "Rahu's transit may bring some instability here." }
+  return { tone: 'neutral', text: lang === 'ja' ? '現在、この分野に強く影響するトランジットはありません。' : lang === 'mm' ? 'လက်ရှိကာလတွင် သိသာသော ဂြိုဟ်သွား သက်ရောက်မှု မရှိပါ။' : 'No strong current transit is touching this area right now.' }
 }

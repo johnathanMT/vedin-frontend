@@ -82,54 +82,65 @@ export const VARGA_GUIDE: { code: string; en: string; mm: string }[] = [
 
 // Yoga meanings — bilingual. Keyed by the exact backend yoga name; also used as
 // an educational guide (incl. Neecha Bhanga Raja Yoga).
-export const YOGA_INFO: Record<string, { en: string; mm: string }> = {
+export const YOGA_INFO: Record<string, { en: string; mm: string; ja: string }> = {
   'Gaja Kesari Yoga': {
     en: 'Jupiter in a kendra (1/4/7/10) from the Moon. Grants wisdom, virtue, prosperity and a respected, well-liked nature.',
     mm: 'ကြာသပတေးသည် စန်း (လ) မှ ကေန္ဒြ (၁/၄/၇/၁၀) တွင် တည်ရှိသောအခါ ဖြစ်သည်။ ပညာဉာဏ်၊ ဂုဏ်သိက္ခာ၊ ကြီးပွားချမ်းသာမှုနှင့် လူချစ်လူခင်ပေါများပြီး လေးစားခံရသော သဘာဝကို ပေးသည်။',
+    ja: '月からケンドラ（1/4/7/10）に木星が位置します。智慧・徳・繁栄、そして人に好かれ敬われる性質を与えます。',
   },
   'Budha-Aditya Yoga': {
     en: 'Sun and Mercury conjunct in one sign. Sharp intellect, eloquence, skill in learning and business.',
     mm: 'နေနှင့် ဗုဒ္ဓဟူး တစ်ရာသီတည်း ပူးယှဉ်သောအခါ ဖြစ်သည်။ ဉာဏ်ရည်ထက်မြက်မှု၊ ဟောပြောဆက်သွယ်စွမ်း၊ ပညာနှင့် စီးပွားရေးကျွမ်းကျင်မှုကို ပေးသည်။',
+    ja: '太陽と水星が同じ星座で合します。鋭い知性・雄弁さ・学びと商いの才を与えます。',
   },
   'Chandra-Mangala Yoga': {
     en: 'Moon and Mars conjunct. Wealth through drive, enterprise and bold initiative.',
     mm: 'စန်းနှင့် အင်္ဂါ ပူးယှဉ်သောအခါ ဖြစ်သည်။ ဇွဲလုံ့လ၊ လုပ်ငန်းစွန့်ဦးတီထွင်မှုနှင့် ရဲရင့်သောဆုံးဖြတ်ချက်ဖြင့် ဥစ္စာဓန ရရှိမှုကို ပေးသည်။',
+    ja: '月と火星が合します。行動力・進取の気性・大胆な決断を通じた富を与えます。',
   },
   'Ruchaka Yoga': {
     en: 'Mars in its own/exaltation sign in a kendra (a Pancha Mahapurusha yoga). Courage, leadership and physical strength.',
     mm: 'အင်္ဂါသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ ရဲစွမ်းသတ္တိ၊ ခေါင်းဆောင်နိုင်စွမ်းနှင့် ကာယခွန်အားကို ပေးသည်။',
+    ja: '火星が自室／高揚の星座でケンドラに位置する五大人物ヨーガ。勇気・統率力・体力を与えます。',
   },
   'Bhadra Yoga': {
     en: 'Mercury in its own/exaltation sign in a kendra. Intelligence, communication and business acumen.',
     mm: 'ဗုဒ္ဓဟူးသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ ဉာဏ်ရည်၊ ဟောပြောရေးသားစွမ်းနှင့် စီးပွားရေးဉာဏ်ကို ပေးသည်။',
+    ja: '水星が自室／高揚の星座でケンドラに位置する五大人物ヨーガ。知性・伝達力・商才を与えます。',
   },
   'Hamsa Yoga': {
     en: 'Jupiter in its own/exaltation sign in a kendra. Virtue, wisdom, spirituality and honour.',
     mm: 'ကြာသပတေးသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ ကုသိုလ်တရား၊ ပညာ၊ ဝိညာဉ်ရေးနှင့် ဂုဏ်သိက္ခာကို ပေးသည်။',
+    ja: '木星が自室／高揚の星座でケンドラに位置する五大人物ヨーガ。徳・智慧・霊性・名誉を与えます。',
   },
   'Malavya Yoga': {
     en: 'Venus in its own/exaltation sign in a kendra. Beauty, comfort, art and refined luxury.',
     mm: 'သောကြာသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ အလှ၊ သက်သာချမ်းသာမှု၊ အနုပညာနှင့် ဇိမ်ခံမှုကို ပေးသည်။',
+    ja: '金星が自室／高揚の星座でケンドラに位置する五大人物ヨーガ。美・快適さ・芸術・洗練された豊かさを与えます。',
   },
   'Sasa Yoga': {
     en: 'Saturn in its own/exaltation sign in a kendra. Discipline, authority, endurance and lasting success.',
     mm: 'စနေသည် ကိုယ်ပိုင်/ဥစ်ရာသီ ကေန္ဒြတွင် တည်ရှိသော ပဉ္စမဟာပုရုဿယောဂ။ စည်းကမ်း၊ အာဏာ၊ ခံနိုင်ရည်နှင့် ရေရှည်တည်တံ့သော အောင်မြင်မှုကို ပေးသည်။',
+    ja: '土星が自室／高揚の星座でケンドラに位置する五大人物ヨーガ。規律・権威・持久力・永続する成功を与えます。',
   },
   'Neecha Bhanga Raja Yoga': {
     en: 'A "debilitation-cancellation" raja yoga: a planet is debilitated (neecha), but its weakness is cancelled — e.g. the lord of its sign, or the planet that would be exalted there, sits in a kendra. Early struggles turn into great, hard-won success.',
     mm: 'ဂြိုဟ်တစ်လုံးသည် နိစ် (ကျဆင်း) ဖြစ်နေသော်လည်း ထိုနိစ်ဖြစ်မှုကို ပယ်ဖျက်ပေးသည့် အခြေအနေ (ဥပမာ — နိစ်ရာသီ၏ သခင် သို့မဟုတ် ထိုနေရာတွင် ဥစ်ဖြစ်မည့်ဂြိုဟ်သည် ကေန္ဒြတွင် တည်ရှိ) ရှိသောအခါ ဖြစ်သည်။ အစပိုင်း အခက်အခဲများမှတစ်ဆင့် နောက်ပိုင်း ကြီးကျယ်သော အောင်မြင်မှု (ရာဇယောဂ) ကို ပေးသည် — "ကျရှုံးရာမှ ကြီးပွား" ဆိုသည့်သဘော။',
+    ja: '「減衰取消」のラージャ・ヨーガ：ある惑星が減衰（ニーチャ）していても、その弱さが打ち消される（例：その星座の支配星、またはそこで高揚する惑星がケンドラに在住）状態です。初期の苦労が、大きく勝ち取られた成功へと転じます。',
   },
   'Raja Yoga': {
     en: 'A link (conjunction/aspect/exchange) between a kendra lord (1/4/7/10) and a trikona lord (1/5/9). Power, status and success.',
     mm: 'ကေန္ဒြသခင် (၁/၄/၇/၁၀) နှင့် တြိကုဏသခင် (၁/၅/၉) တို့ ဆက်စပ် (ပူးယှဉ်/အမြင်/ဖလှယ်) သောအခါ ဖြစ်သည်။ အာဏာ၊ ဂုဏ်အဆင့်နှင့် အောင်မြင်မှုကို ပေးသည်။',
+    ja: 'ケンドラ支配星（1/4/7/10）とトリコーナ支配星（1/5/9）の結びつき（合／アスペクト／交換）です。権力・地位・成功を与えます。',
   },
   'Dhana Yoga': {
     en: 'A link between the lords of wealth houses (2/11) and other benefic-house lords. Accumulation of wealth.',
     mm: 'ဓနအိမ် (၂/၁၁) သခင်များနှင့် အခြားအကျိုးပေးအိမ်သခင်များ ဆက်စပ်သောအခါ ဖြစ်သည်။ ဥစ္စာဓန စုဆောင်းနိုင်မှုကို ပေးသည်။',
+    ja: '財のハウス（2/11）の支配星と、他の吉ハウスの支配星との結びつきです。富の蓄積を与えます。',
   },
 }
 
-export const yogaText = (name: string, lang: Lang) => (YOGA_INFO[name] ? YOGA_INFO[name][lang === 'ja' ? 'en' : lang] : '')
+export const yogaText = (name: string, lang: Lang) => (YOGA_INFO[name] ? YOGA_INFO[name][lang] : '')
 
 export const deg = (d: number) => `${Math.floor(d)}°${String(Math.floor((d % 1) * 60)).padStart(2, '0')}'`
 

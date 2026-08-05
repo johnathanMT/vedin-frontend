@@ -9,10 +9,9 @@ import {
 import { wilsonInterval, binomialNullSamples, permutationPValue, benjaminiHochberg } from '../lib/stats'
 import useLang from '../hooks/useLang'
 
-type Lang = 'en' | 'mm'
 
 export default function Research() {
-  const { lang, setLang } = useLang()
+  const { lang } = useLang()
   const t = (en: string, mm: string, ja?: string) => (lang === 'ja' && ja ? ja : lang === 'mm' ? mm : en)
 
   const [preds, setPreds] = useState<Prediction[]>([])
@@ -147,11 +146,6 @@ export default function Research() {
     <section className="section-container vedin-page">
       <div className="mb-6 flex items-center justify-between">
         <Link to="/" className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 font-mono text-xs text-muted transition hover:text-fg"><ArrowLeft size={15} /> Vedin</Link>
-        <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1">
-          {(['en', 'mm'] as Lang[]).map((l) => (
-            <button key={l} type="button" onClick={() => setLang(l)} className={`rounded-full px-3 py-1 font-mono text-xs transition ${lang === l ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>{l === 'en' ? 'EN' : 'မြန်မာ'}</button>
-          ))}
-        </div>
       </div>
 
       {/* Top cross-link to the sibling page */}
@@ -353,14 +347,6 @@ export default function Research() {
         </ul>
       </div>
 
-      {/* Bottom language toggle — no need to scroll back up */}
-      <div className="mb-6 flex justify-center">
-        <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1">
-          {(['en', 'mm'] as Lang[]).map((l) => (
-            <button key={l} type="button" onClick={() => setLang(l)} className={`rounded-full px-4 py-1.5 font-mono text-xs transition ${lang === l ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>{l === 'en' ? 'EN' : 'မြန်မာ'}</button>
-          ))}
-        </div>
-      </div>
 
       <footer className="border-t border-accent/15 pt-6 text-center">
         <p className="font-mono text-[11px] tracking-wide text-accent-light">Sidereal · Lahiri ayanamsa (1955) · Whole-Sign houses · Mean node · Swiss Ephemeris</p>

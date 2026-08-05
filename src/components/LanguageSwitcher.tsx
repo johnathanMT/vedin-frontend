@@ -37,15 +37,15 @@ export default function LanguageSwitcher() {
 
       {open && (
         <ul role="listbox" aria-label="Language"
-          className="absolute right-0 z-50 mt-1.5 w-36 overflow-hidden rounded-xl border border-slate-200 bg-white py-1 shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
+          className="absolute right-0 z-50 mt-1.5 w-36 overflow-hidden rounded-xl border border-slate-200 bg-[#ffffff] py-1 text-slate-800 shadow-lg dark:border-slate-700 dark:bg-slate-900 dark:text-gray-200">
           {LANG_OPTIONS.map((o) => (
             <li key={o.code}>
               <button
                 type="button" role="option" aria-selected={o.code === lang}
                 onClick={() => { setLang(o.code); setOpen(false) }}
                 className={`flex w-full items-center justify-between px-3 py-2 text-left text-sm transition-colors ${o.code === lang
-                  ? 'font-medium text-amber-700 dark:text-amber-400'
-                  : 'text-slate-700 hover:bg-slate-50 dark:text-neutral-300 dark:hover:bg-neutral-800'}`}
+                  ? 'font-semibold text-amber-700 dark:text-amber-400'
+                  : 'text-slate-800 hover:bg-slate-100 dark:text-gray-200 dark:hover:bg-slate-800'}`}
               >
                 {o.label} {o.code === lang && <Check size={14} />}
               </button>
