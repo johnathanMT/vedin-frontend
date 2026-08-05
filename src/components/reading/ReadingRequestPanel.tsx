@@ -2,7 +2,6 @@ import { forwardRef } from 'react'
 import { Lock, UserPlus, ScrollText, Sparkles, Loader2, Clock, CheckCircle2, Download, AlertTriangle } from 'lucide-react'
 import { Appear } from '../motion/Reveal'
 import ReadingReveal from './ReadingReveal'
-import ReadingChatBox from './ReadingChatBox'
 import type { Lang } from '../../lib/vedin'
 import type { ReadingStatus } from '../../hooks/useReadingRequest'
 
@@ -192,9 +191,6 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
                 </div>
               )}
             </div>
-
-            {/* Grounded follow-up chat — ask questions about this reading */}
-            <ReadingChatBox readingId={requestId} token={token} lang={lang} />
           </div>
         </div>
       )}

@@ -236,11 +236,6 @@ html[data-theme="dark"] .vedin-page {
   50%      { opacity: 0; }
 }
 
-/* Tighten markdown spacing inside a chat answer bubble. */
-.reading-chat-answer > :first-child { margin-top: 0; }
-.reading-chat-answer > :last-child { margin-bottom: 0; }
-.reading-chat-answer p { margin: 0.35rem 0; }
-
 @media (prefers-reduced-motion: reduce) {
   .chart-stroke,
   .chart-glyph,
