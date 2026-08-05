@@ -49,13 +49,11 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
           <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full opacity-25 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--accent)) 0%, transparent 70%)' }} />
           <div className="relative flex flex-col items-center gap-3">
             <span className="grid h-14 w-14 place-items-center rounded-full border border-accent/40 bg-accent/15 text-accent-light"><Lock size={24} /></span>
-            <h3 className="font-groovy text-xl text-fg">{lang === 'mm' ? 'အကောင့် ဖွင့်ထားရန် လိုအပ်ပါသည်' : 'An account is required'}</h3>
-            <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'mm'
-              ? 'ဟောစာတမ်းအပြည့်အစုံကို ရယူရန်နှင့် သင့်ဇာတာများ မှတ်သားထားရန် အကောင့် (Account) ဖွင့်ထားရန် လိုအပ်ပါသည်။'
-              : 'To get the full reading and to save your charts, you need to have an account.'}</p>
+            <h3 className="font-groovy text-xl text-fg">{lang === 'ja' ? 'アカウントが必要です' : lang === 'mm' ? 'အကောင့် ဖွင့်ထားရန် လိုအပ်ပါသည်' : 'An account is required'}</h3>
+            <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'ja' ? '鑑定全文の取得とチャートの保存には、アカウントが必要です。' : lang === 'mm' ? 'ဟောစာတမ်းအပြည့်အစုံကို ရယူရန်နှင့် သင့်ဇာတာများ မှတ်သားထားရန် အကောင့် (Account) ဖွင့်ထားရန် လိုအပ်ပါသည်။' : 'To get the full reading and to save your charts, you need to have an account.'}</p>
             <button type="button" onClick={() => onOpenAuth('signup')}
               className="mt-1 inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110">
-              <UserPlus size={16} /> {lang === 'mm' ? 'အကောင့်ဖွင့် / ဝင်ရန်' : 'Sign Up / Log In'}
+              <UserPlus size={16} /> {lang === 'ja' ? '新規登録 / ログイン' : lang === 'mm' ? 'အကောင့်ဖွင့် / ဝင်ရန်' : 'Sign Up / Log In'}
             </button>
           </div>
         </Appear>
@@ -67,21 +65,19 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
           style={{ background: CARD_BG, boxShadow: CARD_GLOW }}>
           <div className="pointer-events-none absolute -right-12 -top-16 h-48 w-48 rounded-full opacity-30 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--accent)) 0%, transparent 70%)' }} />
           <div className="relative">
-            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={15} /> {lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
-            <h3 className="mt-2 font-groovy text-xl text-fg">{lang === 'mm' ? 'သင့်ဇာတာအတွက် ဆရာ ကိုယ်တိုင် စစ်ဆေးသော ဟောစာတမ်း' : 'A reading personally reviewed by the Sayar'}</h3>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{lang === 'mm'
-              ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီးနောက်၊ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်းအပြည့်အစုံကို ရေးသားပေးပါမည်။'
-              : 'Your chart is computed precisely with classical Vedic astrology formulas, verified and approved to get full details before your full 7-life-area reading is written.'}</p>
+            <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={15} /> {lang === 'ja' ? '詳細な鑑定' : lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
+            <h3 className="mt-2 font-groovy text-xl text-fg">{lang === 'ja' ? '占星術師が直接確認する鑑定' : lang === 'mm' ? 'သင့်ဇာတာအတွက် ဆရာ ကိုယ်တိုင် စစ်ဆေးသော ဟောစာတမ်း' : 'A reading personally reviewed by the Sayar'}</h3>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{lang === 'ja' ? 'あなたのチャートは古典的なインド占星術の計算式で正確に算出され、確認・承認を経たうえで、人生七領域の鑑定全文が作成されます。' : lang === 'mm' ? 'သင့်ဇာတာအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ပြီးနောက်၊ ဘဝကဏ္ဍ ၇ ရပ် အပြည့်အစုံ ဟောစာတမ်းအပြည့်အစုံကို ရေးသားပေးပါမည်။' : 'Your chart is computed precisely with classical Vedic astrology formulas, verified and approved to get full details before your full 7-life-area reading is written.'}</p>
             <button type="button" onClick={onRequest} disabled={loading}
               className="mt-4 inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
               {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
               {loading
-                ? (lang === 'mm' ? 'ပေးပို့နေသည်…' : 'Sending…')
+                ? (lang === 'ja' ? '送信中…' : lang === 'mm' ? 'ပေးပို့နေသည်…' : 'Sending…')
                 : showDashboard
-                  ? (lang === 'mm' ? 'ကျွန်ုပ်၏ ပရိုဖိုင်ဖြင့် ဟောစာတမ်း တောင်းဆိုရန်' : 'Request Reading based on my profile')
-                  : (lang === 'mm' ? 'ဆရာ ကိုဘုန်းမင်းသိုက်ဒင်ထံမှ ဟောစာတမ်းအပြည့်အစုံ တောင်းဆိုရန်' : 'Request Full Reading from the Sayar')}
+                  ? (lang === 'ja' ? '自分のプロフィールで鑑定をリクエスト' : lang === 'mm' ? 'ကျွန်ုပ်၏ ပရိုဖိုင်ဖြင့် ဟောစာတမ်း တောင်းဆိုရန်' : 'Request Reading based on my profile')
+                  : (lang === 'ja' ? '占星術師に鑑定全文をリクエスト' : lang === 'mm' ? 'ဆရာ ကိုဘုန်းမင်းသိုက်ဒင်ထံမှ ဟောစာတမ်းအပြည့်အစုံ တောင်းဆိုရန်' : 'Request Full Reading from the Sayar')}
             </button>
-            <p className="mt-2 font-mono text-[11px] text-muted">{lang === 'mm' ? 'တစ်လလျှင် တစ်ကြိမ် တောင်းဆိုနိုင်ပါသည်။' : 'One request per month.'}</p>
+            <p className="mt-2 font-mono text-[11px] text-muted">{lang === 'ja' ? 'リクエストは月に1回までです。' : lang === 'mm' ? 'တစ်လလျှင် တစ်ကြိမ် တောင်းဆိုနိုင်ပါသည်။' : 'One request per month.'}</p>
           </div>
         </div>
       )}
@@ -98,11 +94,9 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
             <span className="grid h-14 w-14 place-items-center rounded-full border border-accent/40 bg-accent/15 text-accent-light">
               <Clock size={26} className="animate-pulse" />
             </span>
-            <h3 className="font-groovy text-xl text-fg">{lang === 'mm' ? 'ဆရာမှ စစ်ဆေးနေပါသည်' : 'Awaiting the Sayar’s review'}</h3>
-            <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'mm'
-              ? 'ဆရာမှ သင့်ဇာတာအား အသေးစိတ် စစ်ဆေးနေပါသည်။ အတည်ပြုပြီးပါက ဟောစာတမ်းအပြည့်အစုံသည် ဤနေရာတွင် အလိုအလျောက် ပေါ်လာပါမည်။'
-              : 'The Sayar is personally reviewing your chart. Your full reading will appear here automatically once it is approved.'}</p>
-            <span className="mt-1 rounded-full bg-accent/15 px-3 py-1 font-mono text-[11px] text-accent-light">{lang === 'mm' ? 'အခြေအနေ — စစ်ဆေးဆဲ' : 'Status — Pending'}</span>
+            <h3 className="font-groovy text-xl text-fg">{lang === 'ja' ? '占星術師の確認をお待ちください' : lang === 'mm' ? 'ဆရာမှ စစ်ဆေးနေပါသည်' : 'Awaiting the Sayar’s review'}</h3>
+            <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'ja' ? '占星術師があなたのチャートを直接確認しています。承認されると、鑑定全文がここに自動的に表示されます。' : lang === 'mm' ? 'ဆရာမှ သင့်ဇာတာအား အသေးစိတ် စစ်ဆေးနေပါသည်။ အတည်ပြုပြီးပါက ဟောစာတမ်းအပြည့်အစုံသည် ဤနေရာတွင် အလိုအလျောက် ပေါ်လာပါမည်။' : 'The Sayar is personally reviewing your chart. Your full reading will appear here automatically once it is approved.'}</p>
+            <span className="mt-1 rounded-full bg-accent/15 px-3 py-1 font-mono text-[11px] text-accent-light">{lang === 'ja' ? 'ステータス — 確認待ち' : lang === 'mm' ? 'အခြေအနေ — စစ်ဆေးဆဲ' : 'Status — Pending'}</span>
           </div>
         </div>
       )}
@@ -117,13 +111,11 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
               <Loader2 size={26} className="animate-spin" />
             </span>
             <h3 className="font-groovy text-xl text-fg">
-              {lang === 'mm' ? 'ဟောစာတမ်း ရေးသားနေပါသည်' : 'Writing your reading'}
+              {lang === 'ja' ? '鑑定を作成しています' : lang === 'mm' ? 'ဟောစာတမ်း ရေးသားနေပါသည်' : 'Writing your reading'}
             </h3>
-            <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'mm'
-              ? 'ဆရာမှ အတည်ပြုပြီးဖြစ်၍ ဟောစာတမ်းကို ပြင်ဆင်နေပါသည်။ မိနစ်အနည်းငယ်အတွင်း ဤနေရာတွင် အလိုအလျောက် ပေါ်လာပါမည်။'
-              : 'The Sayar has approved it and your reading is being prepared. It will appear here automatically within a minute or two.'}</p>
+            <p className="max-w-xl text-sm leading-relaxed text-muted">{lang === 'ja' ? '占星術師が承認し、鑑定を準備しています。1〜2分以内にここに自動的に表示されます。' : lang === 'mm' ? 'ဆရာမှ အတည်ပြုပြီးဖြစ်၍ ဟောစာတမ်းကို ပြင်ဆင်နေပါသည်။ မိနစ်အနည်းငယ်အတွင်း ဤနေရာတွင် အလိုအလျောက် ပေါ်လာပါမည်။' : 'The Sayar has approved it and your reading is being prepared. It will appear here automatically within a minute or two.'}</p>
             <span className="mt-1 rounded-full bg-jade/15 px-3 py-1 font-mono text-[11px] text-jade-light">
-              {lang === 'mm' ? 'အခြေအနေ — ရေးသားဆဲ' : 'Status — Generating'}
+              {lang === 'ja' ? 'ステータス — 作成中' : lang === 'mm' ? 'အခြေအနေ — ရေးသားဆဲ' : 'Status — Generating'}
             </span>
           </div>
         </div>
@@ -133,9 +125,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
       {status === 'failed' && (
         <div className="flex items-start gap-2.5 rounded-2xl border border-coral/40 bg-coral/5 px-4 py-3.5 text-sm leading-relaxed text-muted no-print">
           <AlertTriangle size={16} className="mt-0.5 shrink-0 text-coral" />
-          {lang === 'mm'
-            ? 'ဟောစာတမ်း ရေးသားရာတွင် အခက်အခဲ ဖြစ်ပွားခဲ့ပါသည်။ ဆရာထံ အကြောင်းကြားပြီးဖြစ်၍ ပြန်လည် ကြိုးစားပေးပါမည်။'
-            : 'Something went wrong while generating your reading. The Sayar has been notified and will retry it.'}
+          {lang === 'ja' ? '鑑定の作成中に問題が発生しました。占星術師に通知され、再試行されます。' : lang === 'mm' ? 'ဟောစာတမ်း ရေးသားရာတွင် အခက်အခဲ ဖြစ်ပွားခဲ့ပါသည်။ ဆရာထံ အကြောင်းကြားပြီးဖြစ်၍ ပြန်လည် ကြိုးစားပေးပါမည်။' : 'Something went wrong while generating your reading. The Sayar has been notified and will retry it.'}
         </div>
       )}
 
@@ -146,7 +136,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
             style={{ background: 'rgb(var(--card))', boxShadow: '0 1px 3px rgb(0 0 0 / 0.06), inset 0 1px 0 rgb(255 255 255 / 0.04)' }}>
             <p className="flex flex-wrap items-center justify-center gap-2 font-groovy text-lg text-fg sm:text-xl">
               <CheckCircle2 size={22} className="text-emerald-500" />
-              {lang === 'mm' ? 'ဆရာမှ သင့်ဟောစာတမ်းကို အတည်ပြုပြီးပါပြီ။' : 'The Sayar has approved your reading.'}
+              {lang === 'ja' ? '占星術師があなたの鑑定を承認しました。' : lang === 'mm' ? 'ဆရာမှ သင့်ဟောစာတမ်းကို အတည်ပြုပြီးပါပြီ။' : 'The Sayar has approved your reading.'}
             </p>
           </div>
         </div>
@@ -156,7 +146,7 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
       {status === 'approved' && !markdown && (
         <div className="flex items-center justify-center gap-2 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3 text-sm text-muted no-print">
           <Loader2 size={15} className="animate-spin" />
-          {lang === 'mm' ? 'ဟောစာတမ်းကို ခေါ်ယူနေပါသည်…' : 'Loading your reading…'}
+          {lang === 'ja' ? '鑑定を読み込み中…' : lang === 'mm' ? 'ဟောစာတမ်းကို ခေါ်ယူနေပါသည်…' : 'Loading your reading…'}
         </div>
       )}
 
@@ -167,13 +157,11 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
           <div className="pointer-events-none absolute -left-16 -bottom-20 h-56 w-56 rounded-full opacity-20 blur-3xl" style={{ background: 'radial-gradient(circle, rgb(var(--jade)) 0%, transparent 70%)' }} />
           <div className="relative">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
-              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={14} /> {lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
-              <span className="inline-flex items-center gap-1 rounded-full bg-jade/15 px-2.5 py-0.5 font-mono text-[10px] text-jade no-print"><CheckCircle2 size={11} /> {lang === 'mm' ? 'ဆရာ အတည်ပြုပြီး' : 'Approved by the Sayar'}</span>
+              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><ScrollText size={14} /> {lang === 'ja' ? '詳細な鑑定' : lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading'}</p>
+              <span className="inline-flex items-center gap-1 rounded-full bg-jade/15 px-2.5 py-0.5 font-mono text-[10px] text-jade no-print"><CheckCircle2 size={11} /> {lang === 'ja' ? '占星術師が承認済み' : lang === 'mm' ? 'ဆရာ အတည်ပြုပြီး' : 'Approved by the Sayar'}</span>
             </div>
             <ReadingReveal ref={readingRef} markdown={markdown} readingId={requestId} token={token} lang={lang} />
-            <p className="mt-5 border-t border-white/10 pt-3 text-[11px] leading-relaxed text-muted">{lang === 'mm'
-              ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ထားပါသည်။သို့သော်လည်း ရလဒ်များမှာ မိမိကိုယ်တိုင် ပြန်လည်ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များသာဖြစ်ပါသည်။'
-              : 'This reading was computed with classical Vedic astrology formulas and personally according to system.But The interpretations are guidance for self-reflection.'}</p>
+            <p className="mt-5 border-t border-white/10 pt-3 text-[11px] leading-relaxed text-muted">{lang === 'ja' ? 'この鑑定は古典的なインド占星術の計算式に基づいて作成されています。解釈は自己省察のための指針としてご活用ください。' : lang === 'mm' ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များဖြင့် တိကျစွာ တွက်ချက်ထားပါသည်။သို့သော်လည်း ရလဒ်များမှာ မိမိကိုယ်တိုင် ပြန်လည်ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များသာဖြစ်ပါသည်။' : 'This reading was computed with classical Vedic astrology formulas and personally according to system.But The interpretations are guidance for self-reflection.'}</p>
 
             {/* Direct client-side PDF download (logged-in users only) */}
             <div className="mt-5 no-print">
@@ -181,14 +169,14 @@ const ReadingRequestPanel = forwardRef<HTMLDivElement, Props>(function ReadingRe
                 <button type="button" onClick={onDownloadPdf} disabled={pdfBusy}
                   className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
                   {pdfBusy ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
-                  {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ Download ဆွဲရန်' : 'Download Full Reading PDF'}
+                  {lang === 'ja' ? '鑑定全文PDFをダウンロード' : lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ Download ဆွဲရန်' : 'Download Full Reading PDF'}
                 </button>
               ) : (
                 <div className="flex flex-col items-start gap-2">
-                  <p className="text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'PDF ဒေါင်းလုဒ်ရယူရန် အကောင့်ဝင်ရန် လိုအပ်ပါသည်။' : 'Log in to download the PDF.'}</p>
+                  <p className="text-[13px] leading-relaxed text-muted">{lang === 'ja' ? 'PDFをダウンロードするにはログインしてください。' : lang === 'mm' ? 'PDF ဒေါင်းလုဒ်ရယူရန် အကောင့်ဝင်ရန် လိုအပ်ပါသည်။' : 'Log in to download the PDF.'}</p>
                   <button type="button" onClick={() => onOpenAuth('login')}
                     className="inline-flex items-center gap-2 rounded-xl border border-accent/40 bg-accent/10 px-4 py-2.5 text-sm font-semibold text-accent-light transition hover:bg-accent/20">
-                    <Lock size={15} /> {lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}
+                    <Lock size={15} /> {lang === 'ja' ? 'ログイン' : lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}
                   </button>
                 </div>
               )}

@@ -3,8 +3,8 @@ import type { Lang } from '../../lib/vedin'
 
 export interface StepDef {
   id: number
-  title: { mm: string; en: string }
-  hint: { mm: string; en: string }
+  title: { mm: string; en: string; ja: string }
+  hint: { mm: string; en: string; ja: string }
 }
 
 /**
@@ -15,18 +15,18 @@ export interface StepDef {
 export const WIZARD_STEPS: StepDef[] = [
   {
     id: 1,
-    title: { mm: 'သင့်အကြောင်း', en: 'About you' },
-    hint: { mm: 'အမည်နှင့် ကျား/မ ကို ဖြည့်ပါ။', en: 'Your name and gender.' },
+    title: { mm: 'သင့်အကြောင်း', en: 'About you', ja: 'あなたについて' },
+    hint: { mm: 'အမည်နှင့် ကျား/မ ကို ဖြည့်ပါ။', en: 'Your name and gender.', ja: 'お名前と性別をご入力ください。' },
   },
   {
     id: 2,
-    title: { mm: 'မွေးသက္ကရာဇ်နှင့် အချိန်', en: 'Date & time' },
-    hint: { mm: 'မွေးသက္ကရာဇ်နှင့် မွေးချိန်ကို တိကျစွာ ဖြည့်ပါ။', en: 'Your exact date and time of birth.' },
+    title: { mm: 'မွေးသက္ကရာဇ်နှင့် အချိန်', en: 'Date & time', ja: '生年月日と時刻' },
+    hint: { mm: 'မွေးသက္ကရာဇ်နှင့် မွေးချိန်ကို တိကျစွာ ဖြည့်ပါ။', en: 'Your exact date and time of birth.', ja: '正確な生年月日と出生時刻をご入力ください。' },
   },
   {
     id: 3,
-    title: { mm: 'မွေးဖွားရာ အရပ်', en: 'Birth place' },
-    hint: { mm: 'မြို့ကို ရှာပါ (သို့) မြေပုံပေါ်တွင် အမှတ်ချပါ။', en: 'Search a city or drop a pin on the map.' },
+    title: { mm: 'မွေးဖွားရာ အရပ်', en: 'Birth place', ja: '出生地' },
+    hint: { mm: 'မြို့ကို ရှာပါ (သို့) မြေပုံပေါ်တွင် အမှတ်ချပါ။', en: 'Search a city or drop a pin on the map.', ja: '都市を検索するか、地図上にピンを置いてください。' },
   },
 ]
 
@@ -51,7 +51,7 @@ export default function WizardProgress({ lang, step }: { lang: Lang; step: numbe
                 {done ? <Check size={13} /> : s.id}
               </span>
               <span className={`hidden truncate text-xs sm:block ${active ? 'text-fg' : 'text-muted'}`}>
-                {mm ? s.title.mm : s.title.en}
+                {lang === 'ja' ? s.title.ja : mm ? s.title.mm : s.title.en}
               </span>
               {i < WIZARD_STEPS.length - 1 && <span className="h-px flex-1 bg-white/10" />}
             </div>
@@ -65,7 +65,9 @@ export default function WizardProgress({ lang, step }: { lang: Lang; step: numbe
       </div>
 
       <p className="mt-2 font-mono text-[10px] text-muted">
-        {mm
+        {lang === 'ja'
+          ? `ステップ ${step} / ${WIZARD_STEPS.length} — ${WIZARD_STEPS[step - 1].hint.ja}`
+          : mm
           ? `အဆင့် ${step} / ${WIZARD_STEPS.length} — ${WIZARD_STEPS[step - 1].hint.mm}`
           : `Step ${step} of ${WIZARD_STEPS.length} — ${WIZARD_STEPS[step - 1].hint.en}`}
       </p>

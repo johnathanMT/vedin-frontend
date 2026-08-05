@@ -20,9 +20,11 @@ function AshtakavargaView({ data, lang }: { data: BirthChartData; lang: Lang }) 
   return (
     <div className="space-y-5">
       <div className="glass-card p-5">
-        <h3 className="mb-1 font-groovy text-lg text-fg">{lang === 'mm' ? 'အဋ္ဌကဝဂ် (Ashtakavarga)' : 'Ashtakavarga'}</h3>
+        <h3 className="mb-1 font-groovy text-lg text-fg">{lang === 'ja' ? 'アシュタカヴァルガ' : lang === 'mm' ? 'အဋ္ဌကဝဂ် (Ashtakavarga)' : 'Ashtakavarga'}</h3>
         <p className="text-sm leading-relaxed text-muted">
-          {lang === 'mm'
+          {lang === 'ja'
+            ? '星座ごとの吉点（ビンドゥ）。SAV ≥ 30 で強、≤ 25 で弱。ビンドゥの多い星座を惑星が通過するほど、その結果はより十分に現れます。'
+            : lang === 'mm'
             ? 'ရာသီတစ်ခုချင်း၏ မင်္ဂလာအမှတ် (bindu)။ SAV ≥ ၃၀ = အားကောင်း၊ ≤ ၂၅ = အားနည်း။ ဂြိုဟ်သွား အားကောင်း/နည်းကို ဤအမှတ်များက ဆုံးဖြတ်သည်။'
             : 'Benefic points (bindus) per sign. SAV ≥ 30 = strong, ≤ 25 = weak. A planet transiting a high-bindu sign gives fuller results.'}
         </p>
@@ -50,7 +52,7 @@ function AshtakavargaView({ data, lang }: { data: BirthChartData; lang: Lang }) 
         <table className="w-full min-w-[640px] border-collapse text-center text-xs">
           <thead className="font-mono text-[10px] uppercase tracking-wider text-muted">
             <tr>
-              <th className="px-2 py-2.5 text-left">{lang === 'mm' ? 'ဂြိုဟ်' : 'Planet'}</th>
+              <th className="px-2 py-2.5 text-left">{lang === 'ja' ? '惑星' : lang === 'mm' ? 'ဂြိုဟ်' : 'Planet'}</th>
               {Array.from({ length: 12 }, (_, s) => <th key={s} className="px-2 py-2.5">{signLabel(s, lang)}</th>)}
             </tr>
           </thead>

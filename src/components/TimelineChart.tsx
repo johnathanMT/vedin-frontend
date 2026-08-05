@@ -60,7 +60,7 @@ function TimelineChart({ timeline, currentAge, lang }: { timeline: YearForecast[
         <g>
           <line x1={x(currentAge)} y1={MT} x2={x(currentAge)} y2={MT + plotH} style={{ stroke: 'rgb(var(--accent))' }} strokeWidth={1.4} />
           <circle cx={x(currentAge)} cy={y(timeline.find((t) => t.age === currentAge)?.stars ?? 3)} r={3.6} style={{ fill: 'rgb(var(--accent))' }} />
-          <text x={x(currentAge)} y={H - 8} textAnchor="middle" fontSize={9} fontWeight={600} fontFamily="monospace" style={{ fill: 'rgb(var(--accent))' }}>{lang === 'mm' ? 'ယခု' : 'now'}</text>
+          <text x={x(currentAge)} y={H - 8} textAnchor="middle" fontSize={9} fontWeight={600} fontFamily="monospace" style={{ fill: 'rgb(var(--accent))' }}>{lang === 'ja' ? '現在' : lang === 'mm' ? 'ယခု' : 'now'}</text>
         </g>
       )}
     </svg>

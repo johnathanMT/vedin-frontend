@@ -119,7 +119,7 @@ export default function Vedin() {
       const { default: tzlookup } = await import('tz-lookup')
       zone = tzlookup(la, lo)
     } catch { /* ocean / unmapped → keep the current zone */ }
-    const label = place.trim() || (lang === 'mm' ? 'မြေပုံပေါ်တွင် ရွေးချယ်ထားသည်' : 'Pinned on the map')
+    const label = place.trim() || (lang === 'ja' ? '地図上にピン留め' : lang === 'mm' ? 'မြေပုံပေါ်တွင် ရွေးချယ်ထားသည်' : 'Pinned on the map')
     geo.apply({ label, lat: la, lon: lo, tz: zone })
   }
 
@@ -213,12 +213,14 @@ export default function Vedin() {
   // Per-step validation, so a blocker is reported on the screen that caused it
   // rather than as an error list at the very bottom of the form.
   const stepError = (s: number): string => {
-    if (s === 1 && !name.trim()) return lang === 'mm' ? 'အမည် ဖြည့်သွင်းပါ။' : 'Please enter a name.'
-    if (s === 2 && !date) return lang === 'mm' ? 'မွေးသက္ကရာဇ် ဖြည့်ပါ။' : 'Please enter your date of birth.'
+    if (s === 1 && !name.trim()) return L('Please enter a name.', 'အမည် ဖြည့်သွင်းပါ။', 'お名前をご入力ください。')
+    if (s === 2 && !date) return L('Please enter your date of birth.', 'မွေးသက္ကရာဇ် ဖြည့်ပါ။', '生年月日をご入力ください。')
     if (s === 3 && !placeConfirmed) {
-      return lang === 'mm'
-        ? 'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ (သို့) မြေပုံပေါ်တွင် အမှတ်ချပါ။'
-        : 'Search and select your birth city, or drop a pin on the map.'
+      return L(
+        'Search and select your birth city, or drop a pin on the map.',
+        'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ (သို့) မြေပုံပေါ်တွင် အမှတ်ချပါ။',
+        '出生地の都市を検索して選択するか、地図上にピンを置いてください。',
+      )
     }
     return ''
   }
@@ -280,7 +282,7 @@ export default function Vedin() {
   const ageLabel = (dob?: string): string => {
     const a = ageFromDob(dob)
     if (a == null) return ''
-    return lang === 'mm' ? `(အသက် ${toMmDigits(a)} နှစ်)` : `(Age ${a})`
+    return lang === 'ja' ? `(${a}歳)` : lang === 'mm' ? `(အသက် ${toMmDigits(a)} နှစ်)` : `(Age ${a})`
   }
 
   // ── Registered dashboard: compute the account's own chart from its profile.
@@ -328,7 +330,7 @@ export default function Vedin() {
 
   // Life-area "get remedy" → pre-fill the consultation chat with that area.
   const openRemedy = (areaLabel: string) => {
-    chat.setInput(lang === 'mm' ? `${areaLabel} ကဏ္ဍအတွက် သင့်လျော်သော ယတြာ/အကြံဉာဏ် လိုအပ်ပါသည်။` : `I would like a suitable remedy / advice for: ${areaLabel}.`)
+    chat.setInput(lang === 'ja' ? `「${areaLabel}」の領域に適した対策・助言をお願いします。` : lang === 'mm' ? `${areaLabel} ကဏ္ဍအတွက် သင့်လျော်သော ယတြာ/အကြံဉာဏ် လိုအပ်ပါသည်။` : `I would like a suitable remedy / advice for: ${areaLabel}.`)
     setTimeout(() => remedyRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 40)
   }
   // Render every tab, switch to the light (print-friendly) theme, then open the
@@ -457,7 +459,7 @@ export default function Vedin() {
   const printReadingFallback = () => {
     if (!customerToken) { openAuth('login'); return }
     const bodyHtml = readingRef.current?.innerHTML
-    if (!bodyHtml) { setVerifyToast(lang === 'mm' ? 'ဟောစာတမ်း မတွေ့ပါ။ စာမျက်နှာကို ပြန်စစ်ပါ။' : 'Reading not found — please reload.'); return }
+    if (!bodyHtml) { setVerifyToast(lang === 'ja' ? '鑑定が見つかりません — 再読み込みしてください。' : lang === 'mm' ? 'ဟောစာတမ်း မတွေ့ပါ။ စာမျက်နှာကို ပြန်စစ်ပါ။' : 'Reading not found — please reload.'); return }
 
     try {
       const who = (querent?.name || '').trim()
@@ -485,12 +487,10 @@ export default function Vedin() {
 </style></head>
 <body><div class="page">
   <div class="head"><div class="brand">Vedin · Sayar Bhone Min Thike Din</div>
-    <div class="name">${who || (lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading')}</div>
+    <div class="name">${who || (lang === 'ja' ? '詳細な鑑定' : lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်း' : 'Detailed Reading')}</div>
     <div class="meta">${today}</div></div>
   <div class="md">${bodyHtml}</div>
-  <div class="foot">${lang === 'mm'
-          ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များကိုအသုံးပြုပြီး တွက်ချက်ထားပါသည်။ ရလဒ်များမှာ ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များဖြစ်ပါသည်။'
-          : 'Computed with classical Vedic astrology formulas and personally verified by the Sayar. Guidance for reflection.'}</div>
+  <div class="foot">${lang === 'ja' ? '古典的なインド占星術の計算式で算出され、占星術師が直接確認しています。自己省察のための指針です。' : lang === 'mm' ? 'ဤဟောစာတမ်းအား ဂန္ထဝင် ဇျောတိသ သင်္ချာနည်းစနစ်များကိုအသုံးပြုပြီး တွက်ချက်ထားပါသည်။ ရလဒ်များမှာ ဆင်ခြင်သုံးသပ်ရန်အတွက် လမ်းညွှန်ချက်များဖြစ်ပါသည်။' : 'Computed with classical Vedic astrology formulas and personally verified by the Sayar. Guidance for reflection.'}</div>
 </div></body></html>`
 
       const iframe = document.createElement('iframe')
@@ -513,7 +513,7 @@ export default function Vedin() {
           w.focus()
           w.print()
         } catch {
-          setVerifyToast(lang === 'mm' ? 'Print/PDF ဖွင့်၍မရပါ။ ထပ်စမ်းကြည့်ပါ။' : 'Could not open the print dialog — please try again.')
+          setVerifyToast(lang === 'ja' ? '印刷ダイアログを開けませんでした — もう一度お試しください。' : lang === 'mm' ? 'Print/PDF ဖွင့်၍မရပါ။ ထပ်စမ်းကြည့်ပါ။' : 'Could not open the print dialog — please try again.')
         } finally { cleanup() }
       }
 
@@ -523,7 +523,7 @@ export default function Vedin() {
       if (fonts?.ready) fonts.ready.then(() => window.setTimeout(go, 150)).catch(() => go())
       window.setTimeout(go, 1600)   // hard fallback if fonts.ready never settles
     } catch {
-      setVerifyToast(lang === 'mm' ? 'PDF ဖန်တီး၍မရပါ။ ထပ်စမ်းကြည့်ပါ။' : 'Could not generate the PDF — please try again.')
+      setVerifyToast(lang === 'ja' ? 'PDFを生成できませんでした — もう一度お試しください。' : lang === 'mm' ? 'PDF ဖန်တီး၍မရပါ။ ထပ်စမ်းကြည့်ပါ။' : 'Could not generate the PDF — please try again.')
     }
   }
 
@@ -537,9 +537,7 @@ export default function Vedin() {
       params.delete('token'); params.delete('verified')
       const qs = params.toString()
       window.history.replaceState({}, '', window.location.pathname + (qs ? `?${qs}` : ''))
-      setVerifyToast(lang === 'mm'
-        ? 'အကောင့် အတည်ပြုပြီးပါပြီ။ ကျေးဇူးပြု၍ Login ဝင်ပါ။'
-        : 'Account confirmed — please log in to continue.')
+      setVerifyToast(lang === 'ja' ? 'アカウントが確認されました — 続けるにはログインしてください。' : lang === 'mm' ? 'အကောင့် အတည်ပြုပြီးပါပြီ။ ကျေးဇူးပြု၍ Login ဝင်ပါ။' : 'Account confirmed — please log in to continue.')
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!verifyToast) return; const id = setTimeout(() => setVerifyToast(''), 4000); return () => clearTimeout(id) }, [verifyToast])
@@ -590,7 +588,7 @@ export default function Vedin() {
           </div>
           <div>
             <p className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/10 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.28em] text-amber-700 dark:text-amber-200">
-              <Sparkles size={11} className="text-amber-500 dark:text-amber-300" /> {lang === 'mm' ? 'ဗေဒင်ပညာ လေ့လာဆည်းပူးသူ' : 'Vedic Astrology Enthusiast'}
+              <Sparkles size={11} className="text-amber-500 dark:text-amber-300" /> {lang === 'ja' ? 'インド占星術 愛好家' : lang === 'mm' ? 'ဗေဒင်ပညာ လေ့လာဆည်းပူးသူ' : 'Vedic Astrology Enthusiast'}
             </p>
             <h1 className="mt-2.5 mb-4 pb-2 bg-gradient-to-b from-amber-200 via-amber-400 to-amber-600 bg-clip-text font-groovy text-4xl font-bold leading-[1.35] text-transparent sm:text-5xl"
               style={{ filter: 'drop-shadow(0 1px 6px rgba(201,162,75,0.18))' }}>
@@ -620,10 +618,10 @@ export default function Vedin() {
               <Sigma size={22} />
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent-light">{lang === 'mm' ? 'ကွန်ပျူတာသိပ္ပံဆိုင်ရာ အခြေခံ' : 'The Computation'}</p>
-              <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'mm' ? 'အယ်လဂိုရီသမ်များ' : 'The Algorithm'}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'ဇာတာတွက်ချက်မှုများ၏ နောက်ကွယ်မှကိန်းအောင်းနေသော သင်္ချာဖော်မြူလာများနှင့် ကုဒ်များ — Julian Day မှ Ashtakavarga အထိ။' : 'The math & code behind the charts — from Julian Day to Ashtakavarga.'}</p>
-              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-accent-light transition group-hover:gap-2.5">{lang === 'mm' ? 'အသေးစိတ်ကြည့်ရှုရန်' : 'Explore'} <ArrowRight size={13} /></span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-accent-light">{lang === 'ja' ? '計算の仕組み' : lang === 'mm' ? 'ကွန်ပျူတာသိပ္ပံဆိုင်ရာ အခြေခံ' : 'The Computation'}</p>
+              <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'ja' ? 'アルゴリズム' : lang === 'mm' ? 'အယ်လဂိုရီသမ်များ' : 'The Algorithm'}</h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'ja' ? 'チャートの背後にある数式とコード — ユリウス日からアシュタカヴァルガまで。' : lang === 'mm' ? 'ဇာတာတွက်ချက်မှုများ၏ နောက်ကွယ်မှကိန်းအောင်းနေသော သင်္ချာဖော်မြူလာများနှင့် ကုဒ်များ — Julian Day မှ Ashtakavarga အထိ။' : 'The math & code behind the charts — from Julian Day to Ashtakavarga.'}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-accent-light transition group-hover:gap-2.5">{lang === 'ja' ? '見る' : lang === 'mm' ? 'အသေးစိတ်ကြည့်ရှုရန်' : 'Explore'} <ArrowRight size={13} /></span>
             </div>
           </div>
         </Link>
@@ -637,10 +635,10 @@ export default function Vedin() {
               <FlaskConical size={22} />
             </span>
             <div className="min-w-0">
-              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-jade">{lang === 'mm' ? 'သိပ္ပံနည်းကျကျ ရိုးသားမှု' : 'Honest Science'}</p>
-              <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'mm' ? 'တိုင်းတာနိုင်သော သုတေသနပြုချက်' : 'Falsifiable Research'}</h3>
-              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'mm' ? 'ကြိုတင်မှတ်တမ်း၊ base rate၊ permutation test — ဟောကြားချက်ကို တိုင်းတာနိုင်သည်။' : 'Pre-registration, base rates, permutation tests — we measure claims, not boast them.'}</p>
-              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-jade transition group-hover:gap-2.5">{lang === 'mm' ? 'လုပ်ထုံးလုပ်နည်းများ ကြည့်ရန်' : 'View protocol'} <ArrowRight size={13} /></span>
+              <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-jade">{lang === 'ja' ? '誠実な科学' : lang === 'mm' ? 'သိပ္ပံနည်းကျကျ ရိုးသားမှု' : 'Honest Science'}</p>
+              <h3 className="mt-1 font-groovy text-xl text-fg">{lang === 'ja' ? '反証可能な研究' : lang === 'mm' ? 'တိုင်းတာနိုင်သော သုတေသနပြုချက်' : 'Falsifiable Research'}</h3>
+              <p className="mt-1.5 text-[13px] leading-relaxed text-muted">{lang === 'ja' ? '事前登録、基準率、並べ替え検定 — 主張を誇示するのではなく、検証します。' : lang === 'mm' ? 'ကြိုတင်မှတ်တမ်း၊ base rate၊ permutation test — ဟောကြားချက်ကို တိုင်းတာနိုင်သည်။' : 'Pre-registration, base rates, permutation tests — we measure claims, not boast them.'}</p>
+              <span className="mt-3 inline-flex items-center gap-1.5 font-mono text-[11px] text-jade transition group-hover:gap-2.5">{lang === 'ja' ? 'プロトコルを見る' : lang === 'mm' ? 'လုပ်ထုံးလုပ်နည်းများ ကြည့်ရန်' : 'View protocol'} <ArrowRight size={13} /></span>
             </div>
           </div>
         </Link>
@@ -658,25 +656,25 @@ export default function Vedin() {
           <div className="pointer-events-none absolute -bottom-24 -left-10 h-56 w-56 rounded-full opacity-40 blur-3xl" style={{ background: 'radial-gradient(circle, #a855f7 0%, transparent 70%)' }} />
           <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="min-w-0">
-              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-200"><Sparkles size={14} className="text-amber-300" /> {lang === 'mm' ? 'သင့်ကိုယ်ပိုင် ဇာတာ ဟောစာတမ်းများကို ကြည့်ရှုရန် Dashboard' : 'Your personal Vedin dashboard'}</p>
+              <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-emerald-200"><Sparkles size={14} className="text-amber-300" /> {lang === 'ja' ? 'あなた専用の Vedin ダッシュボード' : lang === 'mm' ? 'သင့်ကိုယ်ပိုင် ဇာတာ ဟောစာတမ်းများကို ကြည့်ရှုရန် Dashboard' : 'Your personal Vedin dashboard'}</p>
               <h2 className="mt-2 font-groovy text-2xl text-white sm:text-3xl">
-                {lang === 'mm' ? `ကြိုဆိုပါတယ်၊ ${profile.username} ` : `Welcome to your personal Vedin dashboard, ${profile.username} `}
+                {lang === 'ja' ? `ようこそ、${profile.username} さん ` : lang === 'mm' ? `ကြိုဆိုပါတယ်၊ ${profile.username} ` : `Welcome to your personal Vedin dashboard, ${profile.username} `}
                 {ageLabel(profile.dob) && <span className="text-xl text-amber-300 sm:text-2xl">{ageLabel(profile.dob)}</span>}
               </h2>
               <div className="mt-3 flex flex-wrap gap-2 font-mono text-[11px]">
                 {profile.dob && <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-1 text-emerald-100"><Cake size={12} /> {profile.dob}{profile.birthTime ? ` · ${profile.birthTime}` : ''}</span>}
                 {profile.locationName && <span className="inline-flex items-center gap-1.5 rounded-full border border-violet-400/40 bg-violet-500/15 px-2.5 py-1 text-violet-100"><MapPin size={12} /> {profile.locationName}</span>}
-                {profile.gender && <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-white/80">{profile.gender === 'female' ? (lang === 'mm' ? 'မ' : 'Female') : (lang === 'mm' ? 'ကျား' : 'Male')}</span>}
+                {profile.gender && <span className="rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-white/80">{profile.gender === 'female' ? (lang === 'ja' ? '女性' : lang === 'mm' ? 'မ' : 'Female') : (lang === 'ja' ? '男性' : lang === 'mm' ? 'ကျား' : 'Male')}</span>}
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2 self-start sm:items-end">
               <button type="button" onClick={() => customerPanelRef.current?.openProfileEdit()}
                 className="inline-flex items-center gap-2 rounded-xl border border-jade/40 bg-jade/15 px-4 py-2.5 text-sm font-semibold text-jade transition hover:bg-jade/25">
-                <Pencil size={15} /> {lang === 'mm' ? 'ပရိုဖိုင် ပြင်ရန်' : 'Edit Profile'}
+                <Pencil size={15} /> {lang === 'ja' ? 'プロフィールを編集' : lang === 'mm' ? 'ပရိုဖိုင် ပြင်ရန်' : 'Edit Profile'}
               </button>
               <button type="button" onClick={startCalcForOther}
                 className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-2.5 text-sm font-semibold text-fg transition hover:bg-white/20">
-                <Search size={15} /> {lang === 'mm' ? 'အခြားသူအတွက် တွက်ရန်' : 'Calculate for someone else'}
+                <Search size={15} /> {lang === 'ja' ? '別の人を鑑定する' : lang === 'mm' ? 'အခြားသူအတွက် တွက်ရန်' : 'Calculate for someone else'}
               </button>
             </div>
           </div>
@@ -706,7 +704,7 @@ export default function Vedin() {
         {customerToken && profile?.hasProfile && otherMode && (
           <button type="button" onClick={backToDashboard}
             className="no-print inline-flex items-center gap-1.5 rounded-full border border-jade/30 bg-jade/10 px-4 py-2 font-mono text-xs text-jade transition hover:bg-jade/20">
-            ← {lang === 'mm' ? 'ကျွန်ုပ်၏ Dashboard သို့ ပြန်သွားရန်' : 'Back to my dashboard'}
+            ← {lang === 'ja' ? 'ダッシュボードに戻る' : lang === 'mm' ? 'ကျွန်ုပ်၏ Dashboard သို့ ပြန်သွားရန်' : 'Back to my dashboard'}
           </button>
         )}
 
@@ -714,10 +712,10 @@ export default function Vedin() {
           {/* Fallback prompt — signed in but no saved birth profile */}
           {customerToken && profile && !profile.hasProfile && !otherMode && (
             <div className="mx-auto flex w-full max-w-3xl flex-col gap-3 rounded-2xl border border-accent/30 bg-accent/10 px-5 py-4 text-sm leading-relaxed text-accent-light no-print sm:flex-row sm:items-center sm:justify-between">
-              <span>{lang === 'mm' ? 'သင့်အကောင့်တွင် မွေးဇာတာ ပရိုဖိုင် မရှိသေးပါ။ ပရိုဖိုင် ထည့်ပါ (သို့) အောက်ရှိ ဖောင်တွင် ဖြည့်ပါ။' : 'Your account has no birth profile yet — add one, or use the form below.'}</span>
+              <span>{lang === 'ja' ? 'アカウントにはまだ出生プロフィールがありません — 追加するか、下のフォームをご利用ください。' : lang === 'mm' ? 'သင့်အကောင့်တွင် မွေးဇာတာ ပရိုဖိုင် မရှိသေးပါ။ ပရိုဖိုင် ထည့်ပါ (သို့) အောက်ရှိ ဖောင်တွင် ဖြည့်ပါ။' : 'Your account has no birth profile yet — add one, or use the form below.'}</span>
               <button type="button" onClick={() => customerPanelRef.current?.openProfileEdit()}
                 className="inline-flex shrink-0 items-center gap-2 self-start rounded-xl bg-amber-600 shadow-md px-4 py-2 text-sm font-semibold text-amber-50 transition hover:brightness-110 sm:self-auto">
-                <Pencil size={15} /> {lang === 'mm' ? 'ပရိုဖိုင် ထည့်ရန်' : 'Add Profile'}
+                <Pencil size={15} /> {lang === 'ja' ? 'プロフィールを追加' : lang === 'mm' ? 'ပရိုဖိုင် ထည့်ရန်' : 'Add Profile'}
               </button>
             </div>
           )}
@@ -726,7 +724,7 @@ export default function Vedin() {
             <div className="overflow-hidden rounded-2xl border border-accent/25 bg-accent/[0.05]">
               <button type="button" onClick={() => setHowtoOpen((o) => !o)} aria-expanded={howtoOpen}
                 className="flex w-full items-center justify-between gap-2 px-5 py-3.5 text-left transition hover:bg-accent/[0.08]">
-                <span className="flex items-center gap-2 font-groovy text-base text-fg"><Info size={16} className="text-accent" /> {lang === 'mm' ? 'အသုံးပြုနည်း' : 'How to use'}</span>
+                <span className="flex items-center gap-2 font-groovy text-base text-fg"><Info size={16} className="text-accent" /> {lang === 'ja' ? '使い方' : lang === 'mm' ? 'အသုံးပြုနည်း' : 'How to use'}</span>
                 <ChevronDown size={18} className={`shrink-0 text-accent-light transition-transform ${howtoOpen ? 'rotate-180' : ''}`} />
               </button>
               {howtoOpen && (
@@ -754,7 +752,7 @@ export default function Vedin() {
               )}
             </div>
             <h2 className="mt-6 text-center font-groovy text-lg text-fg sm:text-xl">
-              {lang === 'mm' ? 'မိမိရဲ့ မွေးဇာတာစစ်ဆေးရန် အချက်အလက်များကို အပြည့်အစုံဖြည့်သွင်းပါ' : 'Enter your birth details to check your chart'}
+              {L('Enter your birth details to check your chart', 'မိမိရဲ့ မွေးဇာတာစစ်ဆေးရန် အချက်အလက်များကို အပြည့်အစုံဖြည့်သွင်းပါ', 'ホロスコープを確認するため、出生情報をご入力ください')}
             </h2>
           </div>
 
@@ -770,7 +768,7 @@ export default function Vedin() {
             {step === 1 && (<>
             <div className="mb-3 grid grid-cols-2 gap-3">
               <label><span className={labelCls}>{t.fldName} <span className="text-coral">*</span></span>
-                <input value={name} onChange={(e) => setName(e.target.value)} placeholder={lang === 'mm' ? 'အမည်' : 'Full name'}
+                <input value={name} onChange={(e) => setName(e.target.value)} placeholder={L('Full name', 'အမည်', 'お名前')}
                   className={`${field} ${!name.trim() ? 'border-coral/40' : ''}`} /></label>
               <label><span className={labelCls}>{t.fldGender}</span>
                 <select value={gender} onChange={(e) => setGender(e.target.value as 'male' | 'female')} className={field}>
@@ -782,10 +780,10 @@ export default function Vedin() {
 
             {step === 3 && (<>
             <label className="relative block">
-              <span className={labelCls}>{lang === 'mm' ? 'မွေးဖွားရာ မြို့/ဇာတိ' : 'Birth place'} <span className="text-coral">*</span></span>
+              <span className={labelCls}>{L('Birth place', 'မွေးဖွားရာ မြို့/ဇာတိ', '出生地')} <span className="text-coral">*</span></span>
               <span className="relative mt-1.5 block">
                 <Search size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
-                <input value={place} onChange={(e) => geo.search(e.target.value)} placeholder={lang === 'mm' ? 'မြို့ ရှာရန်…' : 'Search a city…'}
+                <input value={place} onChange={(e) => geo.search(e.target.value)} placeholder={L('Search a city…', 'မြို့ ရှာရန်…', '都市を検索…')}
                   className={`w-full rounded-xl border bg-white/5 py-2.5 pl-9 pr-8 text-sm text-fg outline-none transition focus:border-accent/50 ${placeConfirmed ? 'border-jade/50' : 'border-coral/40'}`} />
                 {geo.searching
                   ? <Loader2 size={14} className="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-muted" />
@@ -793,10 +791,10 @@ export default function Vedin() {
               </span>
               {/* A failed lookup used to render identically to "no such city" — say which it is. */}
               {geo.error && (
-                <span className="mt-1 block font-mono text-[10px] text-coral">{lang === 'mm' ? 'မြို့ရှာဖွေမှု ခေတ္တ ရပ်နားနေပါသည်။ ထပ်စမ်းကြည့်ပါ သို့မဟုတ် အောက်ရှိ မြို့များမှ ရွေးပါ။' : 'City search is unavailable right now — try again, or pick from the quick locations below.'}</span>
+                <span className="mt-1 block font-mono text-[10px] text-coral">{L('City search is unavailable right now — try again, or pick from the quick locations below.', 'မြို့ရှာဖွေမှု ခေတ္တ ရပ်နားနေပါသည်။ ထပ်စမ်းကြည့်ပါ သို့မဟုတ် အောက်ရှိ မြို့များမှ ရွေးပါ။', '都市検索は現在利用できません。もう一度お試しいただくか、下のクイック選択からお選びください。')}</span>
               )}
               {!placeConfirmed && place.trim().length > 0 && !geo.searching && !geo.error && (
-                <span className="mt-1 block font-mono text-[10px] text-coral">{lang === 'mm' ? 'စာရင်းထဲမှ မြို့တစ်ခုကို ရွေးချယ်ပါ။' : 'Pick a city from the list.'}</span>
+                <span className="mt-1 block font-mono text-[10px] text-coral">{L('Pick a city from the list.', 'စာရင်းထဲမှ မြို့တစ်ခုကို ရွေးချယ်ပါ။', 'リストから都市を選択してください。')}</span>
               )}
               {geo.results.length > 0 && (
                 <ul className="absolute z-20 mt-1 max-h-56 w-full overflow-y-auto rounded-xl border border-white/15 bg-surface/95 backdrop-blur-md">
@@ -809,7 +807,7 @@ export default function Vedin() {
             </label>
 
             <div className="mt-4">
-              <span className={labelCls}>{lang === 'mm' ? 'မြို့များ အမြန်ရွေးရန်' : 'Quick locations'}</span>
+              <span className={labelCls}>{L('Quick locations', 'မြို့များ အမြန်ရွေးရန်', 'クイック選択')}</span>
               <div className="mt-2 flex flex-wrap gap-2">
                 {PRESETS.map((p) => (
                   <button key={p.label} type="button" onClick={() => applyPreset(p)}
@@ -823,15 +821,15 @@ export default function Vedin() {
             {/* Interactive map — click or drag the pin to set the exact birth spot */}
             <div className="mt-4">
               <div className="mb-1.5 flex items-center justify-between">
-                <span className={labelCls}>{lang === 'mm' ? 'မြေပုံပေါ်တွင် အတိအကျ ရွေးရန်' : 'Fine-tune on the map'}</span>
-                <span className="inline-flex items-center gap-1 font-mono text-[10px] text-muted"><MousePointerClick size={11} /> {lang === 'mm' ? 'နှိပ်၍ (သို့) ဆွဲ၍ ရွှေ့ပါ' : 'Click or drag the pin'}</span>
+                <span className={labelCls}>{L('Fine-tune on the map', 'မြေပုံပေါ်တွင် အတိအကျ ရွေးရန်', '地図で微調整')}</span>
+                <span className="inline-flex items-center gap-1 font-mono text-[10px] text-muted"><MousePointerClick size={11} /> {L('Click or drag the pin', 'နှိပ်၍ (သို့) ဆွဲ၍ ရွှေ့ပါ', 'ピンをクリックまたはドラッグ')}</span>
               </div>
-              <Suspense fallback={<div className="flex h-64 w-full items-center justify-center rounded-xl border border-white/12 bg-white/[0.03] text-xs text-muted"><Loader2 size={16} className="mr-2 animate-spin" /> {lang === 'mm' ? 'မြေပုံ ဖွင့်နေသည်…' : 'Loading map…'}</div>}>
+              <Suspense fallback={<div className="flex h-64 w-full items-center justify-center rounded-xl border border-white/12 bg-white/[0.03] text-xs text-muted"><Loader2 size={16} className="mr-2 animate-spin" /> {L('Loading map…', 'မြေပုံ ဖွင့်နေသည်…', '地図を読み込み中…')}</div>}>
                 <BirthPlaceMap lat={Number(lat) || 0} lon={Number(lon) || 0} onPick={pickFromMap} />
               </Suspense>
               {placeConfirmed && (
                 <p className="mt-1.5 font-mono text-[10px] text-muted">
-                  {lang === 'mm' ? 'နေရာ' : 'Location'} — {(Number(lat) || 0).toFixed(3)}, {(Number(lon) || 0).toFixed(3)} · {tz}
+                  {L('Location', 'နေရာ', '位置')} — {(Number(lat) || 0).toFixed(3)}, {(Number(lon) || 0).toFixed(3)} · {tz}
                 </p>
               )}
             </div>
@@ -839,25 +837,23 @@ export default function Vedin() {
             <details open={advancedOpen} onToggle={(e) => setAdvancedOpen((e.target as HTMLDetailsElement).open)}
               className="mt-3 rounded-xl border border-white/12 bg-white/[0.02] p-3">
               <summary className="cursor-pointer select-none font-mono text-[11px] uppercase tracking-wider text-muted transition hover:text-fg">
-                {lang === 'mm' ? 'အဆင့်မြင့် ဆက်တင်များ' : 'Advanced settings'}
+                {L('Advanced settings', 'အဆင့်မြင့် ဆက်တင်များ', '詳細設定')}
               </summary>
               <p className="mt-2 font-mono text-[10px] leading-relaxed text-muted">
-                {lang === 'mm'
-                  ? 'မြို့ရွေးချယ်မှုမှ အလိုအလျောက် ရယူထားပါသည်။ လိုအပ်မှသာ ပြင်ပါ။'
-                  : 'Derived automatically from the city you picked — only change these if you know you need to.'}
+                {lang === 'ja' ? 'お選びいただいた都市から自動的に取得しています — 必要とわかっている場合のみ変更してください。' : lang === 'mm' ? 'မြို့ရွေးချယ်မှုမှ အလိုအလျောက် ရယူထားပါသည်။ လိုအပ်မှသာ ပြင်ပါ။' : 'Derived automatically from the city you picked — only change these if you know you need to.'}
               </p>
               <div className="mt-3 grid grid-cols-2 gap-3">
-              <label><span className={labelCls}>{lang === 'mm' ? 'လတ္တီတွဒ်' : 'Latitude'}</span>
+              <label><span className={labelCls}>{L('Latitude', 'လတ္တီတွဒ်', '緯度')}</span>
                 <input type="number" step="any" value={lat} onChange={(e) => setLat(e.target.value)} required className={field} /></label>
-              <label><span className={labelCls}>{lang === 'mm' ? 'လောင်ဂျီတွဒ်' : 'Longitude'}</span>
+              <label><span className={labelCls}>{L('Longitude', 'လောင်ဂျီတွဒ်', '経度')}</span>
                 <input type="number" step="any" value={lon} onChange={(e) => setLon(e.target.value)} required className={field} /></label>
             </div>
-            <label className="mt-3 block"><span className={labelCls}>{lang === 'mm' ? 'အချိန်ဇုန်' : 'Time zone'}</span>
+            <label className="mt-3 block"><span className={labelCls}>{L('Time zone', 'အချိန်ဇုန်', 'タイムゾーン')}</span>
               <select value={tz} onChange={(e) => setTz(e.target.value)} className={field}>
                 {[...new Set([tz, ...TZ_OPTIONS])].map((z) => <option key={z} value={z} className="text-black">{z}</option>)}
               </select>
             </label>
-            <label className="mt-3 block"><span className={labelCls}>{lang === 'mm' ? 'အယနန္သ (Ayanamsa)' : 'Ayanamsa'}</span>
+            <label className="mt-3 block"><span className={labelCls}>{L('Ayanamsa', 'အယနန္သ (Ayanamsa)', 'アヤナムシャ')}</span>
               <select value={ayanamsa} onChange={(e) => setAyanamsa(e.target.value)} className={field}>
                 <option value="lahiri" className="text-black">Lahiri (default)</option>
                 <option value="raman" className="text-black">Raman</option>
@@ -869,7 +865,7 @@ export default function Vedin() {
 
             <label className={`mt-4 flex items-start gap-2 rounded-xl border p-3 text-xs leading-relaxed transition ${consent ? 'border-jade/40 bg-jade/5 text-muted' : 'border-coral/40 bg-coral/5 text-fg/80'}`}>
               <input type="checkbox" checked={consent} onChange={(e) => setConsent(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-accent" />
-              <span><span className="text-coral">*</span> {lang === 'mm' ? 'အနာဂါတ်ဟောကိန်းများပိုမိုတိကျမှန်ကန်စွာ အထောက်အကူအတွက် ကျွန်ုပ်၏ မွေးဇာတာ အချက်အလက်ကို လုံခြုံစွာ သိမ်းဆည်းရန် သဘောတူပါသည်။' : "I consent to securely storing my birth details to assist the future astrologer's readings."}</span>
+              <span><span className="text-coral">*</span> {L("I consent to securely storing my birth details to assist the future astrologer's readings.", 'အနာဂါတ်ဟောကိန်းများပိုမိုတိကျမှန်ကန်စွာ အထောက်အကူအတွက် ကျွန်ုပ်၏ မွေးဇာတာ အချက်အလက်ကို လုံခြုံစွာ သိမ်းဆည်းရန် သဘောတူပါသည်။', '今後の鑑定に役立てるため、私の出生情報を安全に保存することに同意します。')}</span>
             </label>
 
             <button type="submit" disabled={loading || !canSubmit}
@@ -878,18 +874,18 @@ export default function Vedin() {
             </button>
             {!canSubmit && (
               <ul className="mt-2 space-y-1">
-                {!name.trim() && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{lang === 'mm' ? 'အမည် ဖြည့်သွင်းပါ။' : 'Please enter a name.'}</li>}
-                {!placeConfirmed && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{lang === 'mm' ? 'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ။' : 'Search and select your birth city from the list.'}</li>}
-                {!consent && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{lang === 'mm' ? 'အချက်အလက်သိမ်းဆည်းခွင့်ကို သဘောတူညီပေးပါ။' : 'Please agree to the data-storage consent.'}</li>}
+                {!name.trim() && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{L('Please enter a name.', 'အမည် ဖြည့်သွင်းပါ။', 'お名前をご入力ください。')}</li>}
+                {!placeConfirmed && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{L('Search and select your birth city from the list.', 'မွေးဖွားရာ မြို့/ဇာတိကို ရှာဖွေ၍ စာရင်းထဲမှ ရွေးချယ်ပါ။', '出生地の都市を検索し、リストから選択してください。')}</li>}
+                {!consent && <li className="flex items-start gap-1.5 font-mono text-[11px] leading-relaxed text-coral"><span>•</span>{L('Please agree to the data-storage consent.', 'အချက်အလက်သိမ်းဆည်းခွင့်ကို သဘောတူညီပေးပါ။', 'データ保存への同意をお願いします。')}</li>}
               </ul>
             )}
             </>)}
 
             {step === 2 && (<>
             <div className="grid grid-cols-2 gap-3">
-              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးသက္ကရာဇ်' : 'Date of birth'}</span>
+              <label><span className={labelCls}>{L('Date of birth', 'မွေးသက္ကရာဇ်', '生年月日')}</span>
                 <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required className={field} /></label>
-              <label><span className={labelCls}>{lang === 'mm' ? 'မွေးချိန် (၂၄ နာရီ)' : 'Time (24h)'}</span>
+              <label><span className={labelCls}>{L('Time (24h)', 'မွေးချိန် (၂၄ နာရီ)', '出生時刻（24時間制）')}</span>
                 <input type="time" value={time} onChange={(e) => setTime(e.target.value)} required disabled={timeUnknown}
                   className={`${field} ${timeUnknown ? 'cursor-not-allowed opacity-40' : ''}`} /></label>
             </div>
@@ -898,22 +894,20 @@ export default function Vedin() {
               <input type="checkbox" checked={timeUnknown} onChange={(e) => setTimeUnknownSafely(e.target.checked)}
                 className="mt-0.5 h-4 w-4 shrink-0 accent-accent" />
               <span className="text-muted">
-                {lang === 'mm' ? 'မွေးချိန် အတိအကျ မသိပါ' : "I don't know my exact birth time"}
+                {L("I don't know my exact birth time", 'မွေးချိန် အတိအကျ မသိပါ', '正確な出生時刻がわかりません')}
               </span>
             </label>
 
             {timeUnknown && (<>
               <div className="mt-2 flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/45 bg-amber-400/10 px-3 py-1 font-mono text-[11px] font-semibold text-amber-300">
-                  <Info size={12} /> {lang === 'mm' ? 'ယုံကြည်စိတ်ချမှု — စန်းအခြေခံ' : 'Confidence — Moon-based'}
+                  <Info size={12} /> {L('Confidence — Moon-based', 'ယုံကြည်စိတ်ချမှု — စန်းအခြေခံ', '信頼度 — 月中心')}
                 </span>
-                <span className="font-mono text-[10px] text-muted">{lang === 'mm' ? 'မွန်းတည့် ၁၂:၀၀ ဖြင့် တွက်မည်' : 'Cast for 12:00 noon'}</span>
+                <span className="font-mono text-[10px] text-muted">{L('Cast for 12:00 noon', 'မွန်းတည့် ၁၂:၀၀ ဖြင့် တွက်မည်', '正午12:00で作成')}</span>
               </div>
               <p className="mt-2 flex items-start gap-1.5 rounded-xl border border-accent/30 bg-accent/5 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">
                 <Info size={13} className="mt-0.5 shrink-0 text-accent-light" />
-                {lang === 'mm'
-                  ? 'လဂ်နှင့် အိမ်ခွဲများ ရွှေ့ပြောင်းသွားနိုင်သဖြင့် တိကျမည် မဟုတ်ပါ — စန်း (Chandra) အခြေခံ ဟောကိန်းကိုသာ အားကိုးပါ။'
-                  : 'The Ascendant and house cusps may shift, so they will not be reliable — rely on the Moon-based (Chandra) reading instead.'}
+                {lang === 'ja' ? 'ラグナ（アセンダント）とハウスの境界がずれる可能性があるため、信頼できません — 月（チャンドラ）を基準とした鑑定をご参照ください。' : lang === 'mm' ? 'လဂ်နှင့် အိမ်ခွဲများ ရွှေ့ပြောင်းသွားနိုင်သဖြင့် တိကျမည် မဟုတ်ပါ — စန်း (Chandra) အခြေခံ ဟောကိန်းကိုသာ အားကိုးပါ။' : 'The Ascendant and house cusps may shift, so they will not be reliable — rely on the Moon-based (Chandra) reading instead.'}
               </p>
             </>)}
 
@@ -933,13 +927,13 @@ export default function Vedin() {
               {step > 1 && (
                 <button type="button" onClick={() => setStep((s) => s - 1)}
                   className="inline-flex items-center gap-1.5 rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-muted transition hover:border-accent/40 hover:text-fg">
-                  <ChevronLeft size={15} /> {lang === 'mm' ? 'နောက်သို့' : 'Back'}
+                  <ChevronLeft size={15} /> {L('Back', 'နောက်သို့', '戻る')}
                 </button>
               )}
               {step < 3 && (
                 <button type="button" disabled={!!currentStepError} onClick={() => setStep((s) => s + 1)}
                   className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-xl bg-amber-600 shadow-md px-5 py-2.5 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
-                  {lang === 'mm' ? 'ဆက်လက်' : 'Continue'} <ChevronRight size={15} />
+                  {L('Continue', 'ဆက်လက်', '次へ')} <ChevronRight size={15} />
                 </button>
               )}
             </div>
@@ -957,7 +951,7 @@ export default function Vedin() {
                 <TopicExplainer topic={tab} lang={lang} onCast={scrollToForm} />
               ) : (
                 <div className="glass-card flex min-h-[300px] items-center justify-center p-8 text-center text-sm text-muted">
-              {lang === 'mm' ? 'မွေးသက္ကာရာဇ်နှင့်အချက်အလက်ထည့်၍ ဟောစာတမ်း၊ ဇာတာခွင်များ (D1/D9/D10/D7) ကြည့်ရှုပါ။' : 'Enter birth details to see the reading and the D1 / D9 / D10 / D7 charts.'}
+              {L('Enter birth details to see the reading and the D1 / D9 / D10 / D7 charts.', 'မွေးသက္ကာရာဇ်နှင့်အချက်အလက်ထည့်၍ ဟောစာတမ်း၊ ဇာတာခွင်များ (D1/D9/D10/D7) ကြည့်ရှုပါ။', '出生情報をご入力いただくと、鑑定と D1 / D9 / D10 / D7 のチャートをご覧いただけます。')}
                 </div>
               )}
             </div>
@@ -972,7 +966,7 @@ export default function Vedin() {
                 <h2 className="font-groovy text-lg text-fg">{place || t.portalTitle}</h2>
                 <button type="button" onClick={downloadPdf}
                   className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-4 py-2 text-xs font-semibold text-amber-50 transition hover:brightness-110">
-                  <Download size={14} /> {lang === 'mm' ? 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ ရယူရန်တောင်းဆိုပါ' : 'Download Full Natal Chart PDF'}
+                  <Download size={14} /> {L('Download Full Natal Chart PDF', 'မွေးဇာတာ ဟောစာတမ်း PDF အပြည့်အစုံ ရယူရန်တောင်းဆိုပါ', '出生図の詳細鑑定PDFをダウンロード')}
                 </button>
               </div>
               <ChartSummaryHero
@@ -1048,7 +1042,7 @@ export default function Vedin() {
 
                   {/* Seven-area overview: radar chart + score bars */}
                   <div className="glass-card p-5">
-                    <h3 className="mb-3 font-groovy text-lg text-fg">{lang === 'mm' ? 'ဘဝကဏ္ဍ ၇ ခု' : 'Seven Life Areas'}</h3>
+                    <h3 className="mb-3 font-groovy text-lg text-fg">{lang === 'ja' ? '人生の七領域' : lang === 'mm' ? 'ဘဝကဏ္ဍ ၇ ခု' : 'Seven Life Areas'}</h3>
                     <div className="grid gap-5 md:grid-cols-2 md:items-center">
                       <AreaRadar areas={reading.areas} />
                       <ul className="space-y-2.5">
@@ -1085,16 +1079,16 @@ export default function Vedin() {
                             {lp && (
                               <div className="mt-3 grid gap-2 sm:grid-cols-3">
                                 <div className="rounded-lg bg-white/[0.03] px-3 py-2">
-                                  <p className={labelCls}>{lang === 'mm' ? 'အိမ်ရှင်သခင်' : 'House lord'}</p>
+                                  <p className={labelCls}>{lang === 'ja' ? 'ハウスの支配星' : lang === 'mm' ? 'အိမ်ရှင်သခင်' : 'House lord'}</p>
                                   <p className="mt-0.5 text-sm text-fg/90">{planetName(lp.name, lang)} · {signLabel(lp.sign, lang)} <span className="text-muted">({lang === 'mm' ? `${lp.house} တန့်` : `H${lp.house}`})</span></p>
                                   {lp.dignity !== '-' && <p className="text-[11px] text-accent-light">{dignityLabel(lp.dignity, lang)}</p>}
                                 </div>
                                 <div className="rounded-lg bg-white/[0.03] px-3 py-2">
-                                  <p className={labelCls}>{lang === 'mm' ? 'D9 နဝင်း' : 'D9 Navamsa'}</p>
+                                  <p className={labelCls}>{lang === 'ja' ? 'D9 ナヴァムシャ' : lang === 'mm' ? 'D9 နဝင်း' : 'D9 Navamsa'}</p>
                                   <p className="mt-0.5 text-sm text-fg/90">{signLabel(lp.navamsaSign, lang)}</p>
                                 </div>
                                 <div className="rounded-lg bg-white/[0.03] px-3 py-2">
-                                  <p className={labelCls}>{lang === 'mm' ? 'D10 ဒသံသ' : 'D10 Dasamsa'}</p>
+                                  <p className={labelCls}>{lang === 'ja' ? 'D10 ダシャムシャ' : lang === 'mm' ? 'D10 ဒသံသ' : 'D10 Dasamsa'}</p>
                                   <p className="mt-0.5 text-sm text-fg/90">{signLabel(lp.vargas.D10, lang)}</p>
                                 </div>
                               </div>
@@ -1102,7 +1096,7 @@ export default function Vedin() {
 
                             {a.karakas.length > 0 && (
                               <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                                <span className={labelCls}>{lang === 'mm' ? 'ကာရက' : 'Karakas'}:</span>
+                                <span className={labelCls}>{lang === 'ja' ? 'カラカ' : lang === 'mm' ? 'ကာရက' : 'Karakas'}:</span>
                                 {a.karakas.map((k) => {
                                   const kp = findPlanet(data, k)
                                   return kp ? (
@@ -1116,7 +1110,7 @@ export default function Vedin() {
 
                             {cur && (
                               <div className={`mt-3 rounded-lg border px-3 py-2 text-xs leading-relaxed ${cur.tone === 'good' ? 'border-jade/40 bg-jade/10 text-jade' : cur.tone === 'warn' ? 'border-coral/40 bg-coral/10 text-coral' : 'border-white/10 bg-white/[0.03] text-muted'}`}>
-                                <span className="font-semibold">{lang === 'mm' ? 'လက်ရှိကာလ၏ သက်ရောက်မှုများ' : 'Current period'}: </span>{cur.text}
+                                <span className="font-semibold">{lang === 'ja' ? '現在の周期' : lang === 'mm' ? 'လက်ရှိကာလ၏ သက်ရောက်မှုများ' : 'Current period'}: </span>{cur.text}
                               </div>
                             )}
 
@@ -1127,7 +1121,7 @@ export default function Vedin() {
                             {needsRemedy && (
                               <button type="button" onClick={() => openRemedy(a.label)}
                                 className="no-print mt-3 inline-flex items-center gap-1.5 self-start rounded-full border border-coral/40 bg-coral/10 px-3 py-1.5 text-xs text-coral transition hover:bg-coral/20">
-                                <Sparkles size={12} /> {lang === 'mm' ? 'ဤကဏ္ဍအတွက် ယတြာ တောင်းယူရန်' : 'Request a remedy for this area'}
+                                <Sparkles size={12} /> {lang === 'ja' ? 'この領域の対策をリクエスト' : lang === 'mm' ? 'ဤကဏ္ဍအတွက် ယတြာ တောင်းယူရန်' : 'Request a remedy for this area'}
                               </button>
                             )}
                           </div>
@@ -1138,7 +1132,7 @@ export default function Vedin() {
 
                   {data.yogas.length > 0 && (
                     <div className="glass-card p-5">
-                      <h3 className="mb-3 font-groovy text-lg text-fg">{lang === 'mm' ? 'ဇာတာတွင် တွေ့ရတတ်သော ယောဂများ' : 'Yogas in your chart'}</h3>
+                      <h3 className="mb-3 font-groovy text-lg text-fg">{lang === 'ja' ? 'あなたのチャートのヨーガ' : lang === 'mm' ? 'ဇာတာတွင် တွေ့ရတတ်သော ယောဂများ' : 'Yogas in your chart'}</h3>
                       <ul className="space-y-2.5">
                         {data.yogas.map((y) => (
                           <li key={y.name} className="rounded-xl border border-white/8 bg-white/[0.03] p-3">
@@ -1153,8 +1147,8 @@ export default function Vedin() {
 
                   {/* Educational: what the yogas mean (incl. Neecha Bhanga Raja Yoga) */}
                   <div className="glass-card p-5">
-                    <h3 className="mb-1 font-groovy text-base text-fg">{lang === 'mm' ? 'ယောဂများ အကြောင်း အသေးစိတ်ဖတ်ရှုရန်' : 'About Yogas'}</h3>
-                    <p className="mb-3 text-xs leading-relaxed text-muted">{lang === 'mm' ? 'ယောဂဆိုသည်မှာ ဂြိုဟ်များ၏ တည်နေရာ/ဆက်စပ်မှုကြောင့် ဖြစ်ပေါ်လာသော အထူးအကျိုးသက်ရောက်မှုများဖြစ်သည်။ အဓိကယောဂများကို အောက်တွင် ရှင်းပြပေးထားသည်။' : 'A yoga is a special result formed by particular planetary placements or links. The main yogas are explained below.'}</p>
+                    <h3 className="mb-1 font-groovy text-base text-fg">{lang === 'ja' ? 'ヨーガについて' : lang === 'mm' ? 'ယောဂများ အကြောင်း အသေးစိတ်ဖတ်ရှုရန်' : 'About Yogas'}</h3>
+                    <p className="mb-3 text-xs leading-relaxed text-muted">{lang === 'ja' ? 'ヨーガとは、特定の惑星の配置や結びつきによって生じる特別な効果です。主なヨーガを以下に説明します。' : lang === 'mm' ? 'ယောဂဆိုသည်မှာ ဂြိုဟ်များ၏ တည်နေရာ/ဆက်စပ်မှုကြောင့် ဖြစ်ပေါ်လာသော အထူးအကျိုးသက်ရောက်မှုများဖြစ်သည်။ အဓိကယောဂများကို အောက်တွင် ရှင်းပြပေးထားသည်။' : 'A yoga is a special result formed by particular planetary placements or links. The main yogas are explained below.'}</p>
                     <div className="space-y-1.5">
                       {Object.entries(YOGA_INFO).map(([name, info]) => (
                         <details key={name} className="group rounded-xl border border-white/10 bg-white/[0.02] px-4 py-2.5 transition hover:border-accent/30 open:border-accent/30 open:bg-accent/[0.04]">
@@ -1210,7 +1204,7 @@ export default function Vedin() {
                     {data.pratyantardashas && data.pratyantardashas.length > 0 && (
                       <div className="glass-card p-5">
                         <div className="flex items-center justify-between">
-                          <h3 className="font-groovy text-lg text-fg">{lang === 'mm' ? 'လက်ရှိ ပစ္စန္တရဒသာ' : 'Current Pratyantar'}</h3>
+                          <h3 className="font-groovy text-lg text-fg">{lang === 'ja' ? '現在のプラティヤンタル' : lang === 'mm' ? 'လက်ရှိ ပစ္စန္တရဒသာ' : 'Current Pratyantar'}</h3>
                           {prat && <span className="rounded-full bg-accent/15 px-3 py-1 text-sm font-semibold text-accent-light">{planetName(bhukti?.lord ?? reading.lord, lang)} – {planetName(prat.lord, lang)}</span>}
                         </div>
                         <ol className="mt-3 space-y-1.5">
@@ -1237,9 +1231,9 @@ export default function Vedin() {
                     <h3 className="mb-1 font-groovy text-lg text-fg">{t.timelineTitle}</h3>
                     <p className="text-sm leading-relaxed text-muted">{t.timelineDesc}</p>
                     <div className="mt-3 flex flex-wrap gap-2 font-mono text-[10px]">
-                      <span className="rounded bg-jade/15 px-1.5 py-0.5 text-jade">{lang === 'mm' ? 'ကောင်း' : 'benefic'}</span>
-                      <span className="rounded bg-coral/15 px-1.5 py-0.5 text-coral">{lang === 'mm' ? 'သတိ / သာဓေသတီ' : 'caution / Sade Sati'}</span>
-                      <span className="text-muted">{lang === 'mm' ? '· ဂြိုဟ်သွားအိမ်ကို စန်းမှ ရေတွက်သော်' : '· transit house counted from the Moon'}</span>
+                      <span className="rounded bg-jade/15 px-1.5 py-0.5 text-jade">{lang === 'ja' ? '吉' : lang === 'mm' ? 'ကောင်း' : 'benefic'}</span>
+                      <span className="rounded bg-coral/15 px-1.5 py-0.5 text-coral">{lang === 'ja' ? '注意 / サデサティ' : lang === 'mm' ? 'သတိ / သာဓေသတီ' : 'caution / Sade Sati'}</span>
+                      <span className="text-muted">{lang === 'ja' ? '· 月から数えたトランジットハウス' : lang === 'mm' ? '· ဂြိုဟ်သွားအိမ်ကို စန်းမှ ရေတွက်သော်' : '· transit house counted from the Moon'}</span>
                     </div>
                   </div>
                   <div className="glass-card p-5">
@@ -1328,7 +1322,7 @@ export default function Vedin() {
               {(tab === 'vargas' || printAll) && (
                 <div className="space-y-4">
                   <div className="no-print flex flex-wrap items-center gap-2">
-                    <span className={labelCls}>{lang === 'mm' ? 'ဇာတာခွဲများကို ရွေးချယ်ရန်' : 'Divisional chart'}</span>
+                    <span className={labelCls}>{lang === 'ja' ? '分割図' : lang === 'mm' ? 'ဇာတာခွဲများကို ရွေးချယ်ရန်' : 'Divisional chart'}</span>
                     <select value={vargaN} onChange={(e) => setVargaN(Number(e.target.value))}
                       className="rounded-xl border border-white/15 bg-white/5 px-3 py-2 text-sm text-fg outline-none focus:border-accent/50">
                       {VARGAS.map((v) => <option key={v.n} value={v.n} className="text-black">{v.name}</option>)}
@@ -1340,7 +1334,7 @@ export default function Vedin() {
 
                   {/* D1–D60 educational accordion */}
                   <div className="glass-card p-5">
-                    <h3 className="mb-3 font-groovy text-base text-fg">{lang === 'mm' ? 'ဇာတာခွဲများ၏ အဓိပ္ပာယ်များ (D1–D60)' : 'What each Divisional Chart means (D1–D60)'}</h3>
+                    <h3 className="mb-3 font-groovy text-base text-fg">{lang === 'ja' ? '各分割図の意味（D1–D60）' : lang === 'mm' ? 'ဇာတာခွဲများ၏ အဓိပ္ပာယ်များ (D1–D60)' : 'What each Divisional Chart means (D1–D60)'}</h3>
                     <div className="space-y-1.5">
                       {VARGA_GUIDE.map((v) => (
                         <details key={v.code} className="group rounded-xl border border-white/10 bg-white/[0.02] px-4 py-2.5 transition hover:border-accent/30 open:border-accent/30 open:bg-accent/[0.04]">
@@ -1385,16 +1379,14 @@ export default function Vedin() {
           Sidereal · Lahiri ayanamsa (1955) · Whole-Sign houses · Mean node · Swiss Ephemeris
         </p>
         <p className="mx-auto mt-2 max-w-2xl text-xs leading-relaxed text-muted">
-          {lang === 'mm'
-            ? 'အသိပေးချက် : ဇာတာများကို ဂန္ထဝင် ဇျောတိသကျမ်းများ၏ နည်းစနစ်များအတိုင်း တိကျစွာ တွက်ချက်ထားပါသည်။ သို့သော် ဗေဒင်ပညာသည် သိပ္ပံနည်းကျ အတည်ပြုထားခြင်း မရှိသဖြင့် — ဆေးဘက်ဆိုင်ရာ၊ ဥပဒေရေးရာ (သို့မဟုတ်) ငွေကြေးဆိုင်ရာ ကိစ္စရပ်များတွင် မျက်စိမှိတ်ယုံကြည်၍ တထစ်ချ ဆုံးဖြတ်ချက် မချသင့်ပါ။ အရေးကြီးသော ကိစ္စရပ်များအတွက် သက်ဆိုင်ရာ ကျွမ်းကျင်ပညာရှင်များနှင့်သာ ဆွေးနွေးတိုင်ပင်ပါ။ ဤတွက်ချက်မှု ရလဒ်များသည် မိမိကိုယ်ကို ပြန်လည်သုံးသပ်ရန်၊ ယဉ်ကျေးမှုအမွေအနှစ်အား လေ့လာရန်နှင့် ပုဂ္ဂိုလ်ရေးစိတ်ဝင်စားမှုအတွက်သာ ရည်ရွယ်တင်ဆက်ခြင်း ဖြစ်ပါသည်။'
-            : 'Disclaimer: These astrological charts are precisely calculated according to the traditional principles of classical Vedic astrology. However, astrology is not a scientifically validated discipline. Therefore, these readings should not be used as a substitute for professional medical, legal, or financial advice. Please consult relevant qualified professionals for major life decisions. The results presented here are strictly for self-reflection, cultural appreciation, and personal interest.'}
+          {lang === 'ja' ? '免責事項：これらの占星術チャートは、古典的なインド占星術の伝統的原則に従って正確に計算されています。ただし、占星術は科学的に検証された学問ではありません。したがって、これらの鑑定を専門的な医療・法律・財務上の助言の代わりとして用いないでください。人生の重要な決定については、しかるべき専門家にご相談ください。ここに示される結果は、あくまで自己省察・文化的理解・個人的関心のためのものです。' : lang === 'mm' ? 'အသိပေးချက် : ဇာတာများကို ဂန္ထဝင် ဇျောတိသကျမ်းများ၏ နည်းစနစ်များအတိုင်း တိကျစွာ တွက်ချက်ထားပါသည်။ သို့သော် ဗေဒင်ပညာသည် သိပ္ပံနည်းကျ အတည်ပြုထားခြင်း မရှိသဖြင့် — ဆေးဘက်ဆိုင်ရာ၊ ဥပဒေရေးရာ (သို့မဟုတ်) ငွေကြေးဆိုင်ရာ ကိစ္စရပ်များတွင် မျက်စိမှိတ်ယုံကြည်၍ တထစ်ချ ဆုံးဖြတ်ချက် မချသင့်ပါ။ အရေးကြီးသော ကိစ္စရပ်များအတွက် သက်ဆိုင်ရာ ကျွမ်းကျင်ပညာရှင်များနှင့်သာ ဆွေးနွေးတိုင်ပင်ပါ။ ဤတွက်ချက်မှု ရလဒ်များသည် မိမိကိုယ်ကို ပြန်လည်သုံးသပ်ရန်၊ ယဉ်ကျေးမှုအမွေအနှစ်အား လေ့လာရန်နှင့် ပုဂ္ဂိုလ်ရေးစိတ်ဝင်စားမှုအတွက်သာ ရည်ရွယ်တင်ဆက်ခြင်း ဖြစ်ပါသည်။' : 'Disclaimer: These astrological charts are precisely calculated according to the traditional principles of classical Vedic astrology. However, astrology is not a scientifically validated discipline. Therefore, these readings should not be used as a substitute for professional medical, legal, or financial advice. Please consult relevant qualified professionals for major life decisions. The results presented here are strictly for self-reflection, cultural appreciation, and personal interest.'}
         </p>
         <div className="mt-3 flex flex-wrap justify-center gap-2">
           <Link to="/algorithms" className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 font-mono text-[11px] text-accent-light transition hover:bg-accent/20">
-            <Star size={12} /> {lang === 'mm' ? 'algorithm များ (CS) →' : 'The algorithms (CS) →'}
+            <Star size={12} /> {lang === 'ja' ? 'アルゴリズム（CS）→' : lang === 'mm' ? 'algorithm များ (CS) →' : 'The algorithms (CS) →'}
           </Link>
           <Link to="/research" className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 font-mono text-[11px] text-accent-light transition hover:bg-accent/20">
-            <Star size={12} /> {lang === 'mm' ? 'တိုင်းတာနိုင်သော သုတေသနဆိုင်ရာ လုပ်ထုံးလုပ်နည်းများ →' : 'Falsifiable research protocol →'}
+            <Star size={12} /> {lang === 'ja' ? '反証可能な研究プロトコル →' : lang === 'mm' ? 'တိုင်းတာနိုင်သော သုတေသနဆိုင်ရာ လုပ်ထုံးလုပ်နည်းများ →' : 'Falsifiable research protocol →'}
           </Link>
         </div>
       </footer>
@@ -1426,21 +1418,21 @@ export default function Vedin() {
                 <CheckCircle2 size={34} className="text-emerald-500" />
               </span>
               <h3 className="mt-4 font-groovy text-xl text-fg sm:text-2xl">
-                {lang === 'mm' ? 'အောင်မြင်ပါသည်။' : 'Success'}
+                {lang === 'ja' ? '成功' : lang === 'mm' ? 'အောင်မြင်ပါသည်။' : 'Success'}
               </h3>
               <p className="mt-2 text-[15px] leading-relaxed text-fg/90">
-                {lang === 'mm'
-                  ? 'ဆရာမှ သင့်ဇာတာအား အသေးစိတ် စစ်ဆေးအတည်ပြုပြီးဖြစ်ပါသည်။'
-                  : 'The Master has verified and approved your reading.'}
+                {lang === 'ja' ? '占星術師があなたの鑑定を確認・承認しました。' : lang === 'mm' ? 'ဆရာမှ သင့်ဇာတာအား အသေးစိတ် စစ်ဆေးအတည်ပြုပြီးဖြစ်ပါသည်။' : 'The Master has verified and approved your reading.'}
               </p>
               <p className="mt-3 rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-sm leading-relaxed text-amber-800 dark:text-amber-100">
-                {lang === 'mm'
+                {lang === 'ja'
+                  ? '下の「詳細な鑑定」タブをクリックしてご覧ください。'
+                  : lang === 'mm'
                   ? "အောက်ပါ 'အသေးစိတ် ဟောစာတမ်း' ခလုတ်ကို နှိပ်၍ ဝင်ရောက်ဖတ်ရှုနိုင်ပါပြီ။"
                   : "Please click the 'Detailed Reading' tab below to view it."}
               </p>
               <button type="button" onClick={() => { setTab('ai'); reading$.dismissApprovedModal() }}
                 className="mt-5 inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-400 px-6 py-2.5 text-sm font-bold text-amber-950 shadow-lg shadow-amber-500/40 transition hover:brightness-110">
-                <ScrollText size={16} /> {lang === 'mm' ? 'ဆက်လက်ရန်' : 'Close'}
+                <ScrollText size={16} /> {lang === 'ja' ? '閉じる' : lang === 'mm' ? 'ဆက်လက်ရန်' : 'Close'}
               </button>
             </div>
           </div>

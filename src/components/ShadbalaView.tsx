@@ -30,9 +30,11 @@ function ShadbalaView({ data, lang }: { data: BirthChartData; lang: Lang }) {
   return (
     <div className="space-y-5">
       <div className="glass-card p-5">
-        <h3 className="mb-1 font-groovy text-lg text-fg">{lang === 'mm' ? 'ဆဒ္ဗလ (Shadbala)' : 'Shadbala — Six Strengths'}</h3>
+        <h3 className="mb-1 font-groovy text-lg text-fg">{lang === 'ja' ? 'シャドバラ — 六種の強さ' : lang === 'mm' ? 'ဆဒ္ဗလ (Shadbala)' : 'Shadbala — Six Strengths'}</h3>
         <p className="text-sm leading-relaxed text-muted">
-          {lang === 'mm'
+          {lang === 'ja'
+            ? '各惑星の六種の強さ（ヴィルパ）。合計ルパ（Rupas）が必要最低値以上であれば、その惑星は十分に強いといえます（✓）。60ヴィルパ = 1ルパ。'
+            : lang === 'mm'
             ? 'ဂြိုဟ်တစ်လုံးချင်း၏ အား ၆ မျိုး (ဗီရုပ)။ စုစုပေါင်း ရူပ (Rupas) ≥ လိုအပ်သောပမာဏ ဆိုလျှင် ဂြိုဟ်အားလုံလောက် (✓)။'
             : "Each planet's six sources of strength (virupas). If total Rupas ≥ the required minimum, the planet is strong enough (✓). 60 virupas = 1 rupa."}
         </p>
@@ -42,10 +44,10 @@ function ShadbalaView({ data, lang }: { data: BirthChartData; lang: Lang }) {
         <table className="w-full min-w-[720px] border-collapse text-center text-xs">
           <thead className="font-mono text-[10px] uppercase tracking-wider text-muted">
             <tr>
-              <th className="px-3 py-2.5 text-left">{lang === 'mm' ? 'ဂြိုဟ်' : 'Planet'}</th>
+              <th className="px-3 py-2.5 text-left">{lang === 'ja' ? '惑星' : lang === 'mm' ? 'ဂြိုဟ်' : 'Planet'}</th>
               {COLS.map((c) => <th key={c.key} className="px-2 py-2.5">{lang === 'mm' ? c.mm : c.en}</th>)}
-              <th className="px-2 py-2.5">{lang === 'mm' ? 'စုစုပေါင်း' : 'Total'}</th>
-              <th className="px-2 py-2.5">{lang === 'mm' ? 'လိုအပ်' : 'Req'}</th>
+              <th className="px-2 py-2.5">{lang === 'ja' ? '合計' : lang === 'mm' ? 'စုစုပေါင်း' : 'Total'}</th>
+              <th className="px-2 py-2.5">{lang === 'ja' ? '必要' : lang === 'mm' ? 'လိုအပ်' : 'Req'}</th>
               <th className="px-2 py-2.5"></th>
             </tr>
           </thead>

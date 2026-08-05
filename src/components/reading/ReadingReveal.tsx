@@ -62,7 +62,7 @@ const ReadingReveal = forwardRef<HTMLDivElement, Props>(function ReadingReveal(
       {active && (
         <button type="button" onClick={skip}
           className="mt-2 inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-muted transition hover:text-fg no-print">
-          <FastForward size={12} /> {lang === 'mm' ? 'အားလုံး ချက်ချင်း ပြရန်' : 'Show all'}
+          <FastForward size={12} /> {lang === 'ja' ? 'すべて表示' : lang === 'mm' ? 'အားလုံး ချက်ချင်း ပြရန်' : 'Show all'}
         </button>
       )}
     </div>

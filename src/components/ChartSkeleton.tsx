@@ -12,7 +12,7 @@ const shimmer = 'motion-safe:animate-pulse rounded-lg bg-fg/[0.07]'
 export default function ChartSkeleton({ lang }: { lang: Lang }) {
   return (
     <div className="glass-card p-5 no-print sm:p-6" role="status" aria-live="polite">
-      <span className="sr-only">{lang === 'mm' ? 'ဇာတာ တွက်ချက်နေပါသည်' : 'Casting your chart'}</span>
+      <span className="sr-only">{lang === 'ja' ? 'ホロスコープを作成中' : lang === 'mm' ? 'ဇာတာ တွက်ချက်နေပါသည်' : 'Casting your chart'}</span>
 
       {/* four summary tiles mirroring ChartSummaryHero */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">

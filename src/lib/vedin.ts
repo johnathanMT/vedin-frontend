@@ -7,6 +7,11 @@ import type { BirthChartData, DashaPeriod, Finding, TransitNote } from '../types
 
 export type Lang = 'en' | 'mm' | 'ja'
 
+/** Trilingual picker factory. `const L = tri(lang)` then `L(en, mm, ja)`.
+ *  Keeps the many inline UI strings readable while covering all three locales. */
+export const tri = (lang: Lang) => (en: string, mm: string, ja: string) =>
+  lang === 'ja' ? ja : lang === 'mm' ? mm : en
+
 // ── Divisional-chart sign (mirror of AstrologyService.VargaSign) ──────────────
 // Lets the frontend compute the Ascendant's varga sign for any Dn chart.
 export function vargaSign(lon: number, varga: number): number {

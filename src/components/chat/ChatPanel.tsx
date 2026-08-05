@@ -27,25 +27,25 @@ const ChatPanel = forwardRef<HTMLDivElement, Props>(function ChatPanel(
     <div ref={remedyRef} className="no-print glass-card border border-amber-400/25 p-6">
       <h3 className="flex items-center gap-2 font-groovy text-lg text-fg">
         <Sparkles size={16} className="text-amber-500 dark:text-amber-300" />
-        {lang === 'mm' ? 'ယတြာ အစီအရင်နှင့် အသေးစိတ်မေးမြန်းရန် — ဆရာဘုန်းမင်းသိုက်ဒင်ထံ တိုက်ရိုက် ဆက်သွယ်ရန်' : 'Remedy (Yatra) & Consultation — chat with Saya Phone Myint Thaik Din'}
+        {lang === 'ja' ? '対策（ヤントラ）とご相談 — 占星術師とチャット' : lang === 'mm' ? 'ယတြာ အစီအရင်နှင့် အသေးစိတ်မေးမြန်းရန် — ဆရာဘုန်းမင်းသိုက်ဒင်ထံ တိုက်ရိုက် ဆက်သွယ်ရန်' : 'Remedy (Yatra) & Consultation — chat with Saya Phone Myint Thaik Din'}
       </h3>
       <p className="mt-1 text-sm leading-relaxed text-muted">
-        {lang === 'mm' ? 'ဆရာနှင့် တိုက်ရိုက် စကားပြောနိုင်ပါသည်။ သင့် မေးခွန်းများနှင့် ယတြာ တောင်းဆိုမှုများကို အောက်တွင် ရိုက်ထည့်ပါ။' : 'Chat directly with the Sayar. Type your questions and remedy requests below.'}
+        {lang === 'ja' ? '占星術師と直接チャットできます。下にご質問や対策のご依頼をご入力ください。' : lang === 'mm' ? 'ဆရာနှင့် တိုက်ရိုက် စကားပြောနိုင်ပါသည်။ သင့် မေးခွန်းများနှင့် ယတြာ တောင်းဆိုမှုများကို အောက်တွင် ရိုက်ထည့်ပါ။' : 'Chat directly with the Sayar. Type your questions and remedy requests below.'}
       </p>
 
       {!token ? (
         <div className="mt-4 flex flex-col items-start gap-3 rounded-xl border border-accent/30 bg-accent/10 px-5 py-4">
-          <p className="text-sm text-accent-light">{lang === 'mm' ? 'ဆရာနှင့် စကားပြောရန် အကောင့်ဝင်ပါ။' : 'Log in to chat with the Sayar.'}</p>
+          <p className="text-sm text-accent-light">{lang === 'ja' ? '占星術師とチャットするにはログインしてください。' : lang === 'mm' ? 'ဆရာနှင့် စကားပြောရန် အကောင့်ဝင်ပါ။' : 'Log in to chat with the Sayar.'}</p>
           <button type="button" onClick={() => onOpenAuth('login')}
             className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-4 py-2 text-sm font-semibold text-amber-50 transition hover:brightness-110">
-            <Lock size={15} /> {lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}
+            <Lock size={15} /> {lang === 'ja' ? 'ログイン' : lang === 'mm' ? 'အကောင့်ဝင်ရန်' : 'Log In'}
           </button>
         </div>
       ) : (
         <div className="mt-4">
           <div className="flex h-80 flex-col gap-2.5 overflow-y-auto rounded-2xl border border-fg/10 bg-fg/[0.03] p-4">
             {messages.length === 0 ? (
-              <p className="m-auto max-w-xs text-center text-sm text-muted">{lang === 'mm' ? 'စကားပြောဆိုမှု မရှိသေးပါ — အောက်တွင် စတင်မေးမြန်းပါ။' : 'No messages yet — start the conversation below.'}</p>
+              <p className="m-auto max-w-xs text-center text-sm text-muted">{lang === 'ja' ? 'まだメッセージはありません — 下から会話を始めましょう。' : lang === 'mm' ? 'စကားပြောဆိုမှု မရှိသေးပါ — အောက်တွင် စတင်မေးမြန်းပါ။' : 'No messages yet — start the conversation below.'}</p>
             ) : messages.map((m) => {
               const mine = m.senderRole === 'Customer'
               return (
@@ -65,16 +65,16 @@ const ChatPanel = forwardRef<HTMLDivElement, Props>(function ChatPanel(
           <div className="mt-3 flex items-end gap-2">
             <textarea value={input} onChange={(e) => setInput(e.target.value)} rows={2}
               onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend() } }}
-              placeholder={lang === 'mm' ? 'မေးခွန်း ရိုက်ထည့်ပါ… (Enter = ပို့)' : 'Type your question… (Enter to send)'}
+              placeholder={lang === 'ja' ? 'ご質問をご入力ください…（Enterで送信）' : lang === 'mm' ? 'မေးခွန်း ရိုက်ထည့်ပါ… (Enter = ပို့)' : 'Type your question… (Enter to send)'}
               className={`${field} flex-1 resize-none`} />
             <button type="button" onClick={onSend} disabled={busy || !input.trim()}
               className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-amber-600 shadow-md px-4 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60">
-              {busy ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />} {lang === 'mm' ? 'ပို့မည်' : 'Send'}
+              {busy ? <Loader2 size={15} className="animate-spin" /> : <Send size={15} />} {lang === 'ja' ? '送信' : lang === 'mm' ? 'ပို့မည်' : 'Send'}
             </button>
           </div>
           <p className="mt-2 flex items-center gap-1.5 font-mono text-[10px] text-muted">
             <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
-            {lang === 'mm' ? 'အလိုအလျောက် အသစ်ပြန်ဆွဲနေသည်' : 'Auto-updating live'}
+            {lang === 'ja' ? '自動更新中' : lang === 'mm' ? 'အလိုအလျောက် အသစ်ပြန်ဆွဲနေသည်' : 'Auto-updating live'}
           </p>
         </div>
       )}

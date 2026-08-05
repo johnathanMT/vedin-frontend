@@ -2,7 +2,7 @@ import { memo } from 'react'
 import { Sunrise, Moon, Timer, CalendarDays, AlertTriangle } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { Appear } from './motion/Reveal'
-import { signLabel, planetName, toMmDigits, findPlanet, type Lang, type Naynan } from '../lib/vedin'
+import { signLabel, planetName, toMmDigits, findPlanet, tri, type Lang, type Naynan } from '../lib/vedin'
 import type { BirthChartData } from '../types/astrology'
 
 /**
@@ -35,32 +35,33 @@ function ChartSummaryHero({
   timeUnknown?: boolean
 }) {
   const mm = lang === 'mm'
+  const L = tri(lang)
   const moon = findPlanet(data, 'Moon')
 
   const stats: Stat[] = [
     {
       icon: Sunrise,
-      label: mm ? 'လဂ်' : 'Lagna',
+      label: L('Lagna', 'လဂ်', 'ラグナ'),
       value: signLabel(data.ascendant.sign, lang),
       note: `${Math.floor(data.ascendant.degreeInSign)}° · ${data.ascendant.nakshatraName}`,
       tone: 'accent',
     },
     {
       icon: Moon,
-      label: mm ? 'စန်းရာသီ' : 'Moon sign',
+      label: L('Moon sign', 'စန်းရာသီ', '月星座'),
       value: moon ? signLabel(moon.sign, lang) : '—',
       note: moon ? `${Math.floor(moon.degreeInSign)}° · ${moon.nakshatraName}` : undefined,
       tone: 'jade',
     },
     {
       icon: Timer,
-      label: mm ? 'လက်ရှိ မဟာဒသာ' : 'Current Mahadasha',
+      label: L('Current Mahadasha', 'လက်ရှိ မဟာဒသာ', '現在のマハーダシャー'),
       value: mahadashaLord ? planetName(mahadashaLord, lang) : '—',
       tone: 'coral',
     },
     {
       icon: CalendarDays,
-      label: mm ? 'နေ့နံ' : 'Nay Nan',
+      label: L('Nay Nan', 'နေ့နံ', '誕生曜日'),
       value: naynan ? (mm ? naynan.mmDay : naynan.enDay) : '—',
       note: naynan ? (mm ? `နံ ${toMmDigits(naynan.num)} · ${planetName(naynan.planet, lang)}` : `No. ${naynan.num} · ${naynan.planet}`) : undefined,
       tone: 'accent',
@@ -76,7 +77,7 @@ function ChartSummaryHero({
       <div className="relative">
         {name && (
           <p className="font-mono text-[11px] uppercase tracking-wider text-muted">
-            {mm ? 'ဟောကိန်းအတွက်' : 'Reading for'} · <span className="text-fg/80">{name}</span>
+            {L('Reading for', 'ဟောကိန်းအတွက်', '鑑定対象')} · <span className="text-fg/80">{name}</span>
           </p>
         )}
 

@@ -100,7 +100,7 @@ export default function TabBar({ lang, tabs, tab, onTab, chartStyle, onChartStyl
             {(['diamond', 'grid'] as ChartStyle[]).map((s) => (
               <button key={s} type="button" onClick={() => onChartStyle(s)}
                 className={`rounded-full px-2.5 py-1 font-mono text-[11px] transition ${chartStyle === s ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>
-                {s === 'diamond' ? (lang === 'mm' ? 'စိန်ပုံစံ' : 'Diamond') : (lang === 'mm' ? 'ဇယားကွက်ပုံစံ' : 'Grid')}
+                {s === 'diamond' ? (lang === 'ja' ? 'ダイヤ型' : lang === 'mm' ? 'စိန်ပုံစံ' : 'Diamond') : (lang === 'ja' ? 'グリッド' : lang === 'mm' ? 'ဇယားကွက်ပုံစံ' : 'Grid')}
               </button>
             ))}
           </div>
