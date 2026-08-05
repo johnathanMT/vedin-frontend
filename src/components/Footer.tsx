@@ -9,9 +9,9 @@ import useLang from '../hooks/useLang'
  * Vedin (#ashtaka / #shadbala / #account).
  */
 const linkCls =
-  'text-slate-700 dark:text-neutral-300 hover:text-amber-700 dark:hover:text-amber-400 transition-colors'
+  'font-medium text-slate-900 dark:text-neutral-100 hover:text-amber-700 dark:hover:text-amber-400 transition-colors'
 const headingCls =
-  'mb-3 font-mono text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-500 dark:text-neutral-500'
+  'mb-3 font-mono text-xs font-semibold uppercase tracking-[0.22em] text-slate-700 dark:text-neutral-300'
 
 export default function Footer() {
   const { lang } = useLang()
@@ -19,7 +19,7 @@ export default function Footer() {
   const year = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-amber-600/25 dark:border-amber-500/20 bg-slate-50 dark:bg-[#0a0a0a]">
+    <footer className="antialiased border-t border-amber-600 dark:border-amber-500/60 bg-slate-50 dark:bg-[#0a0a0a]">
       <div className="mx-auto max-w-6xl px-6 py-12">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {/* Brand & tagline */}
@@ -27,7 +27,7 @@ export default function Footer() {
             <span className="bg-gradient-to-b from-amber-600 to-amber-800 bg-clip-text font-groovy text-2xl font-bold tracking-wide text-transparent dark:from-amber-300 dark:to-amber-500">
               Vedin
             </span>
-            <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-600 dark:text-neutral-400">
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-slate-700 dark:text-neutral-300">
               {t(
                 'Timeless Vedic wisdom, decoded for the modern era.',
                 'ခေတ်သစ်အတွက် ပြန်လည်ဖော်ထုတ်ထားသော ထာဝရ ဗေဒင်ပညာ။',
@@ -61,14 +61,14 @@ export default function Footer() {
       {/* Disclaimer & copyright */}
       <div className="border-t border-slate-200 dark:border-neutral-800">
         <div className="mx-auto max-w-6xl px-6 py-6">
-          <p className="text-xs leading-relaxed text-slate-600 dark:text-neutral-400">
+          <p className="text-sm leading-relaxed text-slate-700 dark:text-neutral-300">
             {t(
               'Disclaimer: Astrological readings are for entertainment and spiritual guidance purposes only and should not replace professional medical, legal, or financial advice.',
               'အသိပေးချက် — ဗေဒင်ဟောစာတမ်းများသည် ဖျော်ဖြေရေးနှင့် စိတ်ဓာတ်ရေးရာ လမ်းညွှန်မှုအတွက်သာ ဖြစ်ပြီး ကျွမ်းကျင်သော ဆေးဘက်ဆိုင်ရာ၊ ဥပဒေရေးရာ (သို့) ငွေကြေးဆိုင်ရာ အကြံဉာဏ်များကို အစားထိုးခြင်း မပြုသင့်ပါ။',
               '免責事項 — 占星術の鑑定は娯楽および精神的な指針を目的としたものであり、専門的な医療・法律・財務上の助言に代わるものではありません。',
             )}
           </p>
-          <p className="mt-3 text-xs font-medium text-slate-600 dark:text-neutral-400">
+          <p className="mt-3 text-sm font-medium text-slate-900 dark:text-neutral-100">
             © {year} Myo Thant Naing. {t('All rights reserved.', 'မူပိုင်ခွင့် အားလုံး လက်ဝယ်ရှိသည်။', '無断転載を禁じます。')}
           </p>
         </div>
