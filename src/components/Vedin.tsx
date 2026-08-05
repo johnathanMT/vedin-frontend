@@ -22,6 +22,7 @@ import TabBar, { type TabDef } from './TabBar'
 import ChartSummaryHero from './ChartSummaryHero'
 import ChartSkeleton from './ChartSkeleton'
 import WizardProgress from './wizard/WizardProgress'
+import TopicExplainer from './TopicExplainer'
 // Leaflet (~150 kB + CSS) is pulled in only when the Birth-place step renders.
 const BirthPlaceMap = lazy(() => import('./BirthPlaceMap'))
 
@@ -146,6 +147,10 @@ export default function Vedin() {
       document.getElementById('vedin-account')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [location.hash, data])
+
+  // Scroll the querent up to the birth form (from an explainer's "Cast your chart" CTA).
+  const scrollToForm = () =>
+    document.getElementById('vedin-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   const [vargaN, setVargaN] = useState(9)
   const [ayanamsa, setAyanamsa] = useState(() => draftValue(draft0, 'ayanamsa', 'lahiri'))
   const [consent, setConsent] = useState(() => draftValue(draft0, 'consent', false))
@@ -748,7 +753,7 @@ export default function Vedin() {
           </div>
 
           {/* ── Form (centered on top; results span the full page below) ── */}
-          <form onSubmit={submit} className="glass-card mx-auto w-full max-w-3xl p-6 no-print">
+          <form onSubmit={submit} id="vedin-form" className="glass-card mx-auto w-full max-w-3xl scroll-mt-24 p-6 no-print">
             <WizardProgress lang={lang} step={step} />
 
             <AnimatePresence mode="wait" initial={false}>
@@ -941,8 +946,14 @@ export default function Vedin() {
         {/* ── Result ── */}
         <div className="min-w-0">
           {!data && !loading && (
-            <div className="glass-card flex min-h-[300px] items-center justify-center p-8 text-center text-sm text-muted no-print">
+            <div id="vedin-charts" className="scroll-mt-24 no-print">
+              {(tab === 'ashtaka' || tab === 'shadbala') ? (
+                <TopicExplainer topic={tab} lang={lang} onCast={scrollToForm} />
+              ) : (
+                <div className="glass-card flex min-h-[300px] items-center justify-center p-8 text-center text-sm text-muted">
               {lang === 'mm' ? 'မွေးသက္ကာရာဇ်နှင့်အချက်အလက်ထည့်၍ ဟောစာတမ်း၊ ဇာတာခွင်များ (D1/D9/D10/D7) ကြည့်ရှုပါ။' : 'Enter birth details to see the reading and the D1 / D9 / D10 / D7 charts.'}
+                </div>
+              )}
             </div>
           )}
 
