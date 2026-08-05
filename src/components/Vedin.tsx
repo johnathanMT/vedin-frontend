@@ -41,7 +41,7 @@ import { loadBirthDraft, draftValue, saveBirthDraft } from '../hooks/useBirthDra
 import type { BirthChartData, PlanetPosition, TransitPos } from '../types/astrology'
 import { JT, type Lang, type Naynan, vargaSign, signLabel, planetName, readingFor, naynan, activeBhukti, activePratyantar, toMmDigits, themeWord, transitNoteText, findPlanet, dignityLabel, currentAreaEffect } from '../lib/vedin'
 import {
-  PRESETS, browserTz, TZ_OPTIONS, VARGAS, BIO_EN, BIO_MM, PROFILE_PILLS, VARGA_GUIDE,
+  PRESETS, browserTz, TZ_OPTIONS, VARGAS, BIO_EN, BIO_MM, BIO_JA, PROFILE_PILLS, VARGA_GUIDE,
   YOGA_INFO, yogaText, deg, field, labelCls,
   type Preset, type Profile, type Tab, type ChartStyle,
 } from '../lib/vedin-content'
@@ -598,12 +598,12 @@ export default function Vedin() {
             <div className="mt-3.5 flex flex-wrap justify-center gap-2">
               {PROFILE_PILLS.map((p, i) => (
                 <span key={p.en} className={`inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium ${PILL_TONES[i % PILL_TONES.length]}`}>
-                  {lang === 'mm' ? p.mm : p.en}
+                  {lang === 'ja' ? p.ja : lang === 'mm' ? p.mm : p.en}
                 </span>
               ))}
             </div>
           </div>
-          <p className="text-[15px] leading-relaxed text-muted">{lang === 'mm' ? BIO_MM : BIO_EN}</p>
+          <p className="text-[15px] leading-relaxed text-muted">{lang === 'ja' ? BIO_JA : lang === 'mm' ? BIO_MM : BIO_EN}</p>
         </div>
       </div>
 

@@ -49,17 +49,19 @@ export const VARGAS: { n: number; name: string; desc: { en: string; mm: string }
 
 export const BIO_EN = 'Bhone Min Thike Din delivers each reading with the rigor of an exact Vedic science. Every chart is decoded through a demanding, multi-layered methodology — the sidereal zodiac fixed by the Lahiri Ayanamsa, Whole-Sign houses anchored on the Chandra Lagna, the complete set of sixteen divisional charts from D1 to D60, the Vimśottarī Dasha timeline of planetary periods, the six-fold Shadbala strength metrics and the Ashtakavarga point system. This is not vague fortune-telling; it is a precise mathematical blueprint of your life, computed to the exacting standard of the classical Vedic astrology śāstras. From that blueprint he delivers clear, strategic life guidance — decisive, practical, and grounded in absolute confidence and professional mastery.'
 
+export const BIO_JA = 'ボーン・ミン・ダイッ・ディンは、厳密なインド占星術（Vedic Astrology）の科学的手法をもって、一つひとつの鑑定を丁寧にお届けいたします。すべてのチャートは、多層的で厳格な方法論により読み解かれます — ラヒリ・アヤナムシャによって定められたサイデリアル方式の黄道、チャンドラ・ラグナに基づくホールサイン・ハウス、D1からD60までの16種の分割図の完全なセット、惑星期を示すヴィムショッタリー・ダシャーの時間軸、六種の強さを測るシャドバラ、そして点数方式のアシュタカヴァルガ。これは曖昧な運勢占いではなく、古典インド占星術のシャーストラ（経典）の厳密な基準に従って算出された、あなた様の人生の精密な数学的設計図です。その設計図から、明確で戦略的な人生の指針を — 決断力に富み、実践的で、確かな専門的知見に裏打ちされた形で — お示しいたします。'
+
 export const BIO_MM = 'ရှေးဟောင်း ဂဏန်းသင်္ချာနှင့် နက္ခတ်ဗေဒင်သိပ္ပံ (Vedic Astrology) ၏ အဆင့်မြင့် တွက်ကိန်းများကို အခြေခံ၍ — Sidereal Zodiac ကို Lahiri Ayanamsa ဖြင့် တိကျစွာ ချိန်ညှိတွက်ချက်ခြင်း၊ Chandra Lagna (စန္ဒလဂ်) ကို အခြေခံသော Whole-Sign House စနစ်၊ အခြေခံဇာတာမှသည် အနုစိတ်ဇာတာများအထိ ပါဝင်သော ဇာတာခွင် ၁၆ မျိုး (D1 မှ D60 Vargas)၊ ဝိံရှာတ္တရီ (Vimsottari) ဒဿနှင့် အန္တရဒဿ ကာလများ၊ ဂြိုလ်တို့၏ အမြင် (Drishti)၊ ဂြိုလ်စွမ်းအားပြည့်ဝမှုကို တိုင်းတာသည့် ဆုဒ္ဓလ (Shadbala) နှင့် အဋ္ဌကဝဂ် (Ashtakavarga) စသည့် ရှေးဟောင်း နက္ခတ်သင်္ချာနည်းစနစ်များကို အလွှာလိုက် (Layer-by-layer) စေ့စေ့စပ်စပ် စစ်ဆေးခွဲခြမ်းစိတ်ဖြာကာ တိကျသေချာစွာ တွက်ချက်ဖော်ပြပေးပါသည်။'
 
 // Astrologer credential pills — readable in BOTH light and dark (dark shades on
 // light bg, light shades on dark bg), each with a distinct colour + soft glow.
-export const PROFILE_PILLS: { mm: string; en: string }[] = [
-  { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology' },
-  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa' },
-  { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha' },
-  { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas' },
-  { mm: 'ဆဒ္ဗလ', en: 'Shadbala' },
-  { mm: 'အဋ္ဌကဝဂ်', en: 'Ashtakavarga' },
+export const PROFILE_PILLS: { mm: string; en: string; ja: string }[] = [
+  { mm: 'နက္ခတ်ဗေဒင်', en: 'Sidereal Vedic Astrology', ja: 'サイデリアル方式 インド占星術' },
+  { mm: 'လာဟိရီ အယနံသ', en: 'Lahiri Ayanamsa', ja: 'ラヒリ・アヤナムシャ' },
+  { mm: 'ဝိံရှောတ္တရီ ဒသာ', en: 'Vimśottarī Dasha', ja: 'ヴィムショッタリー・ダシャー' },
+  { mm: 'ဇာတာခွဲ D1–D60', en: 'D1–D60 Vargas', ja: 'D1-D60 分割図' },
+  { mm: 'ဆဒ္ဗလ', en: 'Shadbala', ja: 'シャドバラ' },
+  { mm: 'အဋ္ဌကဝဂ်', en: 'Ashtakavarga', ja: 'アシュタカヴァルガ' },
 ]
 
 // D1–D60 educational meanings (simple, bilingual).

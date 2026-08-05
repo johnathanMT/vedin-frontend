@@ -13,7 +13,7 @@ type Lang = 'en' | 'mm'
 
 export default function Research() {
   const { lang, setLang } = useLang()
-  const t = (en: string, mm: string) => (lang === 'mm' ? mm : en)
+  const t = (en: string, mm: string, ja?: string) => (lang === 'ja' && ja ? ja : lang === 'mm' ? mm : en)
 
   const [preds, setPreds] = useState<Prediction[]>([])
   const [journal, setJournal] = useState<JournalEntry[]>([])
@@ -157,37 +157,36 @@ export default function Research() {
       {/* Top cross-link to the sibling page */}
       <div className="mb-6 flex flex-wrap gap-2">
         <Link to="/algorithms" className="inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-accent/10 px-4 py-2 font-mono text-[11px] text-accent-light transition hover:bg-accent/20">
-          <Sigma size={13} /> {t('The algorithms (CS) →', 'အယ်လဂိုရီသမ်များ (CS) →')}
+          <Sigma size={13} /> {t('The algorithms (CS) →', 'အယ်လဂိုရီသမ်များ (CS) →', 'アルゴリズム（CS）→')}
         </Link>
       </div>
 
       {/* Hero + hypotheses */}
       <div className="glass-card mb-6 p-6">
-        <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><FlaskConical size={14} /> {t('Falsifiable research protocol', 'စစ်ဆေးချေပနိုင်သော သုတေသန လုပ်ထုံးလုပ်နည်း')}</p>
-        <h1 className="mt-2 font-groovy text-2xl text-fg sm:text-3xl">{t('Does it beat chance? — a measurement, not a claim', 'တိုက်ဆိုင်မှုသက်သက်ထက် ပိုမှန်သလား? — ယုံကြည်ချက်သက်သက်မဟုတ်ဘဲ လက်တွေ့တိုင်းတာခြင်း')}</h1>
+        <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><FlaskConical size={14} /> {t('Falsifiable research protocol', 'စစ်ဆေးချေပနိုင်သော သုတေသန လုပ်ထုံးလုပ်နည်း', '反証可能な研究プロトコル')}</p>
+        <h1 className="mt-2 font-groovy text-2xl text-fg sm:text-3xl">{t('Does it beat chance? — a measurement, not a claim', 'တိုက်ဆိုင်မှုသက်သက်ထက် ပိုမှန်သလား? — ယုံကြည်ချက်သက်သက်မဟုတ်ဘဲ လက်တွေ့တိုင်းတာခြင်း', '偶然を上回るか？ — 主張ではなく、測定')}</h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
-          {t('This tool does not try to prove astrology works. It pre-registers specific, falsifiable predictions before their window opens, hash-locks them, and later scores them against an honestly-stated base rate. A null result is a successful result.',
-            'ဤကိရိယာသည် ဗေဒင်မှန်ကန်ကြောင်း သက်သေပြရန် ဖန်တီးထားခြင်းမဟုတ်ပါ။ သတ်မှတ်ကာလ မတိုင်မီ တိကျသောဟောကိန်းများကို ကြိုတင်ရေးသားစေပြီး မပြောင်းလဲနိုင်အောင် Hash-lock ဖြင့် ပိတ်ထားမည်ဖြစ်ပါသည်။ ထို့နောက် ရိုးသားစွာ သတ်မှတ်ထားသော Base rate များနှင့် နှိုင်းယှဉ်၍ အမှတ်ပေးစစ်ဆေးမည် ဖြစ်သည်။ မည်သို့သော ရလဒ်ထွက်ပေါ်လာစေကာမူ ယင်းသည် အောင်မြင်သော သုတေသနရလဒ်တစ်ခုသာ ဖြစ်ပါသည်။')}
+          {t('This tool does not try to prove astrology works. It pre-registers specific, falsifiable predictions before their window opens, hash-locks them, and later scores them against an honestly-stated base rate. A null result is a successful result.', 'ဤကိရိယာသည် ဗေဒင်မှန်ကန်ကြောင်း သက်သေပြရန် ဖန်တီးထားခြင်းမဟုတ်ပါ။ သတ်မှတ်ကာလ မတိုင်မီ တိကျသောဟောကိန်းများကို ကြိုတင်ရေးသားစေပြီး မပြောင်းလဲနိုင်အောင် Hash-lock ဖြင့် ပိတ်ထားမည်ဖြစ်ပါသည်။ ထို့နောက် ရိုးသားစွာ သတ်မှတ်ထားသော Base rate များနှင့် နှိုင်းယှဉ်၍ အမှတ်ပေးစစ်ဆေးမည် ဖြစ်သည်။ မည်သို့သော ရလဒ်ထွက်ပေါ်လာစေကာမူ ယင်းသည် အောင်မြင်သော သုတေသနရလဒ်တစ်ခုသာ ဖြစ်ပါသည်။', 'このツールは占星術が有効であることを証明しようとするものではありません。特定の反証可能な予測を、その観測期間が始まる前に事前登録し、ハッシュで固定したうえで、正直に設定された基準率と照合して後日採点します。帰無（有意差なし）の結果もまた、成功した結果です。')}
         </p>
         <div className="mt-4 rounded-xl border border-accent/25 bg-accent/[0.06] p-4 font-mono text-xs leading-relaxed text-fg/90">
-          <p><span className="text-accent-light">H₀</span> : {t('There is no association between chart factors and life events.', 'ဇာတာပါ အချက်အလက်များနှင့် လက်တွေ့ဘဝဖြစ်ရပ်များအကြား ဆက်စပ်မှု မရှိပါ။')}</p>
-          <p className="mt-1"><span className="text-accent-light">H₁</span> : {t('There is an association.', 'ဆက်စပ်မှု ရှိပါသည်။')}</p>
-          <p className="mt-2 text-muted">{t('This project attempts to reject H₀. If it cannot, that outcome will be reported honestly.', 'ဤသုတေသနသည် အထက်ပါ H₀ ကို ပယ်ဖျက်နိုင်ရန် ကြိုးစားမည်ဖြစ်သည်။ အကယ်၍ မအောင်မြင်ခဲ့ပါကလည်း ထွက်ပေါ်လာသည့်ရလဒ်အတိုင်း ရိုးသားစွာ တင်ပြသွားမည် ဖြစ်သည်။')}</p>
+          <p><span className="text-accent-light">H₀</span> : {t('There is no association between chart factors and life events.', 'ဇာတာပါ အချက်အလက်များနှင့် လက်တွေ့ဘဝဖြစ်ရပ်များအကြား ဆက်စပ်မှု မရှိပါ။', 'チャートの要素と人生の出来事との間に関連はない。')}</p>
+          <p className="mt-1"><span className="text-accent-light">H₁</span> : {t('There is an association.', 'ဆက်စပ်မှု ရှိပါသည်။', '関連がある。')}</p>
+          <p className="mt-2 text-muted">{t('This project attempts to reject H₀. If it cannot, that outcome will be reported honestly.', 'ဤသုတေသနသည် အထက်ပါ H₀ ကို ပယ်ဖျက်နိုင်ရန် ကြိုးစားမည်ဖြစ်သည်။ အကယ်၍ မအောင်မြင်ခဲ့ပါကလည်း ထွက်ပေါ်လာသည့်ရလဒ်အတိုင်း ရိုးသားစွာ တင်ပြသွားမည် ဖြစ်သည်။', '本プロジェクトはH₀の棄却を試みます。棄却できない場合も、その結果を正直に報告します。')}</p>
         </div>
       </div>
 
       {/* Storage status */}
       <div className={`mb-6 flex flex-wrap items-center gap-2 rounded-xl border px-4 py-3 text-xs leading-relaxed ${signedIn ? 'border-jade/30 bg-jade/[0.06] text-fg/90' : 'border-accent/25 bg-accent/[0.05] text-muted'}`}>
         {signedIn
-          ? <span>{t('☁️ Signed in — your predictions & journal are saved to your account (any device).', '☁️ အကောင့်ဝင်ထားပါသည် — သင်၏ ဟောကိန်းများနှင့် ဂျာနယ်မှတ်တမ်းများကို သင့်အကောင့်တွင် သိမ်းဆည်းထားပြီး (မည်သည့် Device မှမဆို ဝင်ရောက်ကြည့်ရှုနိုင်ပါသည်)။')}</span>
-          : <span>{t('💾 Saved only in this browser. Sign in on the Vedin page to sync your research to your account.', '💾 ဤ Browser အတွင်း၌သာ သိမ်းဆည်းထားပါသည်။ သင်၏ သုတေသနမှတ်တမ်းများကို အကောင့်နှင့် ချိတ်ဆက်ထားရန် Vedin စာမျက်နှာတွင် အကောင့်ဝင်ပါ။')}</span>}
+          ? <span>{t('☁️ Signed in — your predictions & journal are saved to your account (any device).', '☁️ အကောင့်ဝင်ထားပါသည် — သင်၏ ဟောကိန်းများနှင့် ဂျာနယ်မှတ်တမ်းများကို သင့်အကောင့်တွင် သိမ်းဆည်းထားပြီး (မည်သည့် Device မှမဆို ဝင်ရောက်ကြည့်ရှုနိုင်ပါသည်)။', '☁️ サインイン済み — 予測と記録はアカウントに保存されます（どの端末でも）。')}</span>
+          : <span>{t('💾 Saved only in this browser. Sign in on the Vedin page to sync your research to your account.', '💾 ဤ Browser အတွင်း၌သာ သိမ်းဆည်းထားပါသည်။ သင်၏ သုတေသနမှတ်တမ်းများကို အကောင့်နှင့် ချိတ်ဆက်ထားရန် Vedin စာမျက်နှာတွင် အကောင့်ဝင်ပါ။', '💾 このブラウザにのみ保存されます。研究記録をアカウントに同期するには、Vedinページでサインインしてください。')}</span>}
         {syncErr && <span className="text-coral">· {syncErr}</span>}
       </div>
 
       {/* Live dashboard */}
       <div className="glass-card mb-6 p-6">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-groovy text-lg text-fg">{t('Live results', 'လက်ရှိ ရလဒ်များ')}</h2>
+          <h2 className="font-groovy text-lg text-fg">{t('Live results', 'လက်ရှိ ရလဒ်များ', 'ライブ結果')}</h2>
           <div className="flex gap-2">
             <button type="button" onClick={() => download(JSON.stringify({ predictions: preds, journal }, null, 2), 'vedin-research.json', 'application/json')} className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-muted transition hover:text-fg"><Download size={12} /> JSON</button>
             <button type="button" onClick={() => download(exportCsv(preds), 'vedin-predictions.csv', 'text/csv;charset=utf-8')} className="inline-flex items-center gap-1.5 rounded-lg border border-white/15 bg-white/5 px-3 py-1.5 font-mono text-[11px] text-muted transition hover:text-fg"><Download size={12} /> CSV</button>
@@ -195,10 +194,10 @@ export default function Research() {
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[
-            { k: t('Predictions', 'ဟောကိန်းများ'), v: preds.length, c: 'text-fg' },
-            { k: t('Scored', 'အမှတ်ပေးပြီး'), v: scored.length, c: 'text-fg' },
-            { k: t('Hit', 'မှန်ကန်'), v: hits, c: 'text-jade' },
-            { k: t('Miss', 'လွဲချော်'), v: miss, c: 'text-coral' },
+            { k: t('Predictions', 'ဟောကိန်းများ', '予測'), v: preds.length, c: 'text-fg' },
+            { k: t('Scored', 'အမှတ်ပေးပြီး', '採点済み'), v: scored.length, c: 'text-fg' },
+            { k: t('Hit', 'မှန်ကန်', '的中'), v: hits, c: 'text-jade' },
+            { k: t('Miss', 'လွဲချော်', '外れ'), v: miss, c: 'text-coral' },
           ].map((s) => (
             <div key={s.k} className="rounded-xl border border-white/8 bg-white/[0.03] p-3 text-center">
               <div className={`font-groovy text-2xl ${s.c}`}>{s.v}</div>
@@ -208,8 +207,8 @@ export default function Research() {
         </div>
         {scored.length > 0 && (
           <div className="mt-4 space-y-1.5 text-sm text-muted">
-            <p>{t('Hit rate', 'မှန်ကန်မှုနှုန်း')}: <span className="font-semibold text-fg">{pct(wilson.p)}</span> <span className="font-mono text-xs">(95% CI {pct(wilson.low)}–{pct(wilson.high)}, Wilson)</span> · {partial} {t('partial', 'တစ်စိတ်တစ်ပိုင်း')}</p>
-            <p>{t('Expected by chance (mean base rate)', 'တိုက်ဆိုင်မှုကြောင့် မှန်နိုင်ခြေ (ပျမ်းမျှ Base rate)')}: <span className="font-semibold text-fg">{pct(expectedRate)}</span></p>
+            <p>{t('Hit rate', 'မှန်ကန်မှုနှုန်း', '的中率')}: <span className="font-semibold text-fg">{pct(wilson.p)}</span> <span className="font-mono text-xs">(95% CI {pct(wilson.low)}–{pct(wilson.high)}, Wilson)</span> · {partial} {t('partial', 'တစ်စိတ်တစ်ပိုင်း')}</p>
+            <p>{t('Expected by chance (mean base rate)', 'တိုက်ဆိုင်မှုကြောင့် မှန်နိုင်ခြေ (ပျမ်းမျှ Base rate)', '偶然による期待値（平均基準率）')}: <span className="font-semibold text-fg">{pct(expectedRate)}</span></p>
             {pValue !== null
               ? <p>{t('Monte-Carlo p-value vs base-rate null', 'Base-rate Null နှိုင်းယှဉ်ချက် Monte-Carlo p-value')}: <span className={`font-semibold ${pValue < 0.05 ? 'text-jade' : 'text-fg'}`}>{pValue.toFixed(3)}</span> {pValue >= 0.05 && <span className="text-xs">— {t('not distinguishable from chance', 'တိုက်ဆိုင်မှုနှင့် ခွဲခြား၍မရပါ')}</span>}</p>
               : <p className="text-xs">{t('Score at least 5 predictions to compute a p-value.', 'P-value ကို တွက်ချက်ရန် အနည်းဆုံး ဟောကိန်း ၅ ခုအား အမှတ်ပေးရပါမည်။')}</p>}
@@ -262,7 +261,7 @@ export default function Research() {
 
       {/* New prediction */}
       <div className="glass-card mb-6 p-6">
-        <h2 className="mb-1 font-groovy text-lg text-fg">{t('Pre-register a prediction', 'ဟောကိန်းတစ်ခုကို ကြိုတင်မှတ်ပုံတင်ရန်')}</h2>
+        <h2 className="mb-1 font-groovy text-lg text-fg">{t('Pre-register a prediction', 'ဟောကိန်းတစ်ခုကို ကြိုတင်မှတ်ပုံတင်ရန်', '予測を事前登録')}</h2>
         <p className="mb-4 text-xs leading-relaxed text-muted">{t('Write it before the window opens. The claim + falsifier are SHA-256 hash-locked so they cannot be changed later.', 'ဟောကိန်းကာလ မစတင်မီ ရေးသားပါ။ သင်၏ ဟောချက် (Claim) နှင့် ချေပချက် (Falsifier) ကို SHA-256 Hash-lock ဖြင့် ပိတ်ထားမည်ဖြစ်၍ နောင်တွင် ပြင်ဆင်၍မရနိုင်ပါ။')}</p>
         {formErr && <p className="mb-3 rounded-xl border border-coral/40 bg-coral/10 px-3 py-2 text-xs text-coral">{formErr}</p>}
         <form onSubmit={addPrediction} className="grid gap-3 sm:grid-cols-2">
@@ -287,7 +286,7 @@ export default function Research() {
 
       {/* Predictions list */}
       <div className="glass-card mb-6 p-6">
-        <h2 className="mb-3 font-groovy text-lg text-fg">{t('Pre-registered predictions', 'ကြိုတင်မှတ်ပုံတင်ထားသော ဟောကိန်းများ')}</h2>
+        <h2 className="mb-3 font-groovy text-lg text-fg">{t('Pre-registered predictions', 'ကြိုတင်မှတ်ပုံတင်ထားသော ဟောကိန်းများ', '事前登録された予測')}</h2>
         {preds.length === 0 ? <p className="text-sm text-muted">{t('None yet.', 'မရှိသေးပါ။')}</p> : (
           <ul className="space-y-3">
             {preds.map((p) => {
@@ -342,14 +341,14 @@ export default function Research() {
 
       {/* Limitations */}
       <div className="glass-card mb-6 p-6">
-        <h2 className="mb-3 font-groovy text-lg text-fg">{t('Known limitations', 'သိရှိနားလည်ထားရမည့် ကန့်သတ်ချက်များ')}</h2>
+        <h2 className="mb-3 font-groovy text-lg text-fg">{t('Known limitations', 'သိရှိနားလည်ထားရမည့် ကန့်သတ်ချက်များ', '既知の限界')}</h2>
         <ul className="space-y-1.5 text-sm leading-relaxed text-muted">
           {[
             t('Barnum / self-report bias — vague statements feel true; keep claims specific.', 'Barnum Effect နှင့် Self-report Bias — မရေရာသော ဟောချက်များသည် မှန်ကန်သယောင် ခံစားရတတ်သဖြင့် ဟောချက်များကို တိကျသေချာအောင် ရေးသားပါ။'),
             t('Selection bias — users are not a random sample.', 'Selection Bias — ဤကိရိယာကို အသုံးပြုသူများသည် အများပြည်သူအား ကိုယ်စားပြုသော (Random Sample) နမူနာများ မဟုတ်ပါ။'),
             t('Multiple comparisons — many rules → some "significant" by pure chance (use FDR correction).', 'တိုက်ဆိုင်စစ်ဆေးမှုများပြားခြင်း — တွက်ရိုးများပြားသည့်အခါ အချို့သော ရလဒ်များသည် တိုက်ဆိုင်မှုသက်သက်ကြောင့် "ထင်ရှားသယောင်" (Significant) ဖြစ်နေတတ်သည် (FDR ပြင်ဆင်ချက်ကို အသုံးပြုပါ)။'),
             t('Small n — a trustworthy signal needs hundreds+ of independent charts.', 'နမူနာနည်းပါးခြင်း (Small n) — ယုံကြည်စိတ်ချရသော ကောက်ချက်ချနိုင်ရန်အတွက် သီးခြားလွတ်လပ်သော ဇာတာရှင် ရာပေါင်းများစွာ လိုအပ်ပါသည်။'),
-            t('Astrology is not scientifically validated. This is a measurement tool, offered for reflection and study.', 'ဗေဒင်ပညာသည် သိပ္ပံနည်းကျ အပြည့်အဝ အတည်ပြုထားသော ပညာရပ် မဟုတ်ပါ။ ဤစနစ်သည် ကိုယ်တိုင်ဆင်ခြင်သုံးသပ်မှုနှင့် လေ့လာသုတေသနပြုရန်အတွက်သာ ဖန်တီးထားသော တိုင်းတာရေး ကိရိယာတစ်ခု ဖြစ်ပါသည်။'),
+            t('Astrology is not scientifically validated. This is a measurement tool, offered for reflection and study.', 'ဗေဒင်ပညာသည် သိပ္ပံနည်းကျ အပြည့်အဝ အတည်ပြုထားသော ပညာရပ် မဟုတ်ပါ။ ဤစနစ်သည် ကိုယ်တိုင်ဆင်ခြင်သုံးသပ်မှုနှင့် လေ့လာသုတေသနပြုရန်အတွက်သာ ဖန်တီးထားသော တိုင်းတာရေး ကိရိယာတစ်ခု ဖြစ်ပါသည်။', '占星術は科学的に検証されていません。これは省察と研究のために提供される測定ツールです。'),
           ].map((x, i) => <li key={i} className="flex gap-2"><span className="mt-0.5 text-accent-light">•</span><span>{x}</span></li>)}
         </ul>
       </div>

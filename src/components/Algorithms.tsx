@@ -25,10 +25,12 @@ type Lang = 'en' | 'mm'
 interface Section {
   id: string; num: string
   title: string
+  titleJa?: string
   tags: string[]
   complexity?: string
   en: ReactNode
   mm: ReactNode
+  ja?: ReactNode
   formula: string[]   // one or more display-mode LaTeX strings
   code: string
 }
@@ -268,9 +270,50 @@ test('SAV always totals 337', () => {
   },
 ]
 
+// Japanese (academic tone) merged into SECTIONS at load — keeps the English/Burmese
+// section data untouched. title includes " — " so the nav split still works.
+const ALGO_JA: Record<string, { title: string; body: string }> = {
+  julian: {
+    title: 'ユリウス日 — 整数演算',
+    body: 'Fliegel–Van Flandern（1968）のアルゴリズムは、暦日をユリウス日番号へ整数の床除算のみで変換します — 浮動小数点を用いないため、厳密です。難所はグレゴリオ暦／ユリウス暦の切り替えと、遠い日付でのオーバーフローです。',
+  },
+  ephemeris: {
+    title: '天体暦 — VSOP87 切り詰め級数',
+    body: '惑星の日心黄経は、数千の周期項の総和です。VSOP87はこの級数を切り詰めます — 最大の項を残し、残りを捨てます。項が少ないほど表は小さくなりますが、誤差は大きくなります。τはJ2000からのユリウス千年単位の時間です。ΔT多項式（Espenak–Meeus）がTTとUTの差を補正します。',
+  },
+  coords: {
+    title: '座標変換 — 回転とアセンダント',
+    body: '黄道座標から赤道座標への変換は、黄道傾斜角εだけx軸まわりに回転させる操作です。アセンダント（ラグナ） — 上昇する黄道の度数 — は、地方恒星時θと緯度φを用いた球面三角法から求められます。典型的なバグは、atan2の象限処理とφ→±90°の扱いです。',
+  },
+  modular: {
+    title: '合同算術 — 基盤となる仕組み',
+    body: 'インド占星術の全体は、巡回群の積み重ねです：星座はℤ/12、ナクシャトラはℤ/27、ダシャー周期はℤ/9、パーダはℤ/4、そしてそのすべてが円周ℝ/360ℤ上にあります。典型的な落とし穴：JavaScriptでは −30 % 360 = −30（330ではありません）。必ず ((x % n) + n) % n で再正規化してください。',
+  },
+  varga: {
+    title: '分割図マップ — 区分線形関数',
+    body: '各分割図は関数 f : [0°,360°) → ℤ/12 です。ナヴァムシャ（D9）は各星座を3°20′の9区分に分割し、開始星座は活動宮・不動宮・柔軟宮による周期4のパターンに従います。良い研究課題：16すべてのヴァルガを一つの統一的なインターフェースで表せるか？',
+  },
+  dasha: {
+    title: 'ヴィムショッタリー・ダシャー — 再帰的分割',
+    body: 'ダシャーの時間軸は自己相似です：各期間は同じ固定順で9つの下位期間に分割され、それぞれの大きさは下位支配星の120年に対する持ち分で決まります。全階層を完全展開すると O(9ᵈ) となるため、遅延展開し、有効な枝を二分探索します。深い階層では、日付のずれを避けるために有理数演算が必要です。',
+  },
+  ashtakavarga: {
+    title: 'アシュタカヴァルガ — 組合せ論とビットマスク',
+    body: '各惑星について、8つの基準（7グラハ＋アセンダント）が、それぞれ自身から数えた特定のハウスに吉のビットを寄与します — 8×12のブール行列です。各基準の吉ハウスを12ビットのマスクとして格納し、シフトします。優れた単体テストの不変条件：サルヴァアシュタカヴァルガの合計は常に337です。',
+  },
+  repro: {
+    title: '再現性とテスト',
+    body: 'すべての計算は純粋関数です — Date.now() も、グローバル状態もありません — したがって、同じ入力は常に同じ出力を与えます。ゴールデン・フィクスチャ（許容誤差 ±0.02°）が既知のチャートを固定し、プロパティベーステストが不変条件（SAV = 337、varga ∈ [0,12)、ダシャー期間の合計が親と一致）を検証します。クリティカルパスでは、有理数演算が浮動小数点のずれを防ぎます。',
+  },
+}
+for (const s of SECTIONS) {
+  const j = ALGO_JA[s.id]
+  if (j) { s.titleJa = j.title; s.ja = j.body }
+}
+
 export default function Algorithms() {
   const { lang, setLang } = useLang()
-  const t = (en: string, mm: string) => (lang === 'mm' ? mm : en)
+  const t = (en: string, mm: string, ja?: string) => (lang === 'ja' && ja ? ja : lang === 'mm' ? mm : en)
 
   return (
     <section className="section-container vedin-page">
@@ -292,10 +335,11 @@ export default function Algorithms() {
 
       <div className="glass-card mb-6 p-6">
         <p className="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.28em] text-accent-light"><FlaskConical size={14} /> {t('Computational reconstruction', 'ကွန်ပျူတာဖြင့် ပြန်တည်ဆောက်ခြင်း')}</p>
-        <h1 className="mt-2 font-groovy text-2xl text-fg sm:text-3xl">{t('The algorithms behind the charts', 'ဇာတာများ၏ နောက်ကွယ်မှ algorithm များ')}</h1>
+        <h1 className="mt-2 font-groovy text-2xl text-fg sm:text-3xl">{t('The algorithms behind the charts', 'ဇာတာများ၏ နောက်ကွယ်မှ algorithm များ', 'チャートの背後にあるアルゴリズム')}</h1>
         <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted">
           {t('A catalog of the classical astronomical & astrological algorithms this engine reconstructs — for the Computer Science "Algorithms and Mathematical Concepts for Computing". Each entry pairs plain-language notes, the mathematics, and the TypeScript that implements it.',
-            'ကွန်ပျူတာသိပ္ပံဘာသာရပ် "Algorithms and Mathematical Concepts for Computing" အတွက် ရည်ရွယ်၍ ဤစနစ် (Engine) မှ ပြန်လည်ဖော်ထုတ်ရေးသားထားသော ရှေးဟောင်း နက္ခတ္တဗေဒနှင့် ဗေဒင်ပညာ တွက်ရိုး (Algorithms) များ၏ စာရင်းမှတ်တမ်း။ အပိုင်းတစ်ခုချင်းစီတိုင်း၌ သာမန်နားလည်လွယ်သော ရှင်းလင်းချက်များ၊ သင်္ချာသီအိုရီများနှင့် ၎င်းတို့ကို အသက်သွင်းရေးသားထားသော TypeScript ကုဒ်များကိုပါ အချိတ်အဆက်မိမိ တွဲဖက်ပြသထားပါသည်။')}
+            'ကွန်ပျူတာသိပ္ပံဘာသာရပ် "Algorithms and Mathematical Concepts for Computing" အတွက် ရည်ရွယ်၍ ဤစနစ် (Engine) မှ ပြန်လည်ဖော်ထုတ်ရေးသားထားသော ရှေးဟောင်း နက္ခတ္တဗေဒနှင့် ဗေဒင်ပညာ တွက်ရိုး (Algorithms) များ၏ စာရင်းမှတ်တမ်း။ အပိုင်းတစ်ခုချင်းစီတိုင်း၌ သာမန်နားလည်လွယ်သော ရှင်းလင်းချက်များ၊ သင်္ချာသီအိုရီများနှင့် ၎င်းတို့ကို အသက်သွင်းရေးသားထားသော TypeScript ကုဒ်များကိုပါ အချိတ်အဆက်မိမိ တွဲဖက်ပြသထားပါသည်။',
+            'このエンジンが再構築する、古典的な天文学・占星術アルゴリズムのカタログです — 計算機科学「Algorithms and Mathematical Concepts for Computing」を念頭に置いています。各項目では、平易な解説・数式・それを実装するTypeScriptを対にして示します。')}
         </p>
       </div>
 
@@ -305,7 +349,7 @@ export default function Algorithms() {
           <div className="no-scrollbar flex gap-1.5 overflow-x-auto whitespace-nowrap rounded-2xl border border-fg/10 bg-fg/[0.02] p-2 lg:flex-col lg:whitespace-normal">
             {SECTIONS.map((s) => (
               <a key={s.id} href={`#${s.id}`} className="shrink-0 rounded-lg px-3 py-1.5 font-mono text-xs text-muted transition hover:bg-accent/10 hover:text-accent-light focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50">
-                <span className="text-accent-light">{s.num}</span> · {s.title.split(' — ')[0]}
+                <span className="text-accent-light">{s.num}</span> · {(lang === 'ja' && s.titleJa ? s.titleJa : s.title).split(' — ')[0]}
               </a>
             ))}
           </div>
@@ -317,12 +361,12 @@ export default function Algorithms() {
             <article key={s.id} id={s.id} className="glass-card scroll-mt-20 p-6">
               <div className="flex flex-wrap items-baseline gap-3">
                 <span className="font-groovy text-2xl text-accent-light">{s.num}</span>
-                <h2 className="font-groovy text-lg text-fg">{s.title}</h2>
+                <h2 className="font-groovy text-lg text-fg">{lang === 'ja' && s.titleJa ? s.titleJa : s.title}</h2>
               </div>
               <div className="mt-2 flex flex-wrap gap-1.5">
                 {s.tags.map((tag) => <span key={tag} className="rounded-full border border-accent/25 bg-accent/[0.06] px-2 py-0.5 font-mono text-[10px] text-accent-light">{tag}</span>)}
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{lang === 'mm' ? s.mm : s.en}</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{lang === 'ja' && s.ja ? s.ja : lang === 'mm' ? s.mm : s.en}</p>
               <Formula formula={s.formula} />
               {s.complexity && <p className="mt-3 rounded-lg border border-white/8 bg-white/[0.03] px-3 py-2 font-mono text-[11px] text-muted"><span className="text-accent-light">Complexity:</span> {s.complexity}</p>}
               <Code code={s.code} />
