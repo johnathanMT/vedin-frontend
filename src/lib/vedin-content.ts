@@ -127,7 +127,7 @@ export const YOGA_INFO: Record<string, { en: string; mm: string }> = {
   },
 }
 
-export const yogaText = (name: string, lang: Lang) => (YOGA_INFO[name] ? YOGA_INFO[name][lang] : '')
+export const yogaText = (name: string, lang: Lang) => (YOGA_INFO[name] ? YOGA_INFO[name][lang === 'ja' ? 'en' : lang] : '')
 
 export const deg = (d: number) => `${Math.floor(d)}°${String(Math.floor((d % 1) * 60)).padStart(2, '0')}'`
 

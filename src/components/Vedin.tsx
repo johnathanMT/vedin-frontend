@@ -23,6 +23,7 @@ import ChartSummaryHero from './ChartSummaryHero'
 import ChartSkeleton from './ChartSkeleton'
 import WizardProgress from './wizard/WizardProgress'
 import TopicExplainer from './TopicExplainer'
+import LanguageSwitcher from './LanguageSwitcher'
 // Leaflet (~150 kB + CSS) is pulled in only when the Birth-place step renders.
 const BirthPlaceMap = lazy(() => import('./BirthPlaceMap'))
 
@@ -78,8 +79,10 @@ function VargaPanel({ data, lang, signOf, lagnaSign, title, subtitle, desc, char
 }
 
 export default function Vedin() {
-  const { lang, setLang } = useLang()   // defaults to Burmese; persisted across routes + refresh
+  const { lang } = useLang()   // defaults to Burmese; persisted across routes + refresh
   const t = JT[lang]
+  // Trilingual inline helper for the handful of labels not in the JT dictionary.
+  const L = (en: string, mm: string, ja: string) => (lang === 'ja' ? ja : lang === 'mm' ? mm : en)
 
   // A refresh used to wipe every field, including a geocoded city. Rehydrate.
   const draft0 = useRef(loadBirthDraft()).current
@@ -394,7 +397,7 @@ export default function Vedin() {
       sarvashtakavargaBySign: sav.length === 12 ? sav : undefined,
       ashtakavargaNotes: ashNotes,
       yogas: (data.yogas ?? []).map((y) => y.name).slice(0, 30),
-      language: lang === 'mm' ? 'my' : 'en',
+      language: lang === 'mm' ? 'my' : lang,   // 'my' | 'en' | 'ja' for the backend
       // birthDate / birthTime / location → used only for the 30-day dedup hash
       birthDate: date,
       birthTime: time,
@@ -545,12 +548,12 @@ export default function Vedin() {
 
   const curVarga = VARGAS.find((v) => v.n === vargaN) ?? VARGAS[4]
   const TABS: TabDef[] = [
-    { id: 'ai', label: lang === 'mm' ? 'အသေးစိတ် ဟောစာတမ်းများ' : 'Detailed Reading', variant: 'main' },
-    { id: 'reading', label: lang === 'mm' ? 'မွေးဇာတာစစ်တမ်းများ' : t.tabReading },
+    { id: 'ai', label: L('Detailed Reading', 'အသေးစိတ် ဟောစာတမ်းများ', '詳細な鑑定'), variant: 'main' },
+    { id: 'reading', label: L(t.tabReading, 'မွေးဇာတာစစ်တမ်းများ', t.tabReading) },
     { id: 'timeline', label: t.tabTimeline },
-    { id: 'vargas', label: lang === 'mm' ? 'ဇာတာခွဲများ' : 'Charts' },
-    { id: 'ashtaka', label: lang === 'mm' ? 'အဋ္ဌကဝဂ်' : 'Ashtaka', variant: 'ashtaka' },
-    { id: 'shadbala', label: lang === 'mm' ? 'ဆဒ္ဗလ' : 'Shadbala', variant: 'shadbala' },
+    { id: 'vargas', label: L('Charts', 'ဇာတာခွဲများ', 'チャート') },
+    { id: 'ashtaka', label: L('Ashtaka', 'အဋ္ဌကဝဂ်', 'アシュタカ'), variant: 'ashtaka' },
+    { id: 'shadbala', label: L('Shadbala', 'ဆဒ္ဗလ', 'シャドバラ'), variant: 'shadbala' },
   ]
 
   return (
@@ -568,14 +571,9 @@ export default function Vedin() {
       {/* print-hide: the photo + bio are omitted from the printed PDF (Phase 4) */}
       <div className="print-hide relative mb-8 overflow-hidden rounded-3xl border border-amber-500/30 bg-[#ffffff] shadow-sm dark:border-amber-500/20 dark:bg-neutral-900/50 p-6 text-center sm:p-10">
 
-        {/* language toggle — pinned top-right */}
-        <div className="no-print absolute right-4 top-4 z-10 flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1 backdrop-blur">
-          {(['en', 'mm'] as Lang[]).map((l) => (
-            <button key={l} type="button" onClick={() => setLang(l)}
-              className={`rounded-full px-3 py-1 font-mono text-xs transition ${lang === l ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>
-              {l === 'en' ? 'EN' : 'မြန်မာစာ'}
-            </button>
-          ))}
+        {/* language switcher — pinned top-right */}
+        <div className="no-print absolute right-4 top-4 z-10">
+          <LanguageSwitcher />
         </div>
 
         <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-5">
@@ -876,7 +874,7 @@ export default function Vedin() {
 
             <button type="submit" disabled={loading || !canSubmit}
               className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40 disabled:shadow-none">
-              {loading ? <><Loader2 size={16} className="animate-spin" /> {lang === 'mm' ? 'တွက်ချက်ပေးနေပါသည်…' : 'Calculating…'}</> : <><Sparkles size={16} /> {lang === 'mm' ? 'ဇာတာ တွက်မည်' : 'Generate Chart'}</>}
+              {loading ? <><Loader2 size={16} className="animate-spin" /> {L('Calculating…', 'တွက်ချက်ပေးနေပါသည်…', '作成中…')}</> : <><Sparkles size={16} /> {L('Generate Chart', 'ဇာတာ တွက်မည်', 'ホロスコープを作成')}</>}
             </button>
             {!canSubmit && (
               <ul className="mt-2 space-y-1">
@@ -1376,13 +1374,9 @@ export default function Vedin() {
         </div>
       </div>
 
-      {/* Bottom language toggle — mirrors the top one so users needn't scroll back up */}
+      {/* Bottom language switcher — mirrors the header so users needn't scroll back up */}
       <div className="mt-12 flex justify-center no-print">
-        <div className="flex items-center gap-1 rounded-full border border-white/15 bg-white/5 p-1">
-          {(['en', 'mm'] as const).map((l) => (
-            <button key={l} type="button" onClick={() => setLang(l)} className={`rounded-full px-4 py-1.5 font-mono text-xs transition ${lang === l ? 'bg-accent/70 text-space' : 'text-muted hover:text-fg'}`}>{l === 'en' ? 'EN' : 'မြန်မာ'}</button>
-          ))}
-        </div>
+        <LanguageSwitcher />
       </div>
 
       {/* ── Methodology (a genuine differentiator) + honest disclaimer ── */}

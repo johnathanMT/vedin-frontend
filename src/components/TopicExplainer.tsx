@@ -10,12 +10,14 @@ interface Props {
   onCast: () => void
 }
 
+type Tri = { en: string; mm: string; ja?: string }
+
 interface Copy {
   Icon: typeof Sigma
-  kicker: { en: string; mm: string }
-  title: { en: string; mm: string }
-  lede: { en: string; mm: string }
-  points: { en: string; mm: string }[]
+  kicker: Tri
+  title: Tri
+  lede: Tri
+  points: Tri[]
 }
 
 const COPY: Record<ExplainerTopic, Copy> = {
@@ -91,6 +93,70 @@ const COPY: Record<ExplainerTopic, Copy> = {
   },
 }
 
+// Japanese, kept as a separate block and merged into COPY at module load — so the
+// long English/Burmese entries above stay untouched. Professional, polite Japanese.
+const JA: Record<ExplainerTopic, { kicker: string; title: string; lede: string; points: [string, string, string] }> = {
+  ai: {
+    kicker: '詳細な鑑定',
+    title: '人生を七つの領域から読み解く',
+    lede: '占星術師が確認・承認したうえでお届けする、完全な鑑定書です。あなたの惑星配置・ダシャー・ヨーガを踏まえ、人生の七つの柱（学業、仕事、財、結婚、健康、人間関係、天命）にわたって明確な指針をお示しします。すべての記述はあなた自身のチャートに基づいており、定型文ではありません。',
+    points: [
+      '七つの領域 — 学業から天命まで、それぞれに個別の見解を。',
+      'あなたの正確な惑星配置・ダシャー・作用中のヨーガに基づきます。',
+      'お届け前に占星術師が確認・承認します。',
+    ],
+  },
+  vargas: {
+    kicker: '分割図（ヴァルガ）',
+    title: '一つの人生を映す十六の視点',
+    lede: '出生図（D1）を超えて、インド占星術は各星座をさらに細かな分割図（ヴァルガ）へと分け、それぞれが人生の一領域を拡大して映します。D9は結婚と魂を、D10は仕事と地位を、D7は子孫を、そしてD60まで。これらが重なり合い、平面的なチャートを重層的な肖像へと変えます。',
+    points: [
+      'D1（ラーシ）から古典的なD60分割図まで。',
+      'D9ナヴァムシャ — 結婚と運命を映す最重要の図。',
+      '各チャートをダイヤ型またはグリッド型で表示。',
+    ],
+  },
+  timeline: {
+    kicker: 'ダシャー・タイムライン',
+    title: 'チャートが動き出す時',
+    lede: 'チャートは「何が約束されているか」を示し、ヴィムショッタリ・ダシャーは「いつ」を示します。タイムラインは、あなたの人生を司る惑星の大周期と小周期を過去・現在・未来にわたって描き出し、どの章がどの惑星の性質を帯び、その成果がいつ現れるのかを見渡せます。',
+    points: [
+      'マハーダシャー → アンタルダシャー → プラティヤンタルダシャーを順に。',
+      '現在進行中の周期を一目で確認。',
+      '各段階を形づくるサデサティと主要なトランジット。',
+    ],
+  },
+  ashtaka: {
+    kicker: 'アシュタカヴァルガ',
+    title: '強さを示すビンドゥの地図',
+    lede: 'アシュタカヴァルガは、あなたのチャート全体を星座ごとの点数（ビンドゥ）に凝縮し、惑星がどこであなたを後押しし、どこで静かになるのかを正確に示します。これはタイミングを読む古典の鍵です。ビンドゥの多い星座を惑星が通過するとき、その約束は最大限に発揮され、少ない星座では弱まります。',
+    points: [
+      'サルヴァアシュタカヴァルガ — 各星座の総合的な強さ（337点満点）。',
+      'ビンナアシュタカヴァルガ — 各惑星が個別にどう寄与するか。',
+      'トランジットのタイミング — どの時期が目標を真に後押しするか。',
+    ],
+  },
+  shadbala: {
+    kicker: 'シャドバラ',
+    title: '全惑星の六種の強さ',
+    lede: 'シャドバラは、各惑星の真の強さを六つの独立した要素 — 位置、方角、出生の時刻、運動、本来の力、そして受ける視（アスペクト） — から測ります。六つはルパに合算され、その惑星が人生で約束を果たすために必要な強さと比較されます。',
+    points: [
+      'スターナ・ディグ・カーラ・チェーシュタ・ナイサルギカ・ドリク — 六つの源。',
+      '各惑星の合計ルパと古典的な必要最低値の比較。',
+      '明確な結論 — どの惑星が十分に強いか。',
+    ],
+  },
+}
+
+for (const key of Object.keys(JA) as ExplainerTopic[]) {
+  const c = COPY[key]
+  const j = JA[key]
+  c.kicker.ja = j.kicker
+  c.title.ja = j.title
+  c.lede.ja = j.lede
+  c.points.forEach((p, i) => { p.ja = j.points[i] })
+}
+
 /**
  * Educational placeholder shown for the Ashtakavarga / Shadbala tabs when no chart has
  * been cast yet — so a footer deep-link lands on something meaningful and premium
@@ -99,7 +165,7 @@ const COPY: Record<ExplainerTopic, Copy> = {
  */
 export default function TopicExplainer({ topic, lang, onCast }: Props) {
   const c = COPY[topic]
-  const mm = lang === 'mm'
+  const pick = (f: Tri) => (lang === 'ja' ? (f.ja ?? f.en) : lang === 'mm' ? f.mm : f.en)
   const { Icon } = c
 
   return (
@@ -109,18 +175,18 @@ export default function TopicExplainer({ topic, lang, onCast }: Props) {
           <Icon size={24} />
         </span>
         <div className="min-w-0">
-          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-amber-600 dark:text-amber-400">{mm ? c.kicker.mm : c.kicker.en}</p>
-          <h3 className="mt-1 font-groovy text-xl text-fg sm:text-2xl">{mm ? c.title.mm : c.title.en}</h3>
+          <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-amber-600 dark:text-amber-400">{pick(c.kicker)}</p>
+          <h3 className="mt-1 font-groovy text-xl text-fg sm:text-2xl">{pick(c.title)}</h3>
         </div>
       </div>
 
-      <p className="mt-4 text-sm leading-relaxed text-muted sm:text-[15px]">{mm ? c.lede.mm : c.lede.en}</p>
+      <p className="mt-4 text-sm leading-relaxed text-muted sm:text-[15px]">{pick(c.lede)}</p>
 
       <ul className="mt-5 space-y-2.5">
         {c.points.map((p, i) => (
           <li key={i} className="flex items-start gap-2.5 text-sm text-fg/90">
             <Sparkles size={15} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
-            <span>{mm ? p.mm : p.en}</span>
+            <span>{pick(p)}</span>
           </li>
         ))}
       </ul>
@@ -128,10 +194,10 @@ export default function TopicExplainer({ topic, lang, onCast }: Props) {
       <div className="mt-7 border-t border-black/5 pt-5 dark:border-white/5">
         <button type="button" onClick={onCast}
           className="inline-flex items-center gap-2 rounded-xl bg-amber-600 shadow-md px-5 py-3 text-sm font-semibold text-amber-50 transition hover:brightness-110">
-          <ArrowUp size={16} /> {mm ? 'ရလဒ်များ ကြည့်ရန် သင့်ဇာတာ တွက်ပါ' : 'Cast Your Chart to See Results'}
+          <ArrowUp size={16} /> {lang === 'ja' ? 'ホロスコープを作成して結果を見る' : lang === 'mm' ? 'ရလဒ်များ ကြည့်ရန် သင့်ဇာတာ တွက်ပါ' : 'Cast Your Chart to See Results'}
         </button>
         <p className="mt-2 font-mono text-[11px] text-muted">
-          {mm ? 'အထက်ရှိ မွေးဖွားချက် ဖောင်တွင် အချက်အလက်ဖြည့်ပါ။' : 'Fill in your birth details in the form above.'}
+          {lang === 'ja' ? '上の入力欄に出生情報をご記入ください。' : lang === 'mm' ? 'အထက်ရှိ မွေးဖွားချက် ဖောင်တွင် အချက်အလက်ဖြည့်ပါ။' : 'Fill in your birth details in the form above.'}
         </p>
       </div>
     </div>

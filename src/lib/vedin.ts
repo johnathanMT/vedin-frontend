@@ -5,7 +5,7 @@
 // ============================================================================
 import type { BirthChartData, DashaPeriod, Finding, TransitNote } from '../types/astrology'
 
-export type Lang = 'en' | 'mm'
+export type Lang = 'en' | 'mm' | 'ja'
 
 // ── Divisional-chart sign (mirror of AstrologyService.VargaSign) ──────────────
 // Lets the frontend compute the Ascendant's varga sign for any Dn chart.
@@ -41,8 +41,7 @@ export const signName = (i: number, lang: Lang, en: string) => (lang === 'mm' ? 
 export const planetName = (n: string, lang: Lang) => (lang === 'mm' ? (PLANET_MM[n] ?? n) : n)
 
 // ── UI dictionary (EN / MM) ───────────────────────────────────────────────────
-export const JT: Record<Lang, Record<string, string>> = {
-  en: {
+const JT_EN: Record<string, string> = {
     sayar: 'Sayar Bhone Min Thike Din',
     sayarRole: 'Professional Vedic Astrologer',
     sayarTagline: 'Readings grounded in Chandra Lagna (Moon Ascendant), sidereal Vedic astrology & the Vimshottari dasha.',
@@ -69,8 +68,9 @@ export const JT: Record<Lang, Record<string, string>> = {
     timelineDesc: 'Each year of life: the running Mahadasha–Antardasha, the transits of Jupiter, Saturn & Rahu (house counted from your Moon), Sade Sati, and an overall favourability rating.',
     colYear: 'Year', colAge: 'Age', colPeriod: 'Dasha–Bhukti', colStars: 'Rating', colTheme: 'Theme',
     colJup: 'Jupiter', colSat: 'Saturn', colRahu: 'Rahu', colNotes: 'Transit notes', fromMoon: 'from Moon', nowRow: 'now',
-  },
-  mm: {
+}
+
+const JT_MM: Record<string, string> = {
     sayar: 'ဆရာ ဘုန်းမင်းသိုက်ဒင်',
     sayarRole: 'ပရော်ဖက်ရှင်နယ် ဗေဒင်ပညာရှင်',
     sayarTagline: 'စန်းလဂ် (Moon Ascendant)၊ နက္ခတ်ဗေဒင်နှင့် ဝိံရှောတ္တရီ ဒသာစနစ်ကို အခြေခံ၍ ဟောကြားပေးသည်။',
@@ -97,8 +97,27 @@ export const JT: Record<Lang, Record<string, string>> = {
     timelineDesc: 'အသက်တစ်နှစ်စီ — လက်ရှိ မဟာဒသာ–အန္တရ်ဒသာ၊ ကြာသပတေး/စနေ/ရာဟု ဂြိုဟ်သွား (စန်းမှရေတွက်သော အိမ်)၊ သာဓေသတီနှင့် အလုံးစုံ ကောင်းဆိုးအဆင့်။',
     colYear: 'ခုနှစ်', colAge: 'အသက်', colPeriod: 'ဒသာ–ဘုတ္တိ', colStars: 'အဆင့်', colTheme: 'အနှစ်သာရ',
     colJup: 'ကြာသပတေး', colSat: 'စနေ', colRahu: 'ရာဟု', colNotes: 'ဂြိုဟ်သွား မှတ်ချက်', fromMoon: 'စန်းမှ', nowRow: 'ယခု',
-  },
 }
+
+// Japanese overrides the visible UI labels; any key not listed falls back to the
+// English string via the spread, so the app is never left with a missing label.
+const JT_JA: Record<string, string> = {
+  ...JT_EN,
+  sayarRole: 'プロのインド占星術師',
+  portalTitle: 'インド占星術 鑑定ポータル',
+  tabReading: '鑑定',
+  tabD1: 'D1 · ラーシ', tabD9: 'D9 · ナヴァムシャ', tabD10: 'D10 · ダシャムシャ', tabD7: 'D7 · サプタムシャ',
+  currentDasha: '現在のマハーダシャー', lifeAreas: '人生の領域',
+  disclaimer: '伝統的なインド占星術の知識を、ご関心・ご参考・学びのために提供しています。サイデリアル方式 · ラヒリ・アヤナムシャ · ホールサイン・ハウス。',
+  planetsIn: 'このチャートの惑星',
+  fldName: 'お名前', fldGender: '性別', male: '男性', female: '女性',
+  naynanLabel: '誕生曜日番号（ネイナン）', querentFor: '鑑定対象', currentBhukti: '現在のアンタルダシャー（ブクティ）',
+  tabTimeline: 'タイムライン', timelineTitle: '人生のタイムライン（年齢 → 影響）',
+  colYear: '年', colAge: '年齢', colPeriod: 'ダシャー–ブクティ', colStars: '評価', colTheme: 'テーマ',
+  colJup: '木星', colSat: '土星', colRahu: 'ラーフ', colNotes: 'トランジット注記', fromMoon: '月から', nowRow: '現在',
+}
+
+export const JT: Record<Lang, Record<string, string>> = { en: JT_EN, mm: JT_MM, ja: JT_JA }
 
 // ── Basic reading generator (frontend, until the backend engine lands) ────────
 const LORD_NATURE: Record<string, { en: string; mm: string; benefic: boolean }> = {
@@ -156,7 +175,7 @@ const ordEn = (h: number) => { const s = ['th', 'st', 'nd', 'rd'], v = h % 100; 
 const houseLabel = (h: number, lang: Lang) => (lang === 'mm' ? `${h} တန့်` : `${ordEn(h)} house`)
 
 // Deep-dive helpers (used by the life-area cards).
-export const dignityLabel = (v: string, lang: Lang) => (DIGNITY_LABEL[v] ?? DIGNITY_LABEL.Neutral)[lang]
+export const dignityLabel = (v: string, lang: Lang) => (DIGNITY_LABEL[v] ?? DIGNITY_LABEL.Neutral)[lang === 'ja' ? 'en' : lang]
 export const houseLabelOf = (h: number, lang: Lang) => houseLabel(h, lang)
 export const starsFromScore = (score: number) => Math.max(1, Math.min(5, Math.round(score / 20)))
 export const findPlanet = (data: BirthChartData, name: string) => data.planets.find((p) => p.name === name)
@@ -252,7 +271,7 @@ export function readingFor(data: BirthChartData, lang: Lang): { lord: string; ar
   if (data.predictions && data.predictions.length) {
     const areas = data.predictions.map((pr): AreaReading => ({
       key: pr.area,
-      label: (AREA_LABEL[pr.area] ?? { en: pr.area, mm: pr.area })[lang],
+      label: (AREA_LABEL[pr.area] ?? { en: pr.area, mm: pr.area })[lang === 'ja' ? 'en' : lang],
       tone: pr.tone,
       score: pr.score,
       stars: starsFromScore(pr.score),
@@ -331,7 +350,7 @@ const THEME_WORD: Record<string, { en: string; mm: string }> = {
   Rahu: { en: 'Ambition', mm: 'ရည်မှန်းချက်' },
   Ketu: { en: 'Release', mm: 'စွန့်လွှတ်' },
 }
-export const themeWord = (lord: string, lang: Lang): string => (THEME_WORD[lord] ?? { en: lord, mm: lord })[lang]
+export const themeWord = (lord: string, lang: Lang): string => (THEME_WORD[lord] ?? { en: lord, mm: lord })[lang === 'ja' ? 'en' : lang]
 
 /** Localize a structured transit note. */
 export function transitNoteText(n: TransitNote, lang: Lang): string {
@@ -343,7 +362,7 @@ export function transitNoteText(n: TransitNote, lang: Lang): string {
     jupTrineMoon: { en: `Jupiter ${n.house}th from the Moon`, mm: `ကြာသပတေး စန်းမှ ${toMmDigits(n.house)}` },
     rahuTransit: { en: 'Rahu over Lagna / Moon', mm: 'ရာဟု လဂ်/စန်းပေါ်' },
   }
-  return (map[n.code] ?? { en: n.code, mm: n.code })[lang]
+  return (map[n.code] ?? { en: n.code, mm: n.code })[lang === 'ja' ? 'en' : lang]
 }
 
 /** How the CURRENT-year transits (gochara) touch a given life area right now. */

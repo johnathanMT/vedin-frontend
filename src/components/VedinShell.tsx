@@ -4,6 +4,7 @@ import useTheme from '../hooks/useTheme'
 import AmbientBackground from './AmbientBackground'
 import ThemeToggle from './ThemeToggle'
 import Footer from './Footer'
+import LanguageSwitcher from './LanguageSwitcher'
 
 /**
  * VedinShell — the standalone layout for the decoupled Vedin app.
@@ -35,6 +36,7 @@ export default function VedinShell({ children }: { children: ReactNode }) {
         >
           Portfolio <ExternalLink size={13} aria-hidden />
         </a>
+        <LanguageSwitcher />
         <ThemeToggle theme={theme} onToggle={toggle} />
       </header>
 
